@@ -1,0 +1,247 @@
+DEBUG - 2026-08-08 07:32:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:32:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:32:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:32:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:32:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:33:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:41:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:42:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:42:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:42:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:42:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:42:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:43:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:44:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:46:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:46:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:46:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:46:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:47:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:47:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:47:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:47:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:47:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 07:47:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:29:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:29:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:29:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:29:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:29:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:30:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:30:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:30:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:30:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:30:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:38:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-08-08 08:38:30 --> ParseError: Unmatched '}'
+[Method: GET, Route: employee]
+in APPPATH\Models\OfficeModel.php on line 59.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\Users\\Richard Miculob\\Documents\\Payroll PMS\\app\\Models\\OfficeModel.php')
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Models\\OfficeModel')
+ 3 APPPATH\Controllers\Employee.php(13): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Models\\OfficeModel')
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Employee->index()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Employee))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Richard Miculob\\Documents\\Payroll PMS\\public\\index.php')
+DEBUG - 2026-08-08 08:38:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:38:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-08 08:38:59 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `...' at line 1 in C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `employe...', 0)
+#1 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `employe...')
+#2 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `employe...')
+#3 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `employe...', Array, false)
+#4 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Users\Richard Miculob\Documents\Payroll PMS\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\Users\Richard Miculob\Documents\Payroll PMS\app\Controllers\Payroll.php(36): CodeIgniter\BaseModel->findAll()
+#7 C:\Users\Richard Miculob\Documents\Payroll PMS\system\CodeIgniter.php(933): App\Controllers\Payroll->index()
+#8 C:\Users\Richard Miculob\Documents\Payroll PMS\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Payroll))
+#9 C:\Users\Richard Miculob\Documents\Payroll PMS\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\Users\Richard Miculob\Documents\Payroll PMS\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 C:\Users\Richard Miculob\Documents\Payroll PMS\system\rewrite.php(44): require_once('C:\\Users\\Richar...')
+#14 {main}
+CRITICAL - 2026-08-08 08:38:59 --> CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `...' at line 1
+[Method: GET, Route: payroll]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'', [], false)
+ 2 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+ 4 APPPATH\Controllers\Payroll.php(36): CodeIgniter\BaseModel->findAll()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Payroll->index()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Payroll))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Richard Miculob\\Documents\\Payroll PMS\\public\\index.php')
+CRITICAL - 2026-08-08 08:38:59 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `...' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'', [], false)
+ 4 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+ 6 APPPATH\Controllers\Payroll.php(36): CodeIgniter\BaseModel->findAll()
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Payroll->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Payroll))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Richard Miculob\\Documents\\Payroll PMS\\public\\index.php')
+CRITICAL - 2026-08-08 08:38:59 --> [Caused by] mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `...' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'', [], false)
+ 5 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+ 7 APPPATH\Controllers\Payroll.php(36): CodeIgniter\BaseModel->findAll()
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Payroll->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Payroll))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Richard Miculob\\Documents\\Payroll PMS\\public\\index.php')
+DEBUG - 2026-08-08 08:39:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-08-08 08:39:10 --> mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `...' at line 1 in C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `employe...', 0)
+#1 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `employe...')
+#2 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `employe...')
+#3 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `employe...', Array, false)
+#4 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Users\Richard Miculob\Documents\Payroll PMS\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\Users\Richard Miculob\Documents\Payroll PMS\app\Controllers\Payroll.php(36): CodeIgniter\BaseModel->findAll()
+#7 C:\Users\Richard Miculob\Documents\Payroll PMS\system\CodeIgniter.php(933): App\Controllers\Payroll->index()
+#8 C:\Users\Richard Miculob\Documents\Payroll PMS\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Payroll))
+#9 C:\Users\Richard Miculob\Documents\Payroll PMS\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\Users\Richard Miculob\Documents\Payroll PMS\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\Users\Richard Miculob\Documents\Payroll PMS\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 C:\Users\Richard Miculob\Documents\Payroll PMS\system\rewrite.php(44): require_once('C:\\Users\\Richar...')
+#14 {main}
+CRITICAL - 2026-08-08 08:39:10 --> CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `...' at line 1
+[Method: GET, Route: payroll]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'', [], false)
+ 2 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+ 4 APPPATH\Controllers\Payroll.php(36): CodeIgniter\BaseModel->findAll()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Payroll->index()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Payroll))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Richard Miculob\\Documents\\Payroll PMS\\public\\index.php')
+CRITICAL - 2026-08-08 08:39:10 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `...' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'', [], false)
+ 4 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+ 6 APPPATH\Controllers\Payroll.php(36): CodeIgniter\BaseModel->findAll()
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Payroll->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Payroll))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Richard Miculob\\Documents\\Payroll PMS\\public\\index.php')
+CRITICAL - 2026-08-08 08:39:10 --> [Caused by] mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `...' at line 1
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `employees`.*, ...
+FROM `employees`
+LEFT JOIN `deductions` ON `deductions`.`employee_id` = `employees`.`id`
+LEFT JOIN `payroll_records` ON `payroll_records`.`employee_id` = `employees`.`id` AND `payroll_records`.`payroll_period` = \'2026-08\'', [], false)
+ 5 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(0, 0)
+ 7 APPPATH\Controllers\Payroll.php(36): CodeIgniter\BaseModel->findAll()
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Payroll->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Payroll))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Richard Miculob\\Documents\\Payroll PMS\\public\\index.php')
+DEBUG - 2026-08-08 08:39:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:40:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:40:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:40:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:55:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:55:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:55:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-08-08 08:56:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

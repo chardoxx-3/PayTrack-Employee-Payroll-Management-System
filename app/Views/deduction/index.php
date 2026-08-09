@@ -1,0 +1,123 @@
+<?= $this->extend('layout/main') ?>
+
+<?= $this->section('content') ?>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Deduction Management</h4>
+            <p class="text-muted small">Search for an employee to update their deductions.</p>
+        </div>
+        <a href="/payroll" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left me-1"></i> Back to Payroll</a>
+    </div>
+
+    <div class="card border-0 shadow-sm p-3 mb-4 bg-light">
+        <form action="/deduction" method="get" class="row g-2 align-items-center">
+            <div class="col-md-4">
+                <select name="office_id" class="form-select border-0 shadow-sm" onchange="this.form.submit()">
+                    <option value="">All Offices</option>
+                    <?php foreach ($offices as $office): ?>
+                        <option value="<?= $office['id'] ?>" <?= ($office_id == $office['id']) ? 'selected' : '' ?>>
+                            <?= esc($office['office_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group shadow-sm">
+                    <span class="input-group-text bg-white border-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-0" 
+                           placeholder="Search employee ID or name..." value="<?= esc($search ?? '') ?>">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </form>
+    </div>
+
+<div class="table-responsive">
+    <table class="table table-hover bg-white rounded shadow-sm align-middle">
+        <thead class="bg-light text-muted small fw-bold">
+            <tr>
+                <th rowspan="2" class="text-center" style="vertical-align: middle; width: 40px;">NO.</th>
+                <th class="ps-4" rowspan="2" style="vertical-align: middle;">EMPLOYEE</th>
+                <th rowspan="2" style="vertical-align: middle;">DESIGNATION</th>
+                <th rowspan="2" style="vertical-align: middle;">MONTHLY RATE</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">REFUND</th>
+                <th colspan="3" class="text-center border-start">GSIS</th>
+                <th colspan="2" class="text-center border-start">PAG-IBIG</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">PHIC</th>
+                <th colspan="3" class="text-center border-start">BANKS / COOP'S</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">BIR TAX</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">NET PAY</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">QUINCENA</th>
+                <th rowspan="2" class="text-center" style="vertical-align: middle;">STATUS</th>
+                <th rowspan="2" class="text-end pe-4" style="vertical-align: middle;">ACTION</th>
+            </tr>
+            <tr>
+                <th class="text-center small border-start">Premium</th>
+                <th class="text-center small">Conso/MPL</th>
+                <th class="text-center small">GFAL/Other</th>
+                <th class="text-center small border-start">Premium</th>
+                <th class="text-center small">Loan/MP2</th>
+                <th class="text-center small border-start">LBP</th>
+                <th class="text-center small">MCC</th>
+                <th class="text-center small">1stVB</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php $no = 1; foreach ($records as $r): ?>
+            <?php
+                $totalDeductions = ($r['gsis_premium'] ?? 0) + ($r['gsis_policy'] ?? 0) + ($r['gsis_other'] ?? 0)
+                                 + ($r['pagibig_premium'] ?? 0) + ($r['pagibig_loan'] ?? 0)
+                                 + ($r['phic'] ?? 0)
+                                 + ($r['bank_lbp'] ?? 0) + ($r['bank_mcc'] ?? 0) + ($r['bank_1stvb'] ?? 0)
+                                 + ($r['withholding_tax'] ?? 0);
+                $netPay  = $r['net_pay'] ?? (($r['salary_rate'] ?? 0) - $totalDeductions);
+                $firstQ  = $r['first_quincena'] ?? round($netPay / 2, 2);
+                $secondQ = $r['second_quincena'] ?? round($netPay - $firstQ, 2);
+            ?>
+            <tr>
+                <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
+                <td class="ps-4" rowspan="2">
+<div class="fw-bold"><?= esc($r['full_name']) ?></div>
+<small class="text-muted"><?= esc($r['employee_id']) ?></small>
+                </td>
+                <td rowspan="2"><?= esc($r['position']) ?></td>
+                <td rowspan="2">₱<?= number_format($r['salary_rate'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-muted small text-end border-start">₱<?= number_format($r['refund_rata'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['gsis_premium'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['gsis_policy'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['gsis_other'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['pagibig_premium'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['pagibig_loan'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['phic'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['bank_lbp'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['bank_mcc'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['bank_1stvb'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['withholding_tax'] ?? 0, 2) ?></td>
+                <td rowspan="2" class="fw-bold text-success border-start">₱<?= number_format($netPay, 2) ?></td>
+                <td class="text-muted small border-start">1st Q: ₱<?= number_format($firstQ, 2) ?></td>
+                <td rowspan="2" class="text-center">
+                    <?php if (!empty($r['payroll_id'])): ?>
+                        <span class="badge bg-soft-success text-success rounded-pill">Processed</span>
+                    <?php else: ?>
+                        <span class="badge bg-soft-warning text-warning rounded-pill">Pending</span>
+                    <?php endif; ?>
+                </td>
+                <td rowspan="2" class="text-end pe-4 text-nowrap">
+                    <a href="/deduction/manage/<?= $r['id'] ?>" class="btn btn-primary btn-sm px-3 rounded-pill">Edit</a>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td class="text-muted small border-start">2nd Q: ₱<?= number_format($secondQ, 2) ?></td>
+            </tr>
+            <?php endforeach; ?>
+            <?php if (empty($records)): ?>
+            <tr><td colspan="19" class="text-center text-muted py-4">No employees found.</td></tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+</div>
+<?= $this->endSection() ?>
