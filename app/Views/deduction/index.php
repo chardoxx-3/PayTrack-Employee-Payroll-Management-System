@@ -1,20 +1,32 @@
 <?= $this->extend('layout/main') ?>
 
 <?= $this->section('content') ?>
+<?php
+function peso($value) {
+    return $value > 0 ? '₱' . number_format($value, 2) : '';
+}
+?>
+<style>
+.deduction-table th,
+.deduction-table td {
+    border: 1px solid #dee2e6 !important;
+}
+</style>
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h4 class="fw-bold mb-1">Deduction Management</h4>
-            <p class="text-muted small">Search for an employee to update their deductions.</p>
+            <p class="text-muted small mb-1">Select an office to manage deductions for the period: <strong><?= date('F Y') ?></strong></p>
+            <p class="text-muted small mb-0">Period of Service: <strong><?= date('m/01/Y') . '-' . date('m/t/Y') ?></strong></p>
         </div>
-        <a href="/payroll" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left me-1"></i> Back to Payroll</a>
+        <a href="/payroll" class="btn btn-outline-dark btn-sm"><i class="fas fa-arrow-left me-1"></i> Back to Payroll</a>
     </div>
 
     <div class="card border-0 shadow-sm p-3 mb-4 bg-light">
         <form action="/deduction" method="get" class="row g-2 align-items-center">
             <div class="col-md-4">
                 <select name="office_id" class="form-select border-0 shadow-sm" onchange="this.form.submit()">
-                    <option value="">All Offices</option>
+                    <option value="">Select Office Assignment...</option>
                     <?php foreach ($offices as $office): ?>
                         <option value="<?= $office['id'] ?>" <?= ($office_id == $office['id']) ? 'selected' : '' ?>>
                             <?= esc($office['office_name']) ?>
@@ -36,7 +48,7 @@
     </div>
 
 <div class="table-responsive">
-    <table class="table table-hover bg-white rounded shadow-sm align-middle">
+    <table class="table table-hover bg-white rounded shadow-sm align-middle deduction-table">
         <thead class="bg-light text-muted small fw-bold">
             <tr>
                 <th rowspan="2" class="text-center" style="vertical-align: middle; width: 40px;">NO.</th>
@@ -77,27 +89,27 @@
                 $firstQ  = $r['first_quincena'] ?? round($netPay / 2, 2);
                 $secondQ = $r['second_quincena'] ?? round($netPay - $firstQ, 2);
             ?>
-            <tr>
-                <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
+    <tr class="border-bottom">
+        <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
                 <td class="ps-4" rowspan="2">
 <div class="fw-bold"><?= esc($r['full_name']) ?></div>
 <small class="text-muted"><?= esc($r['employee_id']) ?></small>
                 </td>
                 <td rowspan="2"><?= esc($r['position']) ?></td>
-                <td rowspan="2">₱<?= number_format($r['salary_rate'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-muted small text-end border-start">₱<?= number_format($r['refund_rata'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['gsis_premium'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['gsis_policy'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['gsis_other'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['pagibig_premium'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['pagibig_loan'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['phic'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['bank_lbp'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['bank_mcc'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end">₱<?= number_format($r['bank_1stvb'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($r['withholding_tax'] ?? 0, 2) ?></td>
-                <td rowspan="2" class="fw-bold text-success border-start">₱<?= number_format($netPay, 2) ?></td>
-                <td class="text-muted small border-start">1st Q: ₱<?= number_format($firstQ, 2) ?></td>
+                <td rowspan="2"><?= peso($r['salary_rate'] ?? 0) ?></td>
+                <td rowspan="2" class="text-muted small text-end border-start"><?= peso($r['refund_rata'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['gsis_premium'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end"><?= peso($r['gsis_policy'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end"><?= peso($r['gsis_other'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['pagibig_premium'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end"><?= peso($r['pagibig_loan'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['phic'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['bank_lbp'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end"><?= peso($r['bank_mcc'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end"><?= peso($r['bank_1stvb'] ?? 0) ?></td>
+                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['withholding_tax'] ?? 0) ?></td>
+                <td rowspan="2" class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
+                <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?></td>
                 <td rowspan="2" class="text-center">
                     <?php if (!empty($r['payroll_id'])): ?>
                         <span class="badge bg-soft-success text-success rounded-pill">Processed</span>
@@ -110,7 +122,7 @@
                 </td>
             </tr>
             <tr class="border-bottom">
-                <td class="text-muted small border-start">2nd Q: ₱<?= number_format($secondQ, 2) ?></td>
+                <td class="text-muted small border-start">2nd Q: <?= peso($secondQ) ?></td>
             </tr>
             <?php endforeach; ?>
             <?php if (empty($records)): ?>

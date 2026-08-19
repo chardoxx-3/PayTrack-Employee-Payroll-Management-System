@@ -125,6 +125,17 @@ public function update()
     $officeId = $this->request->getVar('office_id');
     $period   = date('Y-m');
 
+    $data['offices'] = $officeModel->findAll();
+
+    if (!$officeId && !empty($data['offices'])) {
+        foreach ($data['offices'] as $office) {
+            if (stripos($office['office_name'], 'MAYOR') !== false) {
+                $officeId = $office['id'];
+                break;
+            }
+        }
+    }
+
     $empModel->select('employees.*, offices.office_name,
                         deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
                         deductions.pagibig_premium, deductions.pagibig_loan,
