@@ -1,6 +1,11 @@
 <?= $this->extend('layout/main') ?>
 
 <?= $this->section('content') ?>
+<?php
+function peso($value) {
+    return $value > 0 ? '₱' . number_format($value, 2) : '';
+}
+?>
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -78,20 +83,20 @@
             <small class="text-muted"><?= $emp['employee_id'] ?></small>
         </td>
         <td rowspan="2"><?= $emp['position'] ?></td>
-        <td rowspan="2">₱<?= number_format($emp['salary_rate'], 2) ?></td>
-        <td rowspan="2" class="text-muted small text-end border-start">₱<?= number_format($emp['refund_rata'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($emp['gsis_premium'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end">₱<?= number_format($emp['gsis_policy'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end">₱<?= number_format($emp['gsis_other'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($emp['pagibig_premium'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end">₱<?= number_format($emp['pagibig_loan'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($emp['phic'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($emp['bank_lbp'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end">₱<?= number_format($emp['bank_mcc'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end">₱<?= number_format($emp['bank_1stvb'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start">₱<?= number_format($emp['withholding_tax'] ?? 0, 2) ?></td>
-        <td rowspan="2" class="fw-bold text-success border-start">₱<?= number_format($netPay, 2) ?></td>
-        <td class="text-muted small border-start">1st Q: ₱<?= number_format($firstQ, 2) ?></td>
+        <td rowspan="2"><?= peso($emp['salary_rate']) ?></td>
+        <td rowspan="2" class="text-muted small text-end border-start"><?= peso($emp['refund_rata'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['gsis_premium'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['gsis_policy'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['gsis_other'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['pagibig_premium'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['pagibig_loan'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['phic'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['bank_lbp'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['bank_mcc'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['bank_1stvb'] ?? 0) ?></td>
+        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
+        <td rowspan="2" class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
+        <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?></td>
         <td rowspan="2" class="text-center">
             <?php if (!empty($emp['payroll_id'])): ?>
                 <span class="badge bg-soft-success text-success rounded-pill">Processed</span>
@@ -112,7 +117,7 @@
         </td>
     </tr>
     <tr class="border-bottom">
-        <td class="text-muted small border-start">2nd Q: ₱<?= number_format($secondQ, 2) ?></td>
+        <td class="text-muted small border-start">2nd Q: <?= peso($secondQ) ?></td>
     </tr>
     <?php endforeach; ?>
 </tbody>
