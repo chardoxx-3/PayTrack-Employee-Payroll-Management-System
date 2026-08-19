@@ -27,14 +27,14 @@ public function index()
         }
     }
 
-    $empModel->select('employees.*,
-                        deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
-                        deductions.pagibig_premium, deductions.pagibig_loan,
-                        deductions.phic, deductions.withholding_tax,
-                        deductions.bank_lbp, deductions.bank_mcc, deductions.bank_1stvb,
-                        payroll_records.id as payroll_id,
-                        payroll_records.total_deductions, payroll_records.net_pay,
-                        payroll_records.first_quincena, payroll_records.second_quincena')
+$empModel->select('employees.*,
+                    deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
+                    deductions.pagibig_premium, deductions.pagibig_loan,
+                    deductions.phic, deductions.withholding_tax,
+                    deductions.bank_lbp, deductions.bank_mcc, deductions.bank_1stvb,
+                    payroll_records.id as payroll_id, payroll_records.refund_rata,
+                    payroll_records.total_deductions, payroll_records.net_pay,
+                    payroll_records.first_quincena, payroll_records.second_quincena')
              ->join('deductions', 'deductions.employee_id = employees.id', 'left')
              ->join('payroll_records', "payroll_records.employee_id = employees.id AND payroll_records.payroll_period = '{$period}'", 'left');
 

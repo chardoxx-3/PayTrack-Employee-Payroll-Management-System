@@ -146,8 +146,6 @@ public function import()
             $rawSalary = is_string($salaryRate) ? str_replace([',', ' '], '', $salaryRate) : $salaryRate;
             $hasValidSalary = is_numeric($rawSalary) && (float) $rawSalary > 0;
 
-            $nextRow = $rows[$i + 1] ?? []; // NEW: the "refund/rata" continuation row for this employee
-
             $deductionData = [
                 'gsis_premium'    => $toFloat($row[6]  ?? 0),
                 'pagibig_premium' => $toFloat($row[9]  ?? 0),
@@ -158,11 +156,43 @@ public function import()
                 'withholding_tax' => $toFloat($row[15] ?? 0),
             ];
 
-            // NEW: pulled straight from the sheet instead of computed
-            $refundRata      = $toFloat($nextRow[5]  ?? 0); // Refund/Rata per ACA — lives on the row AFTER the main row
-            $netPay          = $toFloat($row[16]     ?? 0); // actual calculated Net Pay column from the sheet
-            $firstQuincena   = $toFloat($row[17]     ?? 0); // 1st quincena, main row
-            $secondQuincena  = $toFloat($nextRow[17] ?? 0); // 2nd quincena, continuation row
+            // Refund/Rata isn't always on the very next row (some blocks have a blank
+            // spacer row first), so find the end of this employee's block — the next
+            // numbered employee row, or the sheet's "Total" row — and take the FIRST
+            // populated value in column 5 within that range.
+            $blockEnd = $i + 1;
+            while (isset($rows[$blockEnd])) {
+                $blockNo   = $rows[$blockEnd][0] ?? null;
+                $blockName = trim($rows[$blockEnd][1] ?? '');
+                if (is_numeric($blockNo) && $blockName !== '' && !is_numeric($blockName)) {
+                    break; // reached the next employee's row
+                }
+                if (strcasecmp(trim((string) $blockNo), 'Total') === 0) {
+                    break; // reached the sheet's totals row
+                }
+                $blockEnd++;
+            }
+
+            $refundRata = 0;
+            for ($r = $i + 1; $r < $blockEnd; $r++) {
+                $rawRefund = trim((string) ($rows[$r][5] ?? ''));
+                if ($rawRefund !== '' && $rawRefund !== '-') {
+                    $refundRata = $toFloat($rawRefund);
+                    break;
+                }
+            }
+
+            $secondQuincena = 0;
+            for ($r = $i + 1; $r < $blockEnd; $r++) {
+                $rawQuincena = trim((string) ($rows[$r][17] ?? ''));
+                if ($rawQuincena !== '' && $rawQuincena !== '-') {
+                    $secondQuincena = $toFloat($rawQuincena);
+                    break;
+                }
+            }
+
+            $netPay        = $toFloat($row[16] ?? 0); // actual calculated Net Pay column from the sheet
+            $firstQuincena = $toFloat($row[17] ?? 0); // 1st quincena, main row
 
             $existing = $model->where('office_id', $officeId)
                                ->where('full_name', $fullName)
