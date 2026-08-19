@@ -61,7 +61,6 @@ public function process($employee_id)
 
         $deduct = $deductModel->where('employee_id', $employee_id)->first();
 
-        // Default to zero deductions if no record exists yet for this employee
         $deduct = $deduct ?? [
             'withholding_tax' => 0,
             'loans'           => 0,
@@ -78,10 +77,8 @@ public function process($employee_id)
             'bank_1stvb'      => 0,
         ];
 
-        // Refund/Rata (Pera/ACA differential) - optional flat allowance from request, defaults to 0
         $refund_rata = (float) ($this->request->getVar('refund_rata') ?? 0);
 
-        // Automated Calculation Logic
         $gross_pay = $emp['salary_rate'];
 
         $total_deductions =
@@ -101,37 +98,42 @@ public function process($employee_id)
 
         $net_pay = $gross_pay - $total_deductions;
 
-        // Split net pay into 1st/2nd quincena (standard LGU semi-monthly split)
-        $first_quincena  = round($net_pay / 2, 2);
-        $second_quincena = round($net_pay - $first_quincena, 2);
+        $first_quincena_input  = (float) ($this->request->getVar('first_quincena') ?? 0);
+        $second_quincena_input = (float) ($this->request->getVar('second_quincena') ?? 0);
 
-// NEW
-$period = date('Y-m');
+        if ($first_quincena_input > 0 && $second_quincena_input > 0) {
+            $first_quincena  = round($first_quincena_input, 2);
+            $second_quincena = round($second_quincena_input, 2);
+        } else {
+            $first_quincena  = round($net_pay / 2, 2);
+            $second_quincena = round($net_pay - $first_quincena, 2);
+        }
 
-$payrollData = [
-    'employee_id'       => $employee_id,
-    'payroll_period'    => $period,
-    'period_of_service' => $this->request->getVar('period_of_service') ?? date('m/01/Y') . '-' . date('m/t/Y'),
-    'refund_rata'       => $refund_rata,
-    'gross_pay'         => $gross_pay,
-    'total_deductions'  => $total_deductions,
-    'net_pay'           => $net_pay,
-    'first_quincena'    => $first_quincena,
-    'second_quincena'   => $second_quincena,
-    'cash_paid'         => $net_pay,
-];
+        $period = date('Y-m');
 
-// Update existing payroll record for this employee/period instead of inserting a duplicate
-$existing = $payrollModel->where('employee_id', $employee_id)
-                          ->where('payroll_period', $period)
-                          ->first();
+        $payrollData = [
+            'employee_id'       => $employee_id,
+            'payroll_period'    => $period,
+            'period_of_service' => $this->request->getVar('period_of_service') ?? date('m/01/Y') . '-' . date('m/t/Y'),
+            'refund_rata'       => $refund_rata,
+            'gross_pay'         => $gross_pay,
+            'total_deductions'  => $total_deductions,
+            'net_pay'           => $net_pay,
+            'first_quincena'    => $first_quincena,
+            'second_quincena'   => $second_quincena,
+            'cash_paid'         => $net_pay,
+        ];
 
-if ($existing) {
-    $payrollModel->update($existing['id'], $payrollData);
-} else {
-    $payrollModel->insert($payrollData);
-}
+        $existing = $payrollModel->where('employee_id', $employee_id)
+                                  ->where('payroll_period', $period)
+                                  ->first();
 
-return redirect()->to('/payroll')->with('success', 'Payroll calculated for ' . $emp['full_name']);
+        if ($existing) {
+            $payrollModel->update($existing['id'], $payrollData);
+        } else {
+            $payrollModel->insert($payrollData);
+        }
+
+        return redirect()->to('/payroll')->with('success', 'Payroll calculated for ' . $emp['full_name']);
     }
 }

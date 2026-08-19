@@ -100,7 +100,15 @@
             <?php endif; ?>
         </td>
         <td rowspan="2" class="text-end pe-4 text-nowrap">
-            <a href="/payroll/process/<?= $emp['id'] ?>" class="btn btn-primary btn-sm px-3 rounded-pill">Process</a>
+            <button class="btn btn-primary btn-sm px-3 rounded-pill process-btn"
+                data-employee-id="<?= $emp['id'] ?>"
+                data-employee-name="<?= $emp['full_name'] ?>"
+                data-designation="<?= $emp['position'] ?>"
+                data-net-pay="<?= $netPay ?>"
+                data-bs-toggle="modal"
+                data-bs-target="#processModal">
+                Process
+            </button>
         </td>
     </tr>
     <tr class="border-bottom">
@@ -111,4 +119,89 @@
         </table>
     </div>
 </div>
+
+<div class="modal fade" id="processModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Process Payroll</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="processForm" method="post" action="">
+                    <?= csrf_field() ?>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">EMPLOYEE NAME</label>
+                        <div class="fw-bold" id="modalEmployeeName"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">DESIGNATION</label>
+                        <div id="modalDesignation"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">NET PAY</label>
+                        <div class="fw-bold text-success" id="modalNetPay"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstQuincena" class="form-label text-muted small fw-bold">1st QUINCENA</label>
+                            <div class="input-group">
+                                <span class="input-group-text">₱</span>
+                                <input type="number" step="0.01" class="form-control" id="firstQuincena" name="first_quincena" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="secondQuincena" class="form-label text-muted small fw-bold">2nd QUINCENA</label>
+                            <div class="input-group">
+                                <span class="input-group-text">₱</span>
+                                <input type="number" step="0.01" class="form-control" id="secondQuincena" name="second_quincena" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="processForm" class="btn btn-primary">Process Payroll</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const processButtons = document.querySelectorAll('.process-btn');
+    const processForm = document.getElementById('processForm');
+    const firstQuincenaInput = document.getElementById('firstQuincena');
+    const secondQuincenaInput = document.getElementById('secondQuincena');
+    const modalNetPayEl = document.getElementById('modalNetPay');
+    let currentNetPay = 0;
+
+    processButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const employeeName = btn.getAttribute('data-employee-name');
+            const designation = btn.getAttribute('data-designation');
+            const netPay = parseFloat(btn.getAttribute('data-net-pay')) || 0;
+
+            currentNetPay = netPay;
+
+            document.getElementById('modalEmployeeName').textContent = employeeName;
+            document.getElementById('modalDesignation').textContent = designation;
+            modalNetPayEl.textContent = '₱' + netPay.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            processForm.action = '/payroll/process/' + btn.getAttribute('data-employee-id');
+
+            firstQuincenaInput.value = '';
+            secondQuincenaInput.value = '';
+        });
+    });
+
+    firstQuincenaInput.addEventListener('input', function() {
+        const firstQ = parseFloat(this.value) || 0;
+        const secondQ = currentNetPay - firstQ;
+        secondQuincenaInput.value = secondQ > 0 ? secondQ.toFixed(2) : '';
+    });
+});
+</script>
+
 <?= $this->endSection() ?>

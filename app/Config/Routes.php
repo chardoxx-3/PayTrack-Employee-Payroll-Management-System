@@ -42,7 +42,7 @@ $routes->group('deduction', ['filter' => 'auth'], function($routes) {
 // Payroll Processing
 $routes->group('payroll', ['filter' => 'auth'], function($routes) {
     $routes->get('/', 'Payroll::index');
-    $routes->get('process/(:num)', 'Payroll::process/$1');
+    $routes->match(['get', 'post'], 'process/(:num)', 'Payroll::process/$1');
 });
 
 // Payslip Generation

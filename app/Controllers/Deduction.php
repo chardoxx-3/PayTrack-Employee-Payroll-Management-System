@@ -93,16 +93,12 @@ public function update()
         (float) ($data['bank_1stvb'] ?? 0);
 
     $net_pay = $gross_pay - $total_deductions;
-    $first_quincena  = round($net_pay / 2, 2);
-    $second_quincena = round($net_pay - $first_quincena, 2);
 
     $payrollData = [
         'refund_rata'      => $refund_rata,
         'gross_pay'        => $gross_pay,
         'total_deductions' => $total_deductions,
         'net_pay'          => $net_pay,
-        'first_quincena'   => $first_quincena,
-        'second_quincena'  => $second_quincena,
         'cash_paid'        => $net_pay,
     ];
 
