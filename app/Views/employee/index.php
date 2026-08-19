@@ -9,6 +9,9 @@
         <button type="button" class="btn btn-outline-success btn-sm px-3" data-bs-toggle="modal" data-bs-target="#importModal">
             <i class="fas fa-file-excel"></i> Import from Excel
         </button>
+        <button type="button" class="btn btn-outline-danger btn-sm px-3" data-bs-toggle="modal" data-bs-target="#deleteAllModal">
+            <i class="fas fa-trash-alt"></i> Delete All
+        </button>
         <a href="/employee/create" class="btn btn-primary btn-sm px-3">+ Add New Employee</a>
     </div>
 </div>
@@ -82,4 +85,34 @@
     </form>
   </div>
 </div>
+
+<div class="modal fade" id="deleteAllModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form action="/employee/deleteAll" method="post" class="modal-content">
+      <?= csrf_field() ?>
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-danger">Delete All Employees</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small">This will permanently remove <strong>all employees</strong>, their deductions, and payroll records. This action cannot be undone.</p>
+        <div class="mb-3">
+          <label class="form-label fw-bold small">Type <span class="text-danger">DELETE</span> to confirm:</label>
+          <input type="text" class="form-control" id="deleteConfirmInput" name="confirm" autocomplete="off" required>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-danger" id="deleteAllBtn" disabled>Delete All</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.getElementById('deleteConfirmInput').addEventListener('input', function() {
+    document.getElementById('deleteAllBtn').disabled = (this.value !== 'DELETE');
+});
+</script>
+
 <?= $this->endSection() ?>

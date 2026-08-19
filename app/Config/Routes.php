@@ -23,6 +23,7 @@ $routes->group('employee', ['filter' => 'auth'], function($routes) {
     $routes->get('edit/(:num)', 'Employee::edit/$1');
     $routes->post('update/(:num)', 'Employee::update/$1');
     $routes->get('delete/(:num)', 'Employee::delete/$1');
+    $routes->post('deleteAll', 'Employee::deleteAll');
     $routes->post('import', 'Employee::import');
 });
 

@@ -52,6 +52,19 @@ public function store()
         return redirect()->to('/employee')->with('success', 'Employee removed.');
     }
 
+    public function deleteAll()
+    {
+        $deductModel = new \App\Models\DeductionModel();
+        $payrollModel = new \App\Models\PayrollModel();
+        $empModel = new EmployeeModel();
+
+        $payrollModel->emptyTable();
+        $deductModel->emptyTable();
+        $empModel->emptyTable();
+
+        return redirect()->to('/employee')->with('success', 'All employee records deleted.');
+    }
+
 public function create()
 {
     $officeModel = new OfficeModel();
