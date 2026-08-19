@@ -126,15 +126,18 @@ public function import()
         $rows = $spreadsheet->getSheetByName($sheetName)->toArray();
 
         foreach ($rows as $row) {
-            $no          = $row[0] ?? null;
-            $fullName    = trim($row[1] ?? '');
-            $designation = trim($row[2] ?? '');
-            $salaryRate  = $row[4] ?? null;
+            $no            = $row[0] ?? null;
+            $fullName      = trim($row[1] ?? '');
+            $designation   = trim($row[2] ?? '');
+            $salaryRate    = $row[4] ?? null;
+            $contactNumber = trim($row[19] ?? '');
 
-            // Real employee rows have a numeric "No." and a name; header/blank rows don't.
-            if (!is_numeric($no) || $fullName === '') {
+            if (!is_numeric($no) || $fullName === '' || is_numeric($fullName)) {
                 continue;
             }
+
+            $rawSalary = is_string($salaryRate) ? str_replace([',', ' '], '', $salaryRate) : $salaryRate;
+            $hasValidSalary = is_numeric($rawSalary) && (float) $rawSalary > 0;
 
             $existing = $model->where('office_id', $officeId)
                                ->where('full_name', $fullName)
@@ -142,8 +145,11 @@ public function import()
 
             if ($existing) {
                 $data = ['position' => $designation ?: $existing['position']];
-                if (is_numeric($salaryRate) && (float) $salaryRate > 0) {
-                    $data['salary_rate'] = (float) $salaryRate;
+                if ($hasValidSalary) {
+                    $data['salary_rate'] = (float) $rawSalary;
+                }
+                if ($contactNumber !== '' && preg_match('/^\d{7,15}$/', $contactNumber)) {
+                    $data['contact_number'] = $contactNumber;
                 }
                 $model->update($existing['id'], $data);
                 $updated++;
@@ -156,7 +162,8 @@ public function import()
                     'full_name'         => $fullName,
                     'office_id'         => $officeId,
                     'position'          => $designation,
-                    'salary_rate'       => is_numeric($salaryRate) ? (float) $salaryRate : 0,
+                    'contact_number'    => (preg_match('/^\d{7,15}$/', $contactNumber) ? $contactNumber : null),
+                    'salary_rate'       => $hasValidSalary ? (float) $rawSalary : 0,
                     'employment_status' => 'Regular',
                     'is_active'         => 1,
                 ]);
