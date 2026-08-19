@@ -153,7 +153,7 @@ public function update()
                              ->orLike('employees.employee_id', $keyword)
                              ->groupEnd();
 
-    $data['records']   = $empModel->orderBy('employees.full_name', 'ASC')->findAll();
+    $data['records']   = $empModel->orderBy('employees.id', 'ASC')->findAll();
     $data['offices']   = $officeModel->findAll();
     $data['search']    = $keyword;
     $data['office_id'] = $officeId;
