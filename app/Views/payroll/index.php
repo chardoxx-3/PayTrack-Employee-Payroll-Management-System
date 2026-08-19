@@ -76,7 +76,7 @@ function peso($value) {
         $firstQ = $emp['first_quincena'] ?? round($netPay / 2, 2);
         $secondQ = $emp['second_quincena'] ?? round($netPay - $firstQ, 2);
     ?>
-    <tr>
+    <tr class="border-bottom">
         <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
         <td class="ps-4" rowspan="2">
             <div class="fw-bold"><?= $emp['full_name'] ?></div>
