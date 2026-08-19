@@ -98,6 +98,8 @@ public function import()
 {
     $officeModel = new OfficeModel();
     $model = new EmployeeModel();
+    $deductModel = new \App\Models\DeductionModel();
+    $payrollModel = new \App\Models\PayrollModel(); // NEW
 
     $file = $this->request->getFile('payroll_file');
     if (!$file || !$file->isValid()) {
@@ -108,13 +110,18 @@ public function import()
 
     $year = date('Y');
     $nextNumber = $model->like('employee_id', "EMP-{$year}-", 'after')->countAllResults() + 1;
+    $period = date('Y-m'); // NEW
 
     $imported = 0;
     $updated  = 0;
+    $skipped  = 0;
+
+    $toFloat = function ($v) { // NEW: hoisted out of the row loop
+        if (is_string($v)) $v = str_replace([',', ' '], '', $v);
+        return is_numeric($v) ? (float) $v : 0;
+    };
 
     foreach ($spreadsheet->getSheetNames() as $sheetName) {
-        // Skip supplemental RATA-only sheets — they duplicate employees already
-        // covered by the main office sheets and carry no monthly rate.
         if (stripos($sheetName, 'rata') !== false) {
             continue;
         }
@@ -125,7 +132,7 @@ public function import()
 
         $rows = $spreadsheet->getSheetByName($sheetName)->toArray();
 
-        foreach ($rows as $row) {
+        foreach ($rows as $i => $row) { // NEW: capture index to look at the next row
             $no            = $row[0] ?? null;
             $fullName      = trim($row[1] ?? '');
             $designation   = trim($row[2] ?? '');
@@ -138,6 +145,24 @@ public function import()
 
             $rawSalary = is_string($salaryRate) ? str_replace([',', ' '], '', $salaryRate) : $salaryRate;
             $hasValidSalary = is_numeric($rawSalary) && (float) $rawSalary > 0;
+
+            $nextRow = $rows[$i + 1] ?? []; // NEW: the "refund/rata" continuation row for this employee
+
+            $deductionData = [
+                'gsis_premium'    => $toFloat($row[6]  ?? 0),
+                'pagibig_premium' => $toFloat($row[9]  ?? 0),
+                'phic'            => $toFloat($row[11] ?? 0),
+                'bank_lbp'        => $toFloat($row[12] ?? 0),
+                'bank_mcc'        => $toFloat($row[13] ?? 0),
+                'bank_1stvb'      => $toFloat($row[14] ?? 0),
+                'withholding_tax' => $toFloat($row[15] ?? 0),
+            ];
+
+            // NEW: pulled straight from the sheet instead of computed
+            $refundRata      = $toFloat($nextRow[5]  ?? 0); // Refund/Rata per ACA — lives on the row AFTER the main row
+            $netPay          = $toFloat($row[16]     ?? 0); // actual calculated Net Pay column from the sheet
+            $firstQuincena   = $toFloat($row[17]     ?? 0); // 1st quincena, main row
+            $secondQuincena  = $toFloat($nextRow[17] ?? 0); // 2nd quincena, continuation row
 
             $existing = $model->where('office_id', $officeId)
                                ->where('full_name', $fullName)
@@ -153,25 +178,76 @@ public function import()
                 }
                 $model->update($existing['id'], $data);
                 $updated++;
+
+                $empId = $existing['id'];
             } else {
                 $employeeId = "EMP-{$year}-" . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
                 $nextNumber++;
 
-                $model->insert([
+                $empId = $model->insert([
                     'employee_id'       => $employeeId,
                     'full_name'         => $fullName,
                     'office_id'         => $officeId,
-                    'position'          => $designation,
+                    'position'          => $designation ?: 'N/A',
                     'contact_number'    => (preg_match('/^\d{7,15}$/', $contactNumber) ? $contactNumber : null),
                     'salary_rate'       => $hasValidSalary ? (float) $rawSalary : 0,
                     'employment_status' => 'Regular',
                     'is_active'         => 1,
                 ]);
+
+                if (!$empId) {
+                    log_message('error', 'Employee import failed for "{name}": {errors}', [
+                        'name'   => $fullName,
+                        'errors' => implode('; ', $model->errors() ?? []),
+                    ]);
+                    $skipped++;
+                    continue;
+                }
+
                 $imported++;
+            }
+
+            // Upsert deductions
+            $existingDeduction = $deductModel->where('employee_id', $empId)->first();
+            if ($existingDeduction) {
+                $deductModel->update($existingDeduction['id'], $deductionData);
+            } else {
+                $deductionData['employee_id'] = $empId;
+                $deductModel->insert($deductionData);
+            }
+
+            // NEW: upsert this period's payroll record with the sheet's own refund, net pay, and quincena values
+            $grossPay = $hasValidSalary ? (float) $rawSalary : ($existing['salary_rate'] ?? 0);
+
+            $payrollData = [
+                'refund_rata'       => $refundRata,
+                'gross_pay'         => $grossPay,
+                'total_deductions'  => round($grossPay - $netPay, 2),
+                'net_pay'           => $netPay,
+                'first_quincena'    => $firstQuincena,
+                'second_quincena'   => $secondQuincena,
+                'cash_paid'         => $netPay,
+                'period_of_service' => date('m/01/Y') . '-' . date('m/t/Y'),
+            ];
+
+            $existingPayroll = $payrollModel->where('employee_id', $empId)
+                                             ->where('payroll_period', $period)
+                                             ->first();
+            if ($existingPayroll) {
+                $payrollModel->update($existingPayroll['id'], $payrollData);
+            } else {
+                $payrollData['employee_id']    = $empId;
+                $payrollData['payroll_period'] = $period;
+                $payrollModel->insert($payrollData);
             }
         }
     }
 
-    return redirect()->to('/employee')->with('success', "Import complete: {$imported} added, {$updated} updated.");
+    $message = "Import complete: {$imported} added, {$updated} updated.";
+    if ($skipped > 0) {
+        $message .= " {$skipped} row(s) skipped due to validation errors — check logs.";
+    }
+
+    return redirect()->to('/employee')->with('success', $message);
 }
 }
