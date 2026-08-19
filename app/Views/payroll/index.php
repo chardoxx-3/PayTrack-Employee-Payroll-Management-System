@@ -1,6 +1,12 @@
 <?= $this->extend('layout/main') ?>
 
 <?= $this->section('content') ?>
+<style>
+.payroll-table th,
+.payroll-table td {
+    border: 1px solid #dee2e6 !important;
+}
+</style>
 <?php
 function peso($value) {
     return $value > 0 ? '₱' . number_format($value, 2) : '';
@@ -39,7 +45,7 @@ function peso($value) {
     </div>
 
 <div class="table-responsive">
-        <table class="table table-hover bg-white rounded shadow-sm align-middle">
+        <table class="table table-hover bg-white rounded shadow-sm align-middle payroll-table">
 <thead class="bg-light text-muted small fw-bold">
     <tr>
         <th rowspan="2" class="text-center" style="vertical-align: middle; width: 40px;">NO.</th>
