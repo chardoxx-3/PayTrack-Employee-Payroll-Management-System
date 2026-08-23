@@ -113,7 +113,25 @@ function peso($value) {
             </tr>
         </thead>
         <tbody>
-            <?php $no = 1; foreach ($records as $r): ?>
+            <?php
+            $no = 1;
+            $totalFirstQ = 0;
+            $totalSecondQ = 0;
+            $totalSalaryRate = 0;
+            $totalRefund = 0;
+            $totalGsisPremium = 0;
+            $totalGsisPolicy = 0;
+            $totalGsisOther = 0;
+            $totalPagibigPremium = 0;
+            $totalPagibigLoan = 0;
+            $totalPhic = 0;
+            $totalBankLbp = 0;
+            $totalBankMcc = 0;
+            $totalBank1stvb = 0;
+            $totalWithholdingTax = 0;
+            $totalNetPay = 0;
+            foreach ($records as $r):
+            ?>
             <?php
                 $totalDeductions = ($r['gsis_premium'] ?? 0) + ($r['gsis_policy'] ?? 0) + ($r['gsis_other'] ?? 0)
                                  + ($r['pagibig_premium'] ?? 0) + ($r['pagibig_loan'] ?? 0)
@@ -123,6 +141,21 @@ function peso($value) {
                 $netPay  = $r['net_pay'] ?? (($r['salary_rate'] ?? 0) - $totalDeductions);
                 $firstQ  = $r['first_quincena'] ?? round($netPay / 2, 2);
                 $secondQ = $r['second_quincena'] ?? round($netPay - $firstQ, 2);
+                $totalFirstQ += $firstQ;
+                $totalSecondQ += $secondQ;
+                $totalSalaryRate += $r['salary_rate'] ?? 0;
+                $totalRefund += $r['refund_rata'] ?? 0;
+                $totalGsisPremium += $r['gsis_premium'] ?? 0;
+                $totalGsisPolicy += $r['gsis_policy'] ?? 0;
+                $totalGsisOther += $r['gsis_other'] ?? 0;
+                $totalPagibigPremium += $r['pagibig_premium'] ?? 0;
+                $totalPagibigLoan += $r['pagibig_loan'] ?? 0;
+                $totalPhic += $r['phic'] ?? 0;
+                $totalBankLbp += $r['bank_lbp'] ?? 0;
+                $totalBankMcc += $r['bank_mcc'] ?? 0;
+                $totalBank1stvb += $r['bank_1stvb'] ?? 0;
+                $totalWithholdingTax += $r['withholding_tax'] ?? 0;
+                $totalNetPay += $netPay;
             ?>
     <tr class="border-bottom">
         <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
@@ -163,6 +196,35 @@ function peso($value) {
             <?php if (empty($records)): ?>
             <tr><td colspan="19" class="text-center text-muted py-4">No employees found.</td></tr>
             <?php endif; ?>
+
+            <tr class="small">
+                <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
+                <td class="text-muted border-start fw-bold">₱<?= number_format($totalFirstQ, 2) ?></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr class="small">
+                <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
+                <td class="text-muted border-start fw-bold">₱<?= number_format($totalSecondQ, 2) ?></td>
+                <td colspan="2"></td>
+            </tr>
+            <tr class="fw-bold">
+                <td colspan="3" class="text-center">TOTAL</td>
+                <td class="text-end"><?= peso($totalSalaryRate) ?></td>
+                <td class="text-end border-start"><?= peso($totalRefund) ?></td>
+                <td class="text-end border-start"><?= peso($totalGsisPremium) ?></td>
+                <td class="text-end"><?= peso($totalGsisPolicy) ?></td>
+                <td class="text-end"><?= peso($totalGsisOther) ?></td>
+                <td class="text-end border-start"><?= peso($totalPagibigPremium) ?></td>
+                <td class="text-end"><?= peso($totalPagibigLoan) ?></td>
+                <td class="text-end border-start"><?= peso($totalPhic) ?></td>
+                <td class="text-end border-start"><?= peso($totalBankLbp) ?></td>
+                <td class="text-end"><?= peso($totalBankMcc) ?></td>
+                <td class="text-end"><?= peso($totalBank1stvb) ?></td>
+                <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
+                <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
+                <td class="text-end border-start"><?= peso($totalFirstQ + $totalSecondQ) ?></td>
+                <td colspan="2"></td>
+            </tr>
         </tbody>
     </table>
 </div>
