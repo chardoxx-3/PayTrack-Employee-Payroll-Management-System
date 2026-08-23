@@ -199,12 +199,12 @@ function peso($value) {
     <?php endif; ?>
 
     <tr class="small">
-        <td colspan="16" class="text-end fw-bold">1st Quincena Total:</td>
+        <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
         <td class="text-muted border-start fw-bold">₱<?= number_format($totalFirstQ, 2) ?></td>
         <td colspan="2"></td>
     </tr>
     <tr class="small">
-        <td colspan="16" class="text-end fw-bold">2nd Quincena Total:</td>
+        <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
         <td class="text-muted border-start fw-bold">₱<?= number_format($totalSecondQ, 2) ?></td>
         <td colspan="2"></td>
     </tr>
@@ -223,7 +223,7 @@ function peso($value) {
         <td class="text-end"><?= peso($totalBank1stvb) ?></td>
         <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
         <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
-        <td class="text-end border-start">1st: <?= peso($totalFirstQ) ?><br>2nd: <?= peso($totalSecondQ) ?></td>
+        <td class="text-end border-start small"><?= peso($totalFirstQ + $totalSecondQ) ?></td>
         <td colspan="2"></td>
     </tr>
     </tbody>
