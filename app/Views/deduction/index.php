@@ -7,32 +7,44 @@ function peso($value) {
 }
 ?>
 <style>
+.deduction-table thead th {
+    background-color: #e8f5e9 !important;
+    color: #1e293b !important;
+}
+
 .deduction-table th,
 .deduction-table td {
     border: 1px solid #dee2e6 !important;
 }
 
+.deduction-table tbody tr:hover {
+    background-color: #f5faf6 !important;
+}
+
 .row-selected {
-    background-color: #0d5c4e !important;
+    background-color: #d4edda !important;
+    border-left: 3px solid #0d5c4e !important;
 }
 
 .row-selected td {
-    background-color: #0d5c4e !important;
-    color: #ffffff !important;
+    background-color: #d4edda !important;
+    color: #1e293b !important;
 }
 
 .row-selected td small,
 .row-selected td .text-muted {
-    color: #d9e8e4 !important;
+    color: #4a635f !important;
 }
 
 .row-selected td .badge {
     color: #ffffff !important;
-    background-color: rgba(255, 255, 255, 0.15) !important;
+    background-color: rgba(13, 92, 78, 0.85) !important;
 }
 
 .row-selected td .btn {
     color: #ffffff !important;
+    background-color: #0d5c4e !important;
+    border-color: #0d5c4e !important;
 }
 </style>
 <div class="container-fluid py-4">
@@ -72,7 +84,7 @@ function peso($value) {
 
 <div class="table-responsive">
     <table class="table table-hover bg-white rounded shadow-sm align-middle deduction-table">
-        <thead class="bg-light text-muted small fw-bold">
+        <thead class="text-muted small fw-bold">
             <tr>
                 <th rowspan="2" class="text-center" style="vertical-align: middle; width: 40px;">NO.</th>
                 <th class="ps-4" rowspan="2" style="vertical-align: middle;">EMPLOYEE</th>
@@ -184,12 +196,6 @@ function deselectRow(row) {
     }
     if (selectedRow === row) selectedRow = null;
 }
-
-    function deselectRow(row) {
-        row.classList.remove('row-selected');
-        row.setAttribute('aria-selected', 'false');
-        if (selectedRow === row) selectedRow = null;
-    }
 
     document.querySelectorAll('.deduction-table tbody td[rowspan]').forEach(function(noCell) {
         noCell.style.cursor = 'pointer';

@@ -16,6 +16,21 @@
     </div>
 </div>
         <div class="card-body">
+            <style>
+            .employee-table thead th {
+                background-color: #e8f5e9 !important;
+                color: #1e293b !important;
+            }
+
+            .employee-table tbody tr:hover {
+                background-color: #f5faf6 !important;
+            }
+
+            .employee-table .row-selected {
+                background-color: #d4edda !important;
+                border-left: 3px solid #0d5c4e !important;
+            }
+            </style>
             <!-- Filter Section -->
             <form action="/employee" method="get" class="row g-2 mb-4">
                 <div class="col-md-4">
@@ -32,8 +47,8 @@
             </form>
 
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
-<thead class="table-light text-muted small">
+                <table class="table table-hover align-middle employee-table">
+                <thead class="text-muted small fw-bold">
     <tr>
         <th>EMPLOYEE ID</th>
         <th>FULL NAME</th>
