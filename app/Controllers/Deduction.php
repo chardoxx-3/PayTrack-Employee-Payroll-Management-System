@@ -140,6 +140,7 @@ public function update()
                         deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
                         deductions.pagibig_premium, deductions.pagibig_loan,
                         deductions.phic, deductions.withholding_tax,
+                        deductions.loans, deductions.government_cont, deductions.other_deduct,
                         deductions.bank_lbp, deductions.bank_mcc, deductions.bank_1stvb,
                         payroll_records.id as payroll_id, payroll_records.refund_rata,
                         payroll_records.net_pay, payroll_records.first_quincena, payroll_records.second_quincena')

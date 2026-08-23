@@ -323,11 +323,25 @@ private function importRataOnlySheet(
     int $nextNumber,
     string $period
 ): array {
-    // Locate the RATA and NET PAY columns by header text rather than a fixed
+    // Locate every column we care about by header text rather than a fixed
     // index - these RATA-only sheets don't share one consistent layout
-    // (compare "rata" vs "VICE-SB rata"), so hardcoded indices break silently.
+    // (compare "rata" vs "VICE-SB rata": every column after NAME/DESIGNATION
+    // is shifted by one), so hardcoded indices break silently.
     $rataCol   = $this->findHeaderColumn($rows, ['rata']);
-    $netPayCol = $this->findHeaderColumn($rows, ['net pay']);
+    $netPayCol = $this->findHeaderColumn($rows, ['netpay']);
+
+    // Deduction sub-columns. Each group header ("GSIS", "PAG-IBIG") sits
+    // directly above its first amount column on both sheet layouts, and
+    // "LBP"/"MCC"/"1stVB"/"PHIC" are unique single-column labels - so a
+    // normalized (lowercase, punctuation-stripped) text match is reliable
+    // even though the numeric index isn't.
+    $gsisCol    = $this->findHeaderColumn($rows, ['gsis']);
+    $pagibigCol = $this->findHeaderColumn($rows, ['pagibig']);
+    $phicCol    = $this->findHeaderColumn($rows, ['phic']);
+    $lbpCol     = $this->findHeaderColumn($rows, ['lbp']);
+    $mccCol     = $this->findHeaderColumn($rows, ['mcc']);
+    $vbCol      = $this->findHeaderColumn($rows, ['1stvb']);
+    $taxCol     = $this->findHeaderColumn($rows, ['birwttax', 'birtax']);
 
     if ($rataCol === null) {
         // Sheet layout didn't match anything we recognize - nothing to do.
@@ -370,10 +384,32 @@ private function importRataOnlySheet(
             ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $netPayCol)
             : null;
 
-        // If a NET PAY figure exists and differs from the RATA amount, the
-        // gap is a real deduction taken from that voucher - don't discard it.
-        $totalDeductions = ($netPay !== null) ? round($rataAmount - $netPay, 2) : 0;
-        $netPay = $netPay ?? $rataAmount;
+        // Pull each deduction sub-column found in the header, so amounts
+        // like JAJALLA's 1stVB refund or GASLANG's MCC deduction land in
+        // the same fields the Payroll/Deduction pages actually display,
+        // not a catch-all bucket those pages don't show.
+        $deductionData = [
+            'gsis_premium'    => $gsisCol    !== null ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $gsisCol)    : 0,
+            'pagibig_premium' => $pagibigCol !== null ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $pagibigCol) : 0,
+            'phic'            => $phicCol    !== null ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $phicCol)    : 0,
+            'bank_lbp'        => $lbpCol     !== null ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $lbpCol)     : 0,
+            'bank_mcc'        => $mccCol     !== null ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $mccCol)     : 0,
+            'bank_1stvb'      => $vbCol      !== null ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $vbCol)      : 0,
+            'withholding_tax' => $taxCol     !== null ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $taxCol)     : 0,
+        ];
+
+        $mappedTotal = array_sum($deductionData);
+
+        // If a NET PAY figure exists, trust it for net pay. If the mapped
+        // deduction fields don't fully account for the rata-to-netpay gap
+        // (a column format we didn't recognize), keep the remainder visible
+        // as "other_deduct" instead of silently losing it.
+        $totalDeductions = ($netPay !== null) ? round($rataAmount - $netPay, 2) : $mappedTotal;
+        $netPay = $netPay ?? round($rataAmount - $mappedTotal, 2);
+        $unmapped = round($totalDeductions - $mappedTotal, 2);
+        if ($unmapped != 0) {
+            $deductionData['other_deduct'] = $unmapped;
+        }
 
         $existing = $model->where('office_id', $officeId)
                            ->where('full_name', $fullName)
@@ -408,14 +444,8 @@ private function importRataOnlySheet(
             $imported++;
         }
 
-        // Record the deduction as a lump sum on this voucher. These sheets'
-        // deduction columns (GSIS/PAG-IBIG/bank refunds) don't sit at fixed,
-        // consistent indices across sheets, so rather than mis-map them we
-        // keep the true net pay accurate and surface the gap here for the
-        // deduction screen to review/break down manually.
-        if ($totalDeductions != 0) {
+        if ($mappedTotal != 0 || $unmapped != 0) {
             $existingDeduction = $deductModel->where('employee_id', $empId)->first();
-            $deductionData = ['other_deduct' => $totalDeductions];
             if ($existingDeduction) {
                 $deductModel->update($existingDeduction['id'], $deductionData);
             } else {
@@ -456,7 +486,10 @@ private function findHeaderColumn(array $rows, array $labels): ?int
 {
     for ($r = 0; $r <= 11 && $r < count($rows); $r++) {
         foreach ($rows[$r] as $c => $val) {
-            $cell = strtolower(trim((string) $val));
+            // Normalize: lowercase, strip spaces/punctuation, so "PAG-IBIG",
+            // "Pag-Ibig", "1stVB" etc. all compare equal regardless of
+            // formatting differences between sheets.
+            $cell = preg_replace('/[^a-z0-9]/', '', strtolower(trim((string) $val)));
             if (in_array($cell, $labels, true)) {
                 return $c;
             }
