@@ -96,10 +96,9 @@ function peso($value) {
                 <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">PHIC</th>
                 <th colspan="3" class="text-center border-start">BANKS / COOP'S</th>
                 <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">BIR TAX</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">NET PAY</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">QUINCENA</th>
-                <th rowspan="2" class="text-center" style="vertical-align: middle;">STATUS</th>
-                <th rowspan="2" class="text-end pe-4" style="vertical-align: middle;">ACTION</th>
+        <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">NET PAY</th>
+        <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">QUINCENA</th>
+        <th rowspan="2" class="text-end pe-4" style="vertical-align: middle;">ACTION</th>
             </tr>
             <tr>
                 <th class="text-center small border-start">Premium</th>
@@ -178,13 +177,6 @@ function peso($value) {
                 <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['withholding_tax'] ?? 0) ?></td>
                 <td rowspan="2" class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
                 <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?></td>
-                <td rowspan="2" class="text-center">
-                    <?php if (!empty($r['payroll_id'])): ?>
-                        <span class="badge bg-soft-success text-success rounded-pill">Processed</span>
-                    <?php else: ?>
-                        <span class="badge bg-soft-warning text-warning rounded-pill">Pending</span>
-                    <?php endif; ?>
-                </td>
                 <td rowspan="2" class="text-end pe-4 text-nowrap">
                     <a href="/deduction/manage/<?= $r['id'] ?>" class="btn btn-primary btn-sm px-3 rounded-pill">Edit</a>
                 </td>
@@ -194,18 +186,18 @@ function peso($value) {
             </tr>
             <?php endforeach; ?>
             <?php if (empty($records)): ?>
-            <tr><td colspan="19" class="text-center text-muted py-4">No employees found.</td></tr>
+            <tr><td colspan="18" class="text-center text-muted py-4">No employees found.</td></tr>
             <?php endif; ?>
 
             <tr class="small">
-                <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
+                <td colspan="15" class="text-end fw-bold">1st Quincena:</td>
                 <td class="text-muted border-start fw-bold">₱<?= number_format($totalFirstQ, 2) ?></td>
-                <td colspan="2"></td>
+                <td colspan="1"></td>
             </tr>
             <tr class="small">
-                <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
+                <td colspan="15" class="text-end fw-bold">2nd Quincena:</td>
                 <td class="text-muted border-start fw-bold">₱<?= number_format($totalSecondQ, 2) ?></td>
-                <td colspan="2"></td>
+                <td colspan="1"></td>
             </tr>
             <tr class="fw-bold">
                 <td colspan="3" class="text-center">TOTAL</td>
@@ -223,7 +215,7 @@ function peso($value) {
                 <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
                 <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
                 <td class="text-end border-start"><?= peso($totalFirstQ + $totalSecondQ) ?></td>
-                <td colspan="2"></td>
+                <td colspan="1"></td>
             </tr>
         </tbody>
     </table>
