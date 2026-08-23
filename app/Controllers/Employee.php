@@ -194,7 +194,7 @@ public function import()
             }
 
             $refundRata = 0;
-            for ($r = $i + 1; $r < $blockEnd; $r++) {
+            for ($r = $i; $r < $blockEnd; $r++) {
                 $rawRefund = trim((string) ($rows[$r][5] ?? ''));
                 if ($rawRefund !== '' && $rawRefund !== '-') {
                     $refundRata = $toFloat($rawRefund);
@@ -323,25 +323,23 @@ private function importRataOnlySheet(
     int $nextNumber,
     string $period
 ): array {
-    $rataCol = null;
-    for ($r = 0; $r <= 11 && $r < count($rows); $r++) {
-        foreach ($rows[$r] as $c => $val) {
-            if (strtolower(trim((string) $val)) === 'rata') {
-                $rataCol = $c;
-                break 2;
-            }
-        }
-    }
+    // Locate the RATA and NET PAY columns by header text rather than a fixed
+    // index - these RATA-only sheets don't share one consistent layout
+    // (compare "rata" vs "VICE-SB rata"), so hardcoded indices break silently.
+    $rataCol   = $this->findHeaderColumn($rows, ['rata']);
+    $netPayCol = $this->findHeaderColumn($rows, ['net pay']);
 
     if ($rataCol === null) {
         // Sheet layout didn't match anything we recognize - nothing to do.
         return ['imported' => 0, 'updated' => 0, 'nextNumber' => $nextNumber];
     }
 
+    $deductModel = new \App\Models\DeductionModel();
+
     $imported = 0;
     $updated  = 0;
 
-    foreach ($rows as $row) {
+    foreach ($rows as $i => $row) {
         $no          = $row[0] ?? null;
         $fullName    = trim($row[1] ?? '');
         $designation = trim($row[2] ?? '');
@@ -350,11 +348,32 @@ private function importRataOnlySheet(
             continue;
         }
 
-        $rawRata = $row[$rataCol] ?? 0;
-        if (is_string($rawRata)) {
-            $rawRata = str_replace([',', ' '], '', $rawRata);
+        // Find the end of this employee's block (next numbered row or the
+        // sheet's "Total" row), same approach as the main sheet parser -
+        // the RATA/NET PAY amount isn't always on the name row itself,
+        // sometimes it's on a continuation row underneath.
+        $blockEnd = $i + 1;
+        while (isset($rows[$blockEnd])) {
+            $blockNo   = $rows[$blockEnd][0] ?? null;
+            $blockName = trim($rows[$blockEnd][1] ?? '');
+            if (is_numeric($blockNo) && $blockName !== '' && !is_numeric($blockName)) {
+                break;
+            }
+            if (strcasecmp(trim((string) $blockNo), 'Total') === 0) {
+                break;
+            }
+            $blockEnd++;
         }
-        $rataAmount = is_numeric($rawRata) ? (float) $rawRata : 0;
+
+        $rataAmount = $this->firstNonBlankInColumn($rows, $i, $blockEnd, $rataCol);
+        $netPay     = $netPayCol !== null
+            ? $this->firstNonBlankInColumn($rows, $i, $blockEnd, $netPayCol)
+            : null;
+
+        // If a NET PAY figure exists and differs from the RATA amount, the
+        // gap is a real deduction taken from that voucher - don't discard it.
+        $totalDeductions = ($netPay !== null) ? round($rataAmount - $netPay, 2) : 0;
+        $netPay = $netPay ?? $rataAmount;
 
         $existing = $model->where('office_id', $officeId)
                            ->where('full_name', $fullName)
@@ -389,12 +408,28 @@ private function importRataOnlySheet(
             $imported++;
         }
 
+        // Record the deduction as a lump sum on this voucher. These sheets'
+        // deduction columns (GSIS/PAG-IBIG/bank refunds) don't sit at fixed,
+        // consistent indices across sheets, so rather than mis-map them we
+        // keep the true net pay accurate and surface the gap here for the
+        // deduction screen to review/break down manually.
+        if ($totalDeductions != 0) {
+            $existingDeduction = $deductModel->where('employee_id', $empId)->first();
+            $deductionData = ['other_deduct' => $totalDeductions];
+            if ($existingDeduction) {
+                $deductModel->update($existingDeduction['id'], $deductionData);
+            } else {
+                $deductionData['employee_id'] = $empId;
+                $deductModel->insert($deductionData);
+            }
+        }
+
         $payrollData = [
             'refund_rata'       => $rataAmount,
             'gross_pay'         => $rataAmount,
-            'total_deductions'  => 0,
-            'net_pay'           => $rataAmount,
-            'cash_paid'         => $rataAmount,
+            'total_deductions'  => $totalDeductions,
+            'net_pay'           => $netPay,
+            'cash_paid'         => $netPay,
             'period_of_service' => date('m/01/Y') . '-' . date('m/t/Y'),
         ];
 
@@ -411,5 +446,40 @@ private function importRataOnlySheet(
     }
 
     return ['imported' => $imported, 'updated' => $updated, 'nextNumber' => $nextNumber];
+}
+
+/**
+ * Scan the first ~12 rows of a sheet for a header cell matching one of the
+ * given labels (case-insensitive) and return its column index.
+ */
+private function findHeaderColumn(array $rows, array $labels): ?int
+{
+    for ($r = 0; $r <= 11 && $r < count($rows); $r++) {
+        foreach ($rows[$r] as $c => $val) {
+            $cell = strtolower(trim((string) $val));
+            if (in_array($cell, $labels, true)) {
+                return $c;
+            }
+        }
+    }
+    return null;
+}
+
+/**
+ * Return the first numeric, non-blank value in the given column across a
+ * row range (an employee's block), or 0 if none found.
+ */
+private function firstNonBlankInColumn(array $rows, int $start, int $end, int $col): float
+{
+    for ($r = $start; $r < $end; $r++) {
+        $raw = trim((string) ($rows[$r][$col] ?? ''));
+        if ($raw !== '' && $raw !== '-') {
+            $raw = str_replace([',', ' '], '', $raw);
+            if (is_numeric($raw)) {
+                return (float) $raw;
+            }
+        }
+    }
+    return 0.0;
 }
 }
