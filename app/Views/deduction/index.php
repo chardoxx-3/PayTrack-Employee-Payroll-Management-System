@@ -157,33 +157,30 @@ function peso($value) {
                 $totalNetPay += $netPay;
             ?>
     <tr class="border-bottom">
-        <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
-                <td class="ps-4" rowspan="2">
+        <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
+                <td class="ps-4">
 <div class="fw-bold"><?= esc($r['full_name']) ?></div>
 <small class="text-muted"><?= esc($r['employee_id']) ?></small>
                 </td>
-                <td rowspan="2"><?= esc($r['position']) ?></td>
-                <td rowspan="2"><?= peso($r['salary_rate'] ?? 0) ?></td>
-                <td rowspan="2" class="text-muted small text-end border-start"><?= peso($r['refund_rata'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['gsis_premium'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end"><?= peso($r['gsis_policy'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end"><?= peso($r['gsis_other'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['pagibig_premium'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end"><?= peso($r['pagibig_loan'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['phic'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['bank_lbp'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end"><?= peso($r['bank_mcc'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end"><?= peso($r['bank_1stvb'] ?? 0) ?></td>
-                <td rowspan="2" class="text-danger small text-end border-start"><?= peso($r['withholding_tax'] ?? 0) ?></td>
-                <td rowspan="2" class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
-                <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?></td>
-                <td rowspan="2" class="text-end pe-4 text-nowrap">
+                <td><?= esc($r['position']) ?></td>
+                <td><?= peso($r['salary_rate'] ?? 0) ?></td>
+                <td class="text-muted small text-end border-start"><?= peso($r['refund_rata'] ?? 0) ?></td>
+                <td class="text-danger small text-end border-start"><?= peso($r['gsis_premium'] ?? 0) ?></td>
+                <td class="text-danger small text-end"><?= peso($r['gsis_policy'] ?? 0) ?></td>
+                <td class="text-danger small text-end"><?= peso($r['gsis_other'] ?? 0) ?></td>
+                <td class="text-danger small text-end border-start"><?= peso($r['pagibig_premium'] ?? 0) ?></td>
+                <td class="text-danger small text-end"><?= peso($r['pagibig_loan'] ?? 0) ?></td>
+                <td class="text-danger small text-end border-start"><?= peso($r['phic'] ?? 0) ?></td>
+                <td class="text-danger small text-end border-start"><?= peso($r['bank_lbp'] ?? 0) ?></td>
+                <td class="text-danger small text-end"><?= peso($r['bank_mcc'] ?? 0) ?></td>
+                <td class="text-danger small text-end"><?= peso($r['bank_1stvb'] ?? 0) ?></td>
+                <td class="text-danger small text-end border-start"><?= peso($r['withholding_tax'] ?? 0) ?></td>
+                <td class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
+                <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?><br>2nd Q: <?= peso($secondQ) ?></td>
+                <td class="text-end pe-4 text-nowrap">
                     <a href="/deduction/manage/<?= $r['id'] ?>" class="btn btn-primary btn-sm px-3 rounded-pill">Edit</a>
                 </td>
-            </tr>
-            <tr class="border-bottom">
-                <td class="text-muted small border-start">2nd Q: <?= peso($secondQ) ?></td>
-            </tr>
+    </tr>
             <?php endforeach; ?>
             <?php if (empty($records)): ?>
             <tr><td colspan="18" class="text-center text-muted py-4">No employees found.</td></tr>
@@ -230,50 +227,43 @@ function selectRow(row) {
     if (selectedRow && selectedRow !== row) {
         selectedRow.classList.remove('row-selected');
         selectedRow.setAttribute('aria-selected', 'false');
-        if (selectedRow.nextElementSibling) {
-            selectedRow.nextElementSibling.classList.remove('row-selected');
-        }
     }
     row.classList.add('row-selected');
     row.setAttribute('aria-selected', 'true');
-    if (row.nextElementSibling) {
-        row.nextElementSibling.classList.add('row-selected');
-    }
     selectedRow = row;
 }
 
 function deselectRow(row) {
     row.classList.remove('row-selected');
     row.setAttribute('aria-selected', 'false');
-    if (row.nextElementSibling) {
-        row.nextElementSibling.classList.remove('row-selected');
-    }
     if (selectedRow === row) selectedRow = null;
 }
 
-    document.querySelectorAll('.deduction-table tbody td[rowspan]').forEach(function(noCell) {
-        noCell.style.cursor = 'pointer';
-        noCell.setAttribute('tabindex', '0');
-        noCell.setAttribute('role', 'button');
-        noCell.setAttribute('aria-label', 'Select row ' + noCell.textContent.trim());
+    document.querySelectorAll('.deduction-table tbody tr').forEach(function(row, index) {
+        const firstCell = row.querySelector('td');
+        if (!firstCell) return;
+        firstCell.style.cursor = 'pointer';
+        firstCell.setAttribute('tabindex', '0');
+        firstCell.setAttribute('role', 'button');
+        firstCell.setAttribute('aria-label', 'Select row ' + (index + 1));
 
-        noCell.addEventListener('click', function(e) {
-            const row = this.closest('tr');
-            if (row.classList.contains('row-selected')) {
-                deselectRow(row);
+        firstCell.addEventListener('click', function(e) {
+            const currentRow = this.closest('tr');
+            if (currentRow.classList.contains('row-selected')) {
+                deselectRow(currentRow);
             } else {
-                selectRow(row);
+                selectRow(currentRow);
             }
         });
 
-        noCell.addEventListener('keydown', function(e) {
+        firstCell.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                const row = this.closest('tr');
-                if (row.classList.contains('row-selected')) {
-                    deselectRow(row);
+                const currentRow = this.closest('tr');
+                if (currentRow.classList.contains('row-selected')) {
+                    deselectRow(currentRow);
                 } else {
-                    selectRow(row);
+                    selectRow(currentRow);
                 }
             }
         });

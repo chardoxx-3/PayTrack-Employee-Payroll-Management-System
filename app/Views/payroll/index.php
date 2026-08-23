@@ -153,27 +153,27 @@ function peso($value) {
         $totalNetPay += $netPay;
     ?>
     <tr class="border-bottom">
-        <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
-        <td class="ps-4" rowspan="2">
+        <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
+        <td class="ps-4">
             <div class="fw-bold"><?= $emp['full_name'] ?></div>
             <small class="text-muted"><?= $emp['employee_id'] ?></small>
         </td>
-        <td rowspan="2"><?= $emp['position'] ?></td>
-        <td rowspan="2"><?= peso($emp['salary_rate']) ?></td>
-        <td rowspan="2" class="text-muted small text-end border-start"><?= peso($emp['refund_rata'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['gsis_premium'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['gsis_policy'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['gsis_other'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['pagibig_premium'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['pagibig_loan'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['phic'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['bank_lbp'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['bank_mcc'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end"><?= peso($emp['bank_1stvb'] ?? 0) ?></td>
-        <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
-        <td rowspan="2" class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
-        <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?></td>
-        <td rowspan="2" class="text-center" style="width: 50px;">
+        <td><?= $emp['position'] ?></td>
+        <td><?= peso($emp['salary_rate']) ?></td>
+        <td class="text-muted small text-end border-start"><?= peso($emp['refund_rata'] ?? 0) ?></td>
+        <td class="text-danger small text-end border-start"><?= peso($emp['gsis_premium'] ?? 0) ?></td>
+        <td class="text-danger small text-end"><?= peso($emp['gsis_policy'] ?? 0) ?></td>
+        <td class="text-danger small text-end"><?= peso($emp['gsis_other'] ?? 0) ?></td>
+        <td class="text-danger small text-end border-start"><?= peso($emp['pagibig_premium'] ?? 0) ?></td>
+        <td class="text-danger small text-end"><?= peso($emp['pagibig_loan'] ?? 0) ?></td>
+        <td class="text-danger small text-end border-start"><?= peso($emp['phic'] ?? 0) ?></td>
+        <td class="text-danger small text-end border-start"><?= peso($emp['bank_lbp'] ?? 0) ?></td>
+        <td class="text-danger small text-end"><?= peso($emp['bank_mcc'] ?? 0) ?></td>
+        <td class="text-danger small text-end"><?= peso($emp['bank_1stvb'] ?? 0) ?></td>
+        <td class="text-danger small text-end border-start"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
+        <td class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
+        <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?><br>2nd Q: <?= peso($secondQ) ?></td>
+        <td class="text-center" style="width: 50px;">
             <div class="dropdown">
                 <button class="btn btn-link text-dark p-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 36px; min-height: 36px;">
                     <i class="fas fa-ellipsis-vertical fa-lg"></i>
@@ -198,9 +198,6 @@ function peso($value) {
                 </ul>
             </div>
         </td>
-    </tr>
-    <tr class="border-bottom">
-        <td class="text-muted small border-start">2nd Q: <?= peso($secondQ) ?></td>
     </tr>
     <?php endforeach; ?>
     <?php if (empty($employees)): ?>
@@ -328,50 +325,43 @@ function selectRow(row) {
     if (selectedRow && selectedRow !== row) {
         selectedRow.classList.remove('row-selected');
         selectedRow.setAttribute('aria-selected', 'false');
-        if (selectedRow.nextElementSibling) {
-            selectedRow.nextElementSibling.classList.remove('row-selected');
-        }
     }
     row.classList.add('row-selected');
     row.setAttribute('aria-selected', 'true');
-    if (row.nextElementSibling) {
-        row.nextElementSibling.classList.add('row-selected');
-    }
     selectedRow = row;
 }
 
 function deselectRow(row) {
     row.classList.remove('row-selected');
     row.setAttribute('aria-selected', 'false');
-    if (row.nextElementSibling) {
-        row.nextElementSibling.classList.remove('row-selected');
-    }
     if (selectedRow === row) selectedRow = null;
 }
 
-    document.querySelectorAll('.payroll-table tbody td[rowspan]').forEach(function(noCell) {
-        noCell.style.cursor = 'pointer';
-        noCell.setAttribute('tabindex', '0');
-        noCell.setAttribute('role', 'button');
-        noCell.setAttribute('aria-label', 'Select row ' + noCell.textContent.trim());
+    document.querySelectorAll('.payroll-table tbody tr').forEach(function(row, index) {
+        const firstCell = row.querySelector('td');
+        if (!firstCell) return;
+        firstCell.style.cursor = 'pointer';
+        firstCell.setAttribute('tabindex', '0');
+        firstCell.setAttribute('role', 'button');
+        firstCell.setAttribute('aria-label', 'Select row ' + (index + 1));
 
-        noCell.addEventListener('click', function(e) {
-            const row = this.closest('tr');
-            if (row.classList.contains('row-selected')) {
-                deselectRow(row);
+        firstCell.addEventListener('click', function(e) {
+            const currentRow = this.closest('tr');
+            if (currentRow.classList.contains('row-selected')) {
+                deselectRow(currentRow);
             } else {
-                selectRow(row);
+                selectRow(currentRow);
             }
         });
 
-        noCell.addEventListener('keydown', function(e) {
+        firstCell.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                const row = this.closest('tr');
-                if (row.classList.contains('row-selected')) {
-                    deselectRow(row);
+                const currentRow = this.closest('tr');
+                if (currentRow.classList.contains('row-selected')) {
+                    deselectRow(currentRow);
                 } else {
-                    selectRow(row);
+                    selectRow(currentRow);
                 }
             }
         });
