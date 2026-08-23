@@ -198,14 +198,14 @@ function peso($value) {
         <tr><td colspan="19" class="text-center text-muted py-4">No employees found.</td></tr>
     <?php endif; ?>
 
-    <tr>
+    <tr class="small">
         <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
-        <td class="text-muted small border-start fw-bold"><?= peso($totalFirstQ) ?></td>
+        <td class="text-muted border-start fw-bold"><?= peso($totalNetPay) ?></td>
         <td colspan="2"></td>
     </tr>
-    <tr>
+    <tr class="small">
         <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
-        <td class="text-muted small border-start fw-bold"><?= peso($totalSecondQ) ?></td>
+        <td class="text-muted border-start fw-bold"><?= peso($totalNetPay) ?></td>
         <td colspan="2"></td>
     </tr>
     <tr class="fw-bold">
