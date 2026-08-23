@@ -115,6 +115,14 @@ function peso($value) {
     $totalFirstQ = 0;
     $totalSecondQ = 0;
     $totalMonthlyRate = 0;
+    $totalRefund = 0;
+    $totalGSIS = 0;
+    $totalPagibig = 0;
+    $totalPhic = 0;
+    $totalBanks = 0;
+    $totalBir = 0;
+    $totalNetPay = 0;
+    $totalQuincena = 0;
     foreach($employees as $emp):
     ?>
     <?php
@@ -125,6 +133,14 @@ function peso($value) {
         $totalFirstQ += $firstQ;
         $totalSecondQ += $secondQ;
         $totalMonthlyRate += $emp['salary_rate'] ?? 0;
+        $totalRefund += $emp['refund_rata'] ?? 0;
+        $totalGSIS += ($emp['gsis_premium'] ?? 0) + ($emp['gsis_policy'] ?? 0) + ($emp['gsis_other'] ?? 0);
+        $totalPagibig += ($emp['pagibig_premium'] ?? 0) + ($emp['pagibig_loan'] ?? 0);
+        $totalPhic += $emp['phic'] ?? 0;
+        $totalBanks += ($emp['bank_lbp'] ?? 0) + ($emp['bank_mcc'] ?? 0) + ($emp['bank_1stvb'] ?? 0);
+        $totalBir += $emp['withholding_tax'] ?? 0;
+        $totalNetPay += $netPay;
+        $totalQuincena += $firstQ + $secondQ;
     ?>
     <tr class="border-bottom">
         <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
@@ -185,10 +201,19 @@ function peso($value) {
         <td class="text-muted small border-start fw-bold"><?= peso($totalSecondQ) ?></td>
         <td colspan="2"></td>
     </tr>
+    <tr><td colspan="19" style="padding: 6px 0;"></td></tr>
     <tr>
-        <td colspan="4" class="text-end fw-bold">Monthly Rate Total:</td>
-        <td class="fw-bold border-start"><?= peso($totalMonthlyRate) ?></td>
-        <td colspan="14"></td>
+        <td colspan="3" class="text-end fw-bold">TOTAL</td>
+        <td class="text-end fw-bold"><?= peso($totalMonthlyRate) ?></td>
+        <td class="text-end fw-bold"><?= peso($totalRefund) ?></td>
+        <td colspan="3" class="text-end fw-bold"><?= peso($totalGSIS) ?></td>
+        <td colspan="2" class="text-end fw-bold"><?= peso($totalPagibig) ?></td>
+        <td class="text-end fw-bold"><?= peso($totalPhic) ?></td>
+        <td colspan="3" class="text-end fw-bold"><?= peso($totalBanks) ?></td>
+        <td class="text-end fw-bold"><?= peso($totalBir) ?></td>
+        <td class="text-end fw-bold"><?= peso($totalNetPay) ?></td>
+        <td class="text-end fw-bold"><?= peso($totalQuincena) ?></td>
+        <td colspan="2"></td>
     </tr>
     </tbody>
         </table>
