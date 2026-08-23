@@ -114,15 +114,19 @@ function peso($value) {
     $no = 1;
     $totalFirstQ = 0;
     $totalSecondQ = 0;
-    $totalMonthlyRate = 0;
+    $totalSalaryRate = 0;
     $totalRefund = 0;
-    $totalGSIS = 0;
-    $totalPagibig = 0;
+    $totalGsisPremium = 0;
+    $totalGsisPolicy = 0;
+    $totalGsisOther = 0;
+    $totalPagibigPremium = 0;
+    $totalPagibigLoan = 0;
     $totalPhic = 0;
-    $totalBanks = 0;
-    $totalBir = 0;
+    $totalBankLbp = 0;
+    $totalBankMcc = 0;
+    $totalBank1stvb = 0;
+    $totalWithholdingTax = 0;
     $totalNetPay = 0;
-    $totalQuincena = 0;
     foreach($employees as $emp):
     ?>
     <?php
@@ -132,15 +136,19 @@ function peso($value) {
         $secondQ = $emp['second_quincena'] ?? round($netPay - $firstQ, 2);
         $totalFirstQ += $firstQ;
         $totalSecondQ += $secondQ;
-        $totalMonthlyRate += $emp['salary_rate'] ?? 0;
+        $totalSalaryRate += $emp['salary_rate'] ?? 0;
         $totalRefund += $emp['refund_rata'] ?? 0;
-        $totalGSIS += ($emp['gsis_premium'] ?? 0) + ($emp['gsis_policy'] ?? 0) + ($emp['gsis_other'] ?? 0);
-        $totalPagibig += ($emp['pagibig_premium'] ?? 0) + ($emp['pagibig_loan'] ?? 0);
+        $totalGsisPremium += $emp['gsis_premium'] ?? 0;
+        $totalGsisPolicy += $emp['gsis_policy'] ?? 0;
+        $totalGsisOther += $emp['gsis_other'] ?? 0;
+        $totalPagibigPremium += $emp['pagibig_premium'] ?? 0;
+        $totalPagibigLoan += $emp['pagibig_loan'] ?? 0;
         $totalPhic += $emp['phic'] ?? 0;
-        $totalBanks += ($emp['bank_lbp'] ?? 0) + ($emp['bank_mcc'] ?? 0) + ($emp['bank_1stvb'] ?? 0);
-        $totalBir += $emp['withholding_tax'] ?? 0;
+        $totalBankLbp += $emp['bank_lbp'] ?? 0;
+        $totalBankMcc += $emp['bank_mcc'] ?? 0;
+        $totalBank1stvb += $emp['bank_1stvb'] ?? 0;
+        $totalWithholdingTax += $emp['withholding_tax'] ?? 0;
         $totalNetPay += $netPay;
-        $totalQuincena += $firstQ + $secondQ;
     ?>
     <tr class="border-bottom">
         <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
@@ -202,17 +210,21 @@ function peso($value) {
         <td colspan="2"></td>
     </tr>
     <tr><td colspan="19" style="padding: 6px 0;"></td></tr>
-    <tr>
-        <td colspan="3" class="text-end fw-bold">TOTAL</td>
-        <td class="text-end fw-bold"><?= peso($totalMonthlyRate) ?></td>
-        <td class="text-end fw-bold"><?= peso($totalRefund) ?></td>
-        <td colspan="3" class="text-end fw-bold"><?= peso($totalGSIS) ?></td>
-        <td colspan="2" class="text-end fw-bold"><?= peso($totalPagibig) ?></td>
-        <td class="text-end fw-bold"><?= peso($totalPhic) ?></td>
-        <td colspan="3" class="text-end fw-bold"><?= peso($totalBanks) ?></td>
-        <td class="text-end fw-bold"><?= peso($totalBir) ?></td>
-        <td class="text-end fw-bold"><?= peso($totalNetPay) ?></td>
-        <td class="text-end fw-bold"><?= peso($totalQuincena) ?></td>
+    <tr class="fw-bold">
+        <td colspan="3"></td>
+        <td class="text-end"><?= peso($totalSalaryRate) ?></td>
+        <td class="text-end border-start"><?= peso($totalRefund) ?></td>
+        <td class="text-end border-start"><?= peso($totalGsisPremium) ?></td>
+        <td class="text-end"><?= peso($totalGsisPolicy) ?></td>
+        <td class="text-end"><?= peso($totalGsisOther) ?></td>
+        <td class="text-end border-start"><?= peso($totalPagibigPremium) ?></td>
+        <td class="text-end"><?= peso($totalPagibigLoan) ?></td>
+        <td class="text-end border-start"><?= peso($totalPhic) ?></td>
+        <td class="text-end border-start"><?= peso($totalBankLbp) ?></td>
+        <td class="text-end"><?= peso($totalBankMcc) ?></td>
+        <td class="text-end"><?= peso($totalBank1stvb) ?></td>
+        <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
+        <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
         <td colspan="2"></td>
     </tr>
     </tbody>
