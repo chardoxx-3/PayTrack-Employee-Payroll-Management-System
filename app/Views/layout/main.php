@@ -17,14 +17,17 @@
             --paper: #fffcf5;
             --paper-dim: #f7f1df;
             --line: #e7dcc0;
-            --gold-500: #c99a2e;
-            --gold-600: #b3860e;
-            --gold-700: #9c6b0e;
-            --gold-800: #7a530c;
-            --gold-900: #5c3f0f;
-            --sidebar-bg: #241d10;
-            --sidebar-bg-2: #2f2515;
+            --teal-500: #0d5c4e;
+            --teal-600: #0a4a3f;
+            --teal-700: #083d33;
+            --teal-800: #062e26;
+            --teal-900: #041f1a;
+            --teal-subtle: #e6f4f1;
+            --sidebar-bg: #0a1f1b;
+            --sidebar-bg-2: #0d2d27;
             --bg-light: #fffcf5;
+            --bs-primary: #0d5c4e;
+            --bs-primary-rgb: 13, 92, 78;
         }
 
         body { font-family: 'IBM Plex Sans', sans-serif; background-color: var(--bg-light); color: var(--ink); }
@@ -49,14 +52,14 @@
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            border: 2px solid var(--gold-500);
+            border: 2px solid var(--teal-500);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
         }
 
-        #sidebar .brand-seal i { color: var(--gold-500); font-size: 14px; }
+        #sidebar .brand-seal i { color: var(--teal-500); font-size: 14px; }
 
         #sidebar .brand-text h4 {
             font-family: 'Fraunces', serif;
@@ -67,31 +70,31 @@
             line-height: 1.1;
         }
 
-        #sidebar .brand-text h4 span { color: var(--gold-500); }
+        #sidebar .brand-text h4 span { color: var(--teal-500); }
 
         #sidebar .brand-text small {
-            color: #cbb98a;
+            color: #8fb8b0;
             font-size: 0.7rem;
             letter-spacing: 0.04em;
         }
 
         #sidebar .nav-link {
-            color: #cbb98a;
+            color: #8fb8b0;
             padding: 12px 25px;
             font-weight: 500;
             font-size: 0.92rem;
             border-left: 4px solid transparent;
         }
 
-        #sidebar .nav-link i { width: 25px; color: #a68f5c; }
+        #sidebar .nav-link i { width: 25px; color: #5f9a8f; }
 
         #sidebar .nav-link:hover, #sidebar .nav-link.active {
             color: #fffdf6;
             background: rgba(255, 253, 246, 0.06);
-            border-left-color: var(--gold-500);
+            border-left-color: var(--teal-500);
         }
 
-        #sidebar .nav-link:hover i, #sidebar .nav-link.active i { color: var(--gold-500); }
+        #sidebar .nav-link:hover i, #sidebar .nav-link.active i { color: var(--teal-500); }
 
         #sidebar hr { border-color: rgba(255, 253, 246, 0.12); }
 
@@ -114,7 +117,7 @@
         .navbar .btn-light {
             background: var(--paper-dim);
             border: 1px solid var(--line);
-            color: var(--gold-700);
+            color: var(--teal-700);
         }
 
         .navbar .btn-light:hover { background: var(--line); }
