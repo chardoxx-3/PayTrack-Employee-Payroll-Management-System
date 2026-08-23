@@ -110,12 +110,19 @@ function peso($value) {
     </tr>
 </thead>
 <tbody>
-    <?php $no = 1; foreach($employees as $emp): ?>
+    <?php
+    $no = 1;
+    $totalFirstQ = 0;
+    $totalSecondQ = 0;
+    foreach($employees as $emp):
+    ?>
     <?php
         $totalDeductions = $emp['total_deductions'] ?? 0;
         $netPay = $emp['net_pay'] ?? ($emp['salary_rate'] - $totalDeductions);
         $firstQ = $emp['first_quincena'] ?? round($netPay / 2, 2);
         $secondQ = $emp['second_quincena'] ?? round($netPay - $firstQ, 2);
+        $totalFirstQ += $firstQ;
+        $totalSecondQ += $secondQ;
     ?>
     <tr class="border-bottom">
         <td rowspan="2" class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
@@ -161,7 +168,22 @@ function peso($value) {
         <td class="text-muted small border-start">2nd Q: <?= peso($secondQ) ?></td>
     </tr>
     <?php endforeach; ?>
-</tbody>
+    <?php if (empty($employees)): ?>
+        <tr><td colspan="19" class="text-center text-muted py-4">No employees found.</td></tr>
+    <?php endif; ?>
+
+    <tr><td colspan="19" style="padding: 6px 0;"></td></tr>
+    <tr>
+        <td colspan="16" class="text-end fw-bold">1st Quincena Total:</td>
+        <td class="text-muted small border-start fw-bold"><?= peso($totalFirstQ) ?></td>
+        <td colspan="2"></td>
+    </tr>
+    <tr>
+        <td colspan="16" class="text-end fw-bold">2nd Quincena Total:</td>
+        <td class="text-muted small border-start fw-bold"><?= peso($totalSecondQ) ?></td>
+        <td colspan="2"></td>
+    </tr>
+    </tbody>
         </table>
     </div>
 </div>
