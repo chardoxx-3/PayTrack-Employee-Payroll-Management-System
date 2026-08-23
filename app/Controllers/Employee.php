@@ -162,13 +162,19 @@ public function import()
             // populated value in column 5 within that range.
             $blockEnd = $i + 1;
             while (isset($rows[$blockEnd])) {
-                $blockNo   = $rows[$blockEnd][0] ?? null;
-                $blockName = trim($rows[$blockEnd][1] ?? '');
+                $blockNo    = $rows[$blockEnd][0] ?? null;
+                $blockName  = trim($rows[$blockEnd][1] ?? '');
+                $blockLabel = trim((string) ($rows[$blockEnd][16] ?? '')); // NEW: "1st/2nd Quincena" summary label lives here
                 if (is_numeric($blockNo) && $blockName !== '' && !is_numeric($blockName)) {
                     break; // reached the next employee's row
                 }
                 if (strcasecmp(trim((string) $blockNo), 'Total') === 0) {
                     break; // reached the sheet's totals row
+                }
+                if (stripos($blockLabel, 'quincena') !== false) {
+                    break; // NEW: reached the sheet-wide "1st Quincena"/"2nd Quincena" summary row —
+                           // these sit BEFORE the "Total" row and column 0 is blank there, so without
+                           // this check the last employee's block could swallow the sheet's own totals
                 }
                 $blockEnd++;
             }
