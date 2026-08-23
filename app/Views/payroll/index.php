@@ -198,34 +198,32 @@ function peso($value) {
         <tr><td colspan="19" class="text-center text-muted py-4">No employees found.</td></tr>
     <?php endif; ?>
 
-    <tr class="fw-bold text-muted small">
-        <td colspan="3" class="text-center border-top">1ST QUINCENA</td>
-        <td colspan="12" class="border-top"></td>
-        <td class="text-end border-start border-top"><?= peso($totalFirstQ) ?></td>
-        <td colspan="2" class="border-top"></td>
+    <tr>
+        <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
+        <td class="text-muted small border-start fw-bold"><?= peso($totalFirstQ) ?></td>
+        <td colspan="2"></td>
     </tr>
-    <tr class="fw-bold text-muted small">
-        <td colspan="3" class="text-center">2ND QUINCENA</td>
-        <td colspan="12"></td>
-        <td class="text-end border-start"><?= peso($totalSecondQ) ?></td>
+    <tr>
+        <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
+        <td class="text-muted small border-start fw-bold"><?= peso($totalSecondQ) ?></td>
         <td colspan="2"></td>
     </tr>
     <tr class="fw-bold">
-        <td colspan="3" class="text-end border-start border-bottom">TOTAL</td>
-        <td class="text-end border-start border-bottom"><?= peso($totalSalaryRate) ?></td>
-        <td class="text-end border-start border-bottom"><?= peso($totalRefund) ?></td>
-        <td class="text-end border-start border-bottom"><?= peso($totalGsisPremium) ?></td>
-        <td class="text-end border-bottom"><?= peso($totalGsisPolicy) ?></td>
-        <td class="text-end border-bottom"><?= peso($totalGsisOther) ?></td>
-        <td class="text-end border-start border-bottom"><?= peso($totalPagibigPremium) ?></td>
-        <td class="text-end border-bottom"><?= peso($totalPagibigLoan) ?></td>
-        <td class="text-end border-start border-bottom"><?= peso($totalPhic) ?></td>
-        <td class="text-end border-start border-bottom"><?= peso($totalBankLbp) ?></td>
-        <td class="text-end border-bottom"><?= peso($totalBankMcc) ?></td>
-        <td class="text-end border-bottom"><?= peso($totalBank1stvb) ?></td>
-        <td class="text-end border-start border-bottom"><?= peso($totalWithholdingTax) ?></td>
-        <td class="text-end border-start border-bottom"><?= peso($totalNetPay) ?></td>
-        <td colspan="2" class="border-bottom"></td>
+        <td colspan="3" class="text-center">TOTAL</td>
+        <td class="text-end"><?= peso($totalSalaryRate) ?></td>
+        <td class="text-end border-start"><?= peso($totalRefund) ?></td>
+        <td class="text-end border-start"><?= peso($totalGsisPremium) ?></td>
+        <td class="text-end"><?= peso($totalGsisPolicy) ?></td>
+        <td class="text-end"><?= peso($totalGsisOther) ?></td>
+        <td class="text-end border-start"><?= peso($totalPagibigPremium) ?></td>
+        <td class="text-end"><?= peso($totalPagibigLoan) ?></td>
+        <td class="text-end border-start"><?= peso($totalPhic) ?></td>
+        <td class="text-end border-start"><?= peso($totalBankLbp) ?></td>
+        <td class="text-end"><?= peso($totalBankMcc) ?></td>
+        <td class="text-end"><?= peso($totalBank1stvb) ?></td>
+        <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
+        <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
+        <td colspan="2"></td>
     </tr>
     </tbody>
         </table>
