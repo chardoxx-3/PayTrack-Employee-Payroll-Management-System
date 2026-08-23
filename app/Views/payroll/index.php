@@ -200,12 +200,12 @@ function peso($value) {
 
     <tr class="small">
         <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
-        <td class="text-muted border-start fw-bold"><?= peso($totalNetPay) ?></td>
+        <td class="text-muted border-start fw-bold"><?= peso($totalFirstQ) ?></td>
         <td colspan="2"></td>
     </tr>
     <tr class="small">
         <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
-        <td class="text-muted border-start fw-bold"><?= peso($totalNetPay) ?></td>
+        <td class="text-muted border-start fw-bold"><?= peso($totalSecondQ) ?></td>
         <td colspan="2"></td>
     </tr>
     <tr class="fw-bold">
