@@ -99,7 +99,7 @@ public function import()
     $officeModel = new OfficeModel();
     $model = new EmployeeModel();
     $deductModel = new \App\Models\DeductionModel();
-    $payrollModel = new \App\Models\PayrollModel(); // NEW
+    $payrollModel = new \App\Models\PayrollModel();
 
     $file = $this->request->getFile('payroll_file');
     if (!$file || !$file->isValid()) {
@@ -110,27 +110,41 @@ public function import()
 
     $year = date('Y');
     $nextNumber = $model->like('employee_id', "EMP-{$year}-", 'after')->countAllResults() + 1;
-    $period = date('Y-m'); // NEW
+    $period = date('Y-m');
 
     $imported = 0;
     $updated  = 0;
     $skipped  = 0;
 
-    $toFloat = function ($v) { // NEW: hoisted out of the row loop
+    $toFloat = function ($v) {
         if (is_string($v)) $v = str_replace([',', ' '], '', $v);
         return is_numeric($v) ? (float) $v : 0;
     };
 
     foreach ($spreadsheet->getSheetNames() as $sheetName) {
-        if (stripos($sheetName, 'rata') !== false) {
-            continue;
-        }
+        // "rata" and "VICE-SB rata" are RATA-only payroll vouchers with a different
+        // column layout (no "MONTHLY RATE OF PAY" column, so everything after NAME/
+        // DESIGNATION/PERIOD is shifted compared to the normal office sheets). They
+        // get imported as their own office below, via a dedicated parser that only
+        // trusts what these sheets actually contain (name, designation, RATA amount)
+        // instead of the normal sheets' fixed column indices, which would otherwise
+        // land on the wrong field or blank cells.
+        $normalized = strtolower(trim(str_replace('-', ' ', $sheetName)));
+        $isRataOnlySheet = ($normalized === 'rata' || $normalized === 'vice sb rata');
 
         $officeName = trim(preg_replace('/\s+\d+\s+\d+\s*$/', '', $sheetName));
         $office = $officeModel->where('office_name', $officeName)->first();
         $officeId = $office ? $office['id'] : $officeModel->insert(['office_name' => $officeName]);
 
         $rows = $spreadsheet->getSheetByName($sheetName)->toArray();
+
+        if ($isRataOnlySheet) {
+            $result = $this->importRataOnlySheet($rows, $model, $payrollModel, $officeId, $year, $nextNumber, $period);
+            $imported   += $result['imported'];
+            $updated    += $result['updated'];
+            $nextNumber  = $result['nextNumber'];
+            continue;
+        }
 
         foreach ($rows as $i => $row) { // NEW: capture index to look at the next row
             $no            = $row[0] ?? null;
@@ -164,7 +178,7 @@ public function import()
             while (isset($rows[$blockEnd])) {
                 $blockNo    = $rows[$blockEnd][0] ?? null;
                 $blockName  = trim($rows[$blockEnd][1] ?? '');
-                $blockLabel = trim((string) ($rows[$blockEnd][16] ?? '')); // NEW: "1st/2nd Quincena" summary label lives here
+                $blockLabel = trim((string) ($rows[$blockEnd][16] ?? '')); // "1st/2nd Quincena" summary label lives here
                 if (is_numeric($blockNo) && $blockName !== '' && !is_numeric($blockName)) {
                     break; // reached the next employee's row
                 }
@@ -172,7 +186,7 @@ public function import()
                     break; // reached the sheet's totals row
                 }
                 if (stripos($blockLabel, 'quincena') !== false) {
-                    break; // NEW: reached the sheet-wide "1st Quincena"/"2nd Quincena" summary row —
+                    break; // reached the sheet-wide "1st Quincena"/"2nd Quincena" summary row —
                            // these sit BEFORE the "Total" row and column 0 is blank there, so without
                            // this check the last employee's block could swallow the sheet's own totals
                 }
@@ -252,7 +266,7 @@ public function import()
                 $deductModel->insert($deductionData);
             }
 
-            // NEW: upsert this period's payroll record with the sheet's own refund, net pay, and quincena values
+            // Upsert this period's payroll record with the sheet's own refund, net pay, and quincena values
             $grossPay = $hasValidSalary ? (float) $rawSalary : ($existing['salary_rate'] ?? 0);
 
             $payrollData = [
@@ -285,5 +299,117 @@ public function import()
     }
 
     return redirect()->to('/employee')->with('success', $message);
+}
+
+/**
+ * Import a RATA-only payroll sheet ("rata", "VICE-SB rata") as its own office.
+ *
+ * These sheets don't have a "MONTHLY RATE OF PAY" column, so the RATA amount can
+ * sit in column 4 or column 5 depending on the sheet - rather than hardcoding an
+ * index, we scan the header block for whichever cell literally says "RATA" and use
+ * that column. Only NAME, DESIGNATION, and the RATA amount are trusted from these
+ * sheets; there's no reliable salary/deduction data here, so those are left at 0
+ * rather than guessed at from the wrong column.
+ *
+ * The RATA amount is used as refund_rata, gross_pay, net_pay, and cash_paid, since
+ * these vouchers show no deductions being taken from it.
+ */
+private function importRataOnlySheet(
+    array $rows,
+    EmployeeModel $model,
+    \App\Models\PayrollModel $payrollModel,
+    int $officeId,
+    string $year,
+    int $nextNumber,
+    string $period
+): array {
+    $rataCol = null;
+    for ($r = 0; $r <= 11 && $r < count($rows); $r++) {
+        foreach ($rows[$r] as $c => $val) {
+            if (strtolower(trim((string) $val)) === 'rata') {
+                $rataCol = $c;
+                break 2;
+            }
+        }
+    }
+
+    if ($rataCol === null) {
+        // Sheet layout didn't match anything we recognize - nothing to do.
+        return ['imported' => 0, 'updated' => 0, 'nextNumber' => $nextNumber];
+    }
+
+    $imported = 0;
+    $updated  = 0;
+
+    foreach ($rows as $row) {
+        $no          = $row[0] ?? null;
+        $fullName    = trim($row[1] ?? '');
+        $designation = trim($row[2] ?? '');
+
+        if (!is_numeric($no) || $fullName === '' || is_numeric($fullName)) {
+            continue;
+        }
+
+        $rawRata = $row[$rataCol] ?? 0;
+        if (is_string($rawRata)) {
+            $rawRata = str_replace([',', ' '], '', $rawRata);
+        }
+        $rataAmount = is_numeric($rawRata) ? (float) $rawRata : 0;
+
+        $existing = $model->where('office_id', $officeId)
+                           ->where('full_name', $fullName)
+                           ->first();
+
+        if ($existing) {
+            $model->update($existing['id'], ['position' => $designation ?: $existing['position']]);
+            $updated++;
+            $empId = $existing['id'];
+        } else {
+            $employeeId = "EMP-{$year}-" . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            $nextNumber++;
+
+            $empId = $model->insert([
+                'employee_id'       => $employeeId,
+                'full_name'         => $fullName,
+                'office_id'         => $officeId,
+                'position'          => $designation ?: 'N/A',
+                'salary_rate'       => 0,
+                'employment_status' => 'Regular',
+                'is_active'         => 1,
+            ]);
+
+            if (!$empId) {
+                log_message('error', 'RATA-only import failed for "{name}": {errors}', [
+                    'name'   => $fullName,
+                    'errors' => implode('; ', $model->errors() ?? []),
+                ]);
+                continue;
+            }
+
+            $imported++;
+        }
+
+        $payrollData = [
+            'refund_rata'       => $rataAmount,
+            'gross_pay'         => $rataAmount,
+            'total_deductions'  => 0,
+            'net_pay'           => $rataAmount,
+            'cash_paid'         => $rataAmount,
+            'period_of_service' => date('m/01/Y') . '-' . date('m/t/Y'),
+        ];
+
+        $existingPayroll = $payrollModel->where('employee_id', $empId)
+                                         ->where('payroll_period', $period)
+                                         ->first();
+        if ($existingPayroll) {
+            $payrollModel->update($existingPayroll['id'], $payrollData);
+        } else {
+            $payrollData['employee_id']    = $empId;
+            $payrollData['payroll_period'] = $period;
+            $payrollModel->insert($payrollData);
+        }
+    }
+
+    return ['imported' => $imported, 'updated' => $updated, 'nextNumber' => $nextNumber];
 }
 }
