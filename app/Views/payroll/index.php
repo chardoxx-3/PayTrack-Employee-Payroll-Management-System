@@ -173,9 +173,9 @@ function peso($value) {
         <td rowspan="2" class="text-danger small text-end border-start"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
         <td rowspan="2" class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
         <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?></td>
-        <td rowspan="2" class="text-end pe-4 text-nowrap">
+        <td rowspan="2" class="text-center" style="width: 50px;">
             <div class="dropdown">
-                <button class="btn btn-link btn-sm text-dark p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-link text-dark p-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 36px; min-height: 36px;">
                     <i class="fas fa-ellipsis-vertical fa-lg"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
