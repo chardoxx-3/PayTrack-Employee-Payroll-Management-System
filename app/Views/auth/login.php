@@ -11,9 +11,9 @@
         :root {
             --gov-navy: #0f172a;
             --gov-navy-light: #1e293b;
-            --gov-blue: #2563eb;
-            --gov-blue-hover: #1d4ed8;
-            --gov-blue-subtle: #eff6ff;
+            --gov-teal: #0d5c4e;
+            --gov-teal-hover: #0a4a3f;
+            --gov-teal-subtle: #e6f4f1;
             --gov-gray-50: #f8fafc;
             --gov-gray-100: #f1f5f9;
             --gov-gray-200: #e2e8f0;
@@ -26,7 +26,7 @@
             --gov-error: #dc2626;
             --gov-error-bg: #fef2f2;
             --gov-error-border: #fecaca;
-            --focus-ring: rgba(37, 99, 235, 0.25);
+            --focus-ring: rgba(13, 92, 78, 0.25);
         }
 
         * { box-sizing: border-box; }
@@ -66,7 +66,7 @@
             right: -30%;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.12) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(13, 92, 78, 0.15) 0%, transparent 70%);
             border-radius: 50%;
         }
 
@@ -137,7 +137,7 @@
         .brand-feature i {
             width: 20px;
             text-align: center;
-            color: var(--gov-blue);
+            color: var(--gov-teal);
             font-size: 0.95rem;
         }
 
@@ -232,7 +232,7 @@
 
         .form-control:focus {
             outline: none;
-            border-color: var(--gov-blue);
+            border-color: var(--gov-teal);
             box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
@@ -269,7 +269,7 @@
             font-weight: 600;
             font-family: inherit;
             color: #ffffff;
-            background: var(--gov-blue);
+            background: var(--gov-teal);
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -279,8 +279,8 @@
         }
 
         .btn-login:hover {
-            background: var(--gov-blue-hover);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            background: var(--gov-teal-hover);
+            box-shadow: 0 4px 12px rgba(13, 92, 78, 0.2);
         }
 
         .btn-login:active {
@@ -296,7 +296,7 @@
         }
 
         .login-footer a {
-            color: var(--gov-blue);
+            color: var(--gov-teal);
             text-decoration: none;
             font-weight: 600;
         }
