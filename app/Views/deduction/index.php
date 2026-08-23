@@ -11,6 +11,12 @@ function peso($value) {
 .deduction-table td {
     border: 1px solid #dee2e6 !important;
 }
+
+.row-selected {
+    background-color: #e6f4f1 !important;
+    border-left: 4px solid #0d5c4e !important;
+    box-shadow: inset 0 0 0 1px rgba(13, 92, 78, 0.1);
+}
 </style>
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -132,4 +138,65 @@ function peso($value) {
     </table>
 </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let selectedRow = null;
+
+    function selectRow(row) {
+        if (selectedRow && selectedRow !== row) {
+            selectedRow.classList.remove('row-selected');
+            selectedRow.setAttribute('aria-selected', 'false');
+        }
+        row.classList.add('row-selected');
+        row.setAttribute('aria-selected', 'true');
+        selectedRow = row;
+    }
+
+    function deselectRow(row) {
+        row.classList.remove('row-selected');
+        row.setAttribute('aria-selected', 'false');
+        if (selectedRow === row) selectedRow = null;
+    }
+
+    document.querySelectorAll('.deduction-table tbody td[rowspan]').forEach(function(noCell) {
+        noCell.style.cursor = 'pointer';
+        noCell.setAttribute('tabindex', '0');
+        noCell.setAttribute('role', 'button');
+        noCell.setAttribute('aria-label', 'Select row ' + noCell.textContent.trim());
+
+        noCell.addEventListener('click', function(e) {
+            const row = this.closest('tr');
+            if (row.classList.contains('row-selected')) {
+                deselectRow(row);
+            } else {
+                selectRow(row);
+            }
+        });
+
+        noCell.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const row = this.closest('tr');
+                if (row.classList.contains('row-selected')) {
+                    deselectRow(row);
+                } else {
+                    selectRow(row);
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('.deduction-table tbody tr').forEach(function(row) {
+        row.addEventListener('dblclick', function(e) {
+            if (this.classList.contains('row-selected')) {
+                deselectRow(this);
+            } else {
+                selectRow(this);
+            }
+        });
+    });
+});
+</script>
+
 <?= $this->endSection() ?>
