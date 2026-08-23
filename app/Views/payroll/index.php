@@ -41,11 +41,14 @@
     background-color: #0d5c4e !important;
     border-color: #0d5c4e !important;
 }
+
+
 </style>
 <?php
 function peso($value) {
     return $value > 0 ? '₱' . number_format($value, 2) : '';
 }
+
 ?>
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -198,16 +201,6 @@ function peso($value) {
         <tr><td colspan="19" class="text-center text-muted py-4">No employees found.</td></tr>
     <?php endif; ?>
 
-    <tr class="small">
-        <td colspan="15" class="text-end fw-bold">1st Quincena Total:</td>
-        <td class="text-end border-start fw-bold"><?= peso($totalFirstQ) ?></td>
-        <td colspan="3"></td>
-    </tr>
-    <tr class="small">
-        <td colspan="15" class="text-end fw-bold">2nd Quincena Total:</td>
-        <td class="text-end border-start fw-bold"><?= peso($totalSecondQ) ?></td>
-        <td colspan="3"></td>
-    </tr>
     <tr class="fw-bold">
         <td colspan="3" class="text-center">TOTAL</td>
         <td class="text-end"><?= peso($totalSalaryRate) ?></td>
@@ -223,7 +216,7 @@ function peso($value) {
         <td class="text-end"><?= peso($totalBank1stvb) ?></td>
         <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
         <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
-        <td class="text-end border-start"><?= peso($totalFirstQ + $totalSecondQ) ?></td>
+        <td class="text-end border-start">1st: <?= peso($totalFirstQ) ?> + 2nd: <?= peso($totalSecondQ) ?></td>
         <td colspan="2"></td>
     </tr>
     </tbody>
