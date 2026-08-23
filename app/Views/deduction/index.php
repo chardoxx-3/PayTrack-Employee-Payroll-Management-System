@@ -13,9 +13,26 @@ function peso($value) {
 }
 
 .row-selected {
-    background-color: #e6f4f1 !important;
-    border-left: 4px solid #0d5c4e !important;
-    box-shadow: inset 0 0 0 1px rgba(13, 92, 78, 0.1);
+    background-color: #0d5c4e !important;
+}
+
+.row-selected td {
+    background-color: #0d5c4e !important;
+    color: #ffffff !important;
+}
+
+.row-selected td small,
+.row-selected td .text-muted {
+    color: #d9e8e4 !important;
+}
+
+.row-selected td .badge {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.row-selected td .btn {
+    color: #ffffff !important;
 }
 </style>
 <div class="container-fluid py-4">
@@ -143,28 +160,34 @@ function peso($value) {
 document.addEventListener('DOMContentLoaded', function() {
     let selectedRow = null;
 
-    function selectRow(row) {
-        if (selectedRow && selectedRow !== row) {
-            selectedRow.classList.remove('row-selected');
-            selectedRow.setAttribute('aria-selected', 'false');
-            if (selectedRow.nextElementSibling) {
-                selectedRow.nextElementSibling.classList.remove('row-selected');
-            }
+function selectRow(row) {
+    if (selectedRow && selectedRow !== row) {
+        selectedRow.classList.remove('row-selected');
+        selectedRow.setAttribute('aria-selected', 'false');
+        if (selectedRow.nextElementSibling) {
+            selectedRow.nextElementSibling.classList.remove('row-selected');
         }
-        row.classList.add('row-selected');
-        row.setAttribute('aria-selected', 'true');
-        if (row.nextElementSibling) {
-            row.nextElementSibling.classList.add('row-selected');
-        }
-        selectedRow = row;
     }
+    row.classList.add('row-selected');
+    row.setAttribute('aria-selected', 'true');
+    if (row.nextElementSibling) {
+        row.nextElementSibling.classList.add('row-selected');
+    }
+    selectedRow = row;
+}
+
+function deselectRow(row) {
+    row.classList.remove('row-selected');
+    row.setAttribute('aria-selected', 'false');
+    if (row.nextElementSibling) {
+        row.nextElementSibling.classList.remove('row-selected');
+    }
+    if (selectedRow === row) selectedRow = null;
+}
 
     function deselectRow(row) {
         row.classList.remove('row-selected');
         row.setAttribute('aria-selected', 'false');
-        if (row.nextElementSibling) {
-            row.nextElementSibling.classList.remove('row-selected');
-        }
         if (selectedRow === row) selectedRow = null;
     }
 
