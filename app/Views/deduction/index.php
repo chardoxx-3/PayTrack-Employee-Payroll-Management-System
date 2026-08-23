@@ -147,15 +147,24 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectedRow && selectedRow !== row) {
             selectedRow.classList.remove('row-selected');
             selectedRow.setAttribute('aria-selected', 'false');
+            if (selectedRow.nextElementSibling) {
+                selectedRow.nextElementSibling.classList.remove('row-selected');
+            }
         }
         row.classList.add('row-selected');
         row.setAttribute('aria-selected', 'true');
+        if (row.nextElementSibling) {
+            row.nextElementSibling.classList.add('row-selected');
+        }
         selectedRow = row;
     }
 
     function deselectRow(row) {
         row.classList.remove('row-selected');
         row.setAttribute('aria-selected', 'false');
+        if (row.nextElementSibling) {
+            row.nextElementSibling.classList.remove('row-selected');
+        }
         if (selectedRow === row) selectedRow = null;
     }
 
