@@ -174,15 +174,29 @@ function peso($value) {
         <td rowspan="2" class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
         <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?></td>
         <td rowspan="2" class="text-end pe-4 text-nowrap">
-            <button class="btn btn-primary btn-sm px-3 rounded-pill process-btn"
-                data-employee-id="<?= $emp['id'] ?>"
-                data-employee-name="<?= $emp['full_name'] ?>"
-                data-designation="<?= $emp['position'] ?>"
-                data-net-pay="<?= $netPay ?>"
-                data-bs-toggle="modal"
-                data-bs-target="#processModal">
-                Process
-            </button>
+            <div class="dropdown">
+                <button class="btn btn-link btn-sm text-dark p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-ellipsis-vertical fa-lg"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                    <li>
+                        <button class="dropdown-item d-flex align-items-center gap-2 process-btn"
+                            data-employee-id="<?= $emp['id'] ?>"
+                            data-employee-name="<?= $emp['full_name'] ?>"
+                            data-designation="<?= $emp['position'] ?>"
+                            data-net-pay="<?= $netPay ?>"
+                            data-bs-toggle="modal"
+                            data-bs-target="#processModal">
+                            <i class="fas fa-calculator text-primary"></i> Process
+                        </button>
+                    </li>
+                    <li>
+                        <button class="dropdown-item d-flex align-items-center gap-2" onclick="window.print()">
+                            <i class="fas fa-print text-success"></i> Print
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </td>
     </tr>
     <tr class="border-bottom">
