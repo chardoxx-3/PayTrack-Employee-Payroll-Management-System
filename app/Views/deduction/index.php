@@ -8,8 +8,8 @@ function peso($value) {
 ?>
 <style>
 .deduction-table thead th {
-    background-color: #e8f5e9 !important;
-    color: #1e293b !important;
+    background-color: #0a1f1b !important;
+    color: #ffffff !important;
 }
 
 .deduction-table th,

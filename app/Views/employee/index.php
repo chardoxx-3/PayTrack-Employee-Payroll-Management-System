@@ -18,8 +18,8 @@
         <div class="card-body">
             <style>
             .employee-table thead th {
-                background-color: #e8f5e9 !important;
-                color: #1e293b !important;
+                background-color: #0a1f1b !important;
+                color: #ffffff !important;
             }
 
             .employee-table tbody tr:hover {
