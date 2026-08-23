@@ -223,7 +223,7 @@ function peso($value) {
         <td class="text-end"><?= peso($totalBank1stvb) ?></td>
         <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
         <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
-        <td class="text-end border-start small"><?= peso($totalFirstQ + $totalSecondQ) ?></td>
+        <td class="text-end border-start"><?= peso($totalFirstQ + $totalSecondQ) ?></td>
         <td colspan="2"></td>
     </tr>
     </tbody>
