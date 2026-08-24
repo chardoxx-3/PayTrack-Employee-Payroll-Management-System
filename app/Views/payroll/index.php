@@ -193,9 +193,9 @@ function peso($value) {
                         </button>
                     </li>
                     <li>
-                        <button class="dropdown-item d-flex align-items-center gap-2" onclick="window.print()">
+                        <a href="/payslip/individual/<?= $emp['id'] ?>" class="dropdown-item d-flex align-items-center gap-2" target="_blank">
                             <i class="fas fa-print text-success"></i> Print
-                        </button>
+                        </a>
                     </li>
                 </ul>
             </div>

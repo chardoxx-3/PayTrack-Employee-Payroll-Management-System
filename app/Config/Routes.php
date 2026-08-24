@@ -52,6 +52,7 @@ $routes->group('payroll', ['filter' => 'auth'], function($routes) {
 $routes->group('payslip', ['filter' => 'auth'], function($routes) {
     $routes->get('/', 'Payslip::index');
     $routes->get('preview/(:num)', 'Payslip::preview/$1');
+    $routes->get('individual/(:num)', 'Payslip::individual/$1');
     $routes->get('batchPrint', 'Payslip::batchPrint');
 });
 
