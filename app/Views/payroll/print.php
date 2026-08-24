@@ -68,7 +68,7 @@ function peso($value) {
             <h5 class="fw-bold mb-0">Payroll — <?= $period_label ?> — <?= $officeDisplay ?></h5>
             <p class="text-muted small mb-0">Period of Service: <?= $service_period ?></p>
         </div>
-        <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
+        <button type="button" class="btn btn-success btn-sm" onclick="printPayroll()">
             <i class="fas fa-print me-1"></i> Print
         </button>
     </div>
@@ -170,9 +170,43 @@ function peso($value) {
 </div>
 
 <script>
-window.onload = function() {
-    window.print();
-};
+function printPayroll() {
+    var tableHTML = document.querySelector('div.table-responsive').outerHTML;
+    var headerHTML = document.querySelector('.print-header').outerHTML;
+
+    var printWindow = window.open('', '_blank', 'width=1200,height=900');
+    printWindow.document.write(
+        '<!DOCTYPE html><html><head><title>Print Payroll</title>' +
+        '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">' +
+        '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">' +
+        '<style>' +
+        '*{font-family:"IBM Plex Sans",sans-serif}!important{' +
+        '@page{margin:0;size:A4 landscape}body{margin:0;padding:20px;background:#fff}' +
+        '.payroll-table thead th{background:#0d2d27!important;color:#e6f4f1!important}' +
+        '.payroll-table th,.payroll-table td{border:1px solid #000!important}' +
+        '.payroll-table{width:100%;border-collapse:collapse}' +
+        '.text-teal{color:#0d5c4e!important}' +
+        '</style></head><body>' +
+        headerHTML + tableHTML +
+        '</body></html>'
+    );
+    printWindow.document.close();
+    setTimeout(function() {
+        printWindow.focus();
+        printWindow.print();
+    }, 500);
+}
+
+window.addEventListener('beforeprint', function() {
+    var s = document.createElement('style');
+    s.id = 'force-page-margin';
+    s.textContent = '@page { margin: 0 !important; }';
+    document.head.appendChild(s);
+});
+window.addEventListener('afterprint', function() {
+    var s = document.getElementById('force-page-margin');
+    if (s) s.remove();
+});
 </script>
 </body>
 </html>
