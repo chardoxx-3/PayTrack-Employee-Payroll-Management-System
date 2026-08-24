@@ -194,7 +194,6 @@ function employeeDeductions($emp) {
                     <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
                     <td class="ps-4">
                         <div class="fw-bold"><?= esc($emp['full_name']) ?></div>
-                        <small class="text-muted"><?= $emp['employee_id'] ?></small>
                     </td>
                     <td><?= esc($emp['position'] ?? '-') ?></td>
                     <td class="fw-bold text-teal"><?= number_format($emp['salary_rate'], 2) ?></td>
@@ -210,9 +209,9 @@ function employeeDeductions($emp) {
                     <td class="text-end"><?= number_format($emp['bank_1stvb'] ?? 0, 2) ?></td>
                     <td class="text-end border-start fw-bold"><?= number_format($emp['withholding_tax'] ?? 0, 2) ?></td>
                     <td class="fw-bold text-success border-start"><?= number_format($tNetPay, 2) ?></td>
-                    <td class="text-center border-start">
+                    <td class="border-start">
                         1st Q: <?= peso($emp['first_quincena'] ?? 0) ?><br>
-                        <small class="text-muted">2nd Q: <?= peso($emp['second_quincena'] ?? 0) ?></small>
+                        2nd Q: <?= peso($emp['second_quincena'] ?? 0) ?>
                     </td>
                     <td class="border-start text-center"><?= esc($emp['contact_number'] ?? '-') ?></td>
                 </tr>
@@ -220,12 +219,12 @@ function employeeDeductions($emp) {
             </tbody>
             <?php if (!empty($employees)): ?>
             <tfoot>
-                <tr class="small">
+                <tr>
                     <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
                     <td class="text-muted border-start fw-bold"><?= peso(sumCol($employeesChunk, 'first_quincena')) ?></td>
                     <td class="border-start"></td>
                 </tr>
-                <tr class="small">
+                <tr>
                     <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
                     <td class="text-muted border-start fw-bold"><?= peso(sumCol($employeesChunk, 'second_quincena')) ?></td>
                     <td class="border-start"></td>
