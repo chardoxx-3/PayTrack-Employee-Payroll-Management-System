@@ -215,13 +215,13 @@ function peso($value) {
     <!-- Certification / Approval Footer -->
     <div class="print-footer mt-4" style="<?= !empty($employees) ? '' : 'display:none;' ?>">
         <div class="row g-2 mt-3">
-            <!-- Left: Statement (5) -->
+            <!-- Left: Statement (1) -->
             <div class="col-md-4 text-center">
                 <p class="small lh-sm mb-2">
-                    <strong>(5)</strong> I HEREBY CERTIFY on my official oath that I have paid in cash to each official and employee whose name appears on the above roll the amount set opposite his name, under column 17, the having signed or marked his name under column 20 above, in my presence and at the time that payment was made to him in acknowledgement of receipt of the money paid him.
+                    <strong>(1)</strong> I HEREBY CERTIFY on my official oath that the above PAYROLL is correct, and that services above stated have been duly rendered. Payment for such services is also hereby approved from the appropriation indicated.
                 </p>
-                <p class="fw-bold mb-0">MARY LUSSEL S. PACTO</p>
-                <p class="small text-muted mb-0">Disbursing Officer</p>
+                <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
+                <p class="small text-muted mb-0">Municipal Mayor</p>
             </div>
             <!-- Center: Statement (4) APPROVED -->
             <div class="col-md-4 text-center">
@@ -229,13 +229,13 @@ function peso($value) {
                 <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
                 <p class="small text-muted mb-0">Municipal Mayor</p>
             </div>
-            <!-- Right: Statement (1) -->
+            <!-- Right: Statement (5) -->
             <div class="col-md-4 text-center">
                 <p class="small lh-sm mb-2">
-                    <strong>(1)</strong> I HEREBY CERTIFY on my official oath that the above PAYROLL is correct, and that services above stated have been duly rendered. Payment for such services is also hereby approved from the appropriation indicated.
+                    <strong>(5)</strong> I HEREBY CERTIFY on my official oath that I have paid in cash to each official and employee whose name appears on the above roll the amount set opposite his name, under column 17, the having signed or marked his name under column 20 above, in my presence and at the time that payment was made to him in acknowledgement of receipt of the money paid him.
                 </p>
-                <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
-                <p class="small text-muted mb-0">Municipal Mayor</p>
+                <p class="fw-bold mb-0">MARY LUSSEL S. PACTO</p>
+                <p class="small text-muted mb-0">Disbursing Officer</p>
             </div>
         </div>
     </div>
