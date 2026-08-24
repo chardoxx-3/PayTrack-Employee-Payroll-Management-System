@@ -284,7 +284,7 @@ public function process($employee_id)
 
             $sumCols = ['F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
             foreach ($sumCols as $col) {
-                $sheet->setCellValue($col . $totalsRow, '=SUM(' . $col . '3:' . $col . $lastDataRow)');
+                $sheet->setCellValue($col . $totalsRow, '=SUM(' . $col . '3:' . $col . $lastDataRow . ')');
             }
             $sheet->getStyle('F' . $totalsRow . ':Z' . $totalsRow)->getFont()->setBold(true);
             $sheet->getStyle('F' . $totalsRow . ':Z' . $totalsRow)->getNumberFormat()->setFormatCode('#,##0.00');
