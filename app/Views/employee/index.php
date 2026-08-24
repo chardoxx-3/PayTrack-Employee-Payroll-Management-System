@@ -22,6 +22,11 @@
                 color: #e6f4f1 !important;
             }
 
+            .employee-table th,
+            .employee-table td {
+                border: 1px solid #dee2e6 !important;
+            }
+
             .employee-table tbody tr:hover {
                 background-color: #f5faf6 !important;
             }
@@ -29,6 +34,27 @@
             .employee-table .row-selected {
                 background-color: #d4edda !important;
                 border-left: 3px solid #0d5c4e !important;
+            }
+
+            .employee-table .row-selected td {
+                background-color: #d4edda !important;
+                color: #1e293b !important;
+            }
+
+            .employee-table .row-selected td small,
+            .employee-table .row-selected td .text-muted {
+                color: #4a635f !important;
+            }
+
+            .employee-table .row-selected td .badge {
+                color: #ffffff !important;
+                background-color: rgba(13, 92, 78, 0.85) !important;
+            }
+
+            .employee-table .row-selected td .btn {
+                color: #ffffff !important;
+                background-color: #0d5c4e !important;
+                border-color: #0d5c4e !important;
             }
             </style>
             <!-- Filter Section -->
@@ -47,25 +73,27 @@
             </form>
 
             <div class="table-responsive">
-                <table class="table table-hover align-middle employee-table">
+                <table class="table table-hover bg-white rounded shadow-sm align-middle employee-table">
                 <thead class="text-muted small fw-bold">
     <tr>
-        <th>FULL NAME</th>
-        <th>OFFICE</th>
-        <th>DESIGNATION</th>
+        <th class="text-center" style="vertical-align: middle; width: 40px;">NO.</th>
+        <th style="vertical-align: middle;">FULL NAME</th>
+        <th style="vertical-align: middle;">OFFICE</th>
+        <th style="vertical-align: middle;">DESIGNATION</th>
         <th>CONTACT NUMBER</th>
         <th>STATUS</th>
-        <th class="text-end">ACTIONS</th>
+        <th class="text-end" style="vertical-align: middle;">ACTIONS</th>
     </tr>
 </thead>
                     <tbody>
-<?php foreach($employees as $emp): ?>
+<?php $no = 1; foreach($employees as $emp): ?>
 <tr>
-    <td class="fw-bold text-primary"><?= esc($emp['full_name']) ?></td>
-    <td><span class="text-muted small"><?= $emp['office_name'] ?? '—' ?></span></td>
-    <td><span class="text-muted small"><?= $emp['position'] ?? '—' ?></span></td>
-    <td><span class="text-muted small"><?= $emp['contact_number'] ?? '—' ?></span></td>
-    <td><span class="badge rounded-pill bg-success">Active</span></td>
+    <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
+    <td class="align-middle fw-bold text-primary"><?= esc($emp['full_name']) ?></td>
+    <td class="align-middle"><span class="text-muted small"><?= esc($emp['office_name'] ?? '—') ?></span></td>
+    <td class="align-middle"><span class="text-muted small"><?= esc($emp['position'] ?? '—') ?></span></td>
+    <td class="align-middle"><span class="text-muted small"><?= esc($emp['contact_number'] ?? '—') ?></span></td>
+    <td class="align-middle"><span class="badge rounded-pill bg-success">Active</span></td>
     <td class="text-end">
         <a href="/employee/edit/<?= $emp['id'] ?>" class="btn btn-sm btn-outline-secondary border-0"><i class="fas fa-edit"></i></a>
         <a href="/deduction/manage/<?= $emp['id'] ?>" class="btn btn-sm btn-outline-info border-0"><i class="fas fa-file-invoice"></i></a>
@@ -125,6 +153,64 @@
 <script>
 document.getElementById('deleteConfirmInput').addEventListener('input', function() {
     document.getElementById('deleteAllBtn').disabled = (this.value !== 'DELETE');
+});
+
+let selectedRow = null;
+
+function selectRow(row) {
+    if (selectedRow && selectedRow !== row) {
+        selectedRow.classList.remove('row-selected');
+        selectedRow.setAttribute('aria-selected', 'false');
+    }
+    row.classList.add('row-selected');
+    row.setAttribute('aria-selected', 'true');
+    selectedRow = row;
+}
+
+function deselectRow(row) {
+    row.classList.remove('row-selected');
+    row.setAttribute('aria-selected', 'false');
+    if (selectedRow === row) selectedRow = null;
+}
+
+document.querySelectorAll('.employee-table tbody tr').forEach(function(row, index) {
+    const firstCell = row.querySelector('td');
+    if (!firstCell) return;
+    firstCell.style.cursor = 'pointer';
+    firstCell.setAttribute('tabindex', '0');
+    firstCell.setAttribute('role', 'button');
+    firstCell.setAttribute('aria-label', 'Select row ' + (index + 1));
+
+    firstCell.addEventListener('click', function(e) {
+        const currentRow = this.closest('tr');
+        if (currentRow.classList.contains('row-selected')) {
+            deselectRow(currentRow);
+        } else {
+            selectRow(currentRow);
+        }
+    });
+
+    firstCell.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            const currentRow = this.closest('tr');
+            if (currentRow.classList.contains('row-selected')) {
+                deselectRow(currentRow);
+            } else {
+                selectRow(currentRow);
+            }
+        }
+    });
+});
+
+document.querySelectorAll('.employee-table tbody tr').forEach(function(row) {
+    row.addEventListener('dblclick', function(e) {
+        if (this.classList.contains('row-selected')) {
+            deselectRow(this);
+        } else {
+            selectRow(this);
+        }
+    });
 });
 </script>
 
