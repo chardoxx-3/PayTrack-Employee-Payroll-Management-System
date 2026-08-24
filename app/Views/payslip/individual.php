@@ -233,10 +233,8 @@
                 <text x="50" y="68" text-anchor="middle" font-size="7" fill="#000">Camiguin</text>
             </svg>
         </div>
+        <h1>LGU-MAHINOG</h1>
         <h1>Municipal Payroll</h1>
-        <div class="subtitle">
-            We hereby acknowledge to have received from <strong style="text-decoration: underline;">MARY LUSSEL S. PACTO</strong>, Treasurer of <strong style="text-decoration: underline;">Mahinog, Camiguin</strong> the sums herein specified opposite our respective names, the same, being full compensation for our services rendered during the period stated below, to the correctness of which we hereby severally certify.
-        </div>
     </div>
 
     <div class="divider"></div>
