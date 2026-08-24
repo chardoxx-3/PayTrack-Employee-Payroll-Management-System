@@ -34,7 +34,16 @@ function peso($value) {
             .no-print { display: none !important; }
             body { background: #fff; }
             .table-responsive { overflow: visible; }
-            @page { margin: 0; }
+            .payroll-table thead th {
+                background-color: #0d2d27 !important;
+                color: #e6f4f1 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            @page {
+                size: A4;
+                margin: 0.5in;
+            }
         }
     </style>
 </head>
@@ -57,7 +66,7 @@ function peso($value) {
         <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
             <i class="fas fa-print me-1"></i> Print
         </button>
-        <small class="text-muted mt-1 d-block no-print">Tip: uncheck "Headers &amp; footers" in your browser's print dialog to remove date/URL.</small>
+        <small class="text-muted mt-1 d-block no-print">Tip: Uncheck "Headers &amp; footers" and check "Background graphics" in your browser's print dialog. Paper: A4.</small>
     </div>
 
     <div class="table-responsive">
