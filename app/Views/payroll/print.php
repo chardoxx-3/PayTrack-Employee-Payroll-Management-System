@@ -310,6 +310,9 @@ function employeeDeductions($emp) {
 window.onload = function() {
     window.print();
 };
+window.addEventListener('afterprint', function() {
+    window.close();
+});
 </script>
 </body>
 </html>
