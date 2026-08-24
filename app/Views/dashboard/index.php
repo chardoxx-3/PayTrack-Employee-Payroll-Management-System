@@ -99,6 +99,7 @@
             <div class="card border-0 shadow-sm p-3 text-center">
                 <div class="stat-label">Total Gross Pay</div>
                 <div class="stat-value text-teal">₱<?= number_format($total_gross_pay, 2) ?></div>
+                <div class="text-muted small mt-1">Avg per employee: ₱<?= number_format($processed_payroll > 0 ? $total_gross_pay / $processed_payroll : 0, 2) ?></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
@@ -130,14 +131,18 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm p-4 chart-card h-100">
                 <h6 class="fw-bold mb-3">Payroll by Office (Current Period)</h6>
-                <canvas id="payrollByOfficeChart" height="180"></canvas>
+                <div style="position: relative; height: 320px;">
+                    <canvas id="payrollByOfficeChart"></canvas>
+                </div>
             </div>
         </div>
         <!-- Deductions Breakdown - Doughnut Chart -->
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm p-4 chart-card h-100">
                 <h6 class="fw-bold mb-3">Deductions Breakdown</h6>
-                <canvas id="deductionsChart" height="180"></canvas>
+                <div style="position: relative; height: 320px;">
+                    <canvas id="deductionsChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -147,13 +152,17 @@
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm p-4 chart-card h-100">
                 <h6 class="fw-bold mb-3">Employees by Office</h6>
-                <canvas id="employeesByOfficeChart" height="140"></canvas>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="employeesByOfficeChart"></canvas>
+                </div>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm p-4 chart-card h-100">
                 <h6 class="fw-bold mb-3">Employment Status</h6>
-                <canvas id="employmentStatusChart" height="140"></canvas>
+                <div style="position: relative; height: 280px;">
+                    <canvas id="employmentStatusChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -274,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: 'top' },
                 tooltip: {
@@ -326,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: 'bottom', labels: { maxColumns: 2, font: { size: 10 } } },
                 tooltip: {
@@ -357,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: { legend: { display: false } },
             scales: {
                 y: {
@@ -382,6 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
                 legend: { position: 'bottom' }
             }
