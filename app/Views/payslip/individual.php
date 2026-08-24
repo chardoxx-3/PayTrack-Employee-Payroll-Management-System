@@ -185,7 +185,15 @@
             font-size: 16px;
             font-weight: bold;
             text-transform: uppercase;
-            text-align: right;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .net-pay-box .label {
+            display: inline;
+        }
+        .net-pay-box .amount {
+            float: right;
         }
         .half-pay-box {
             margin-top: 25px;
@@ -323,7 +331,8 @@
     </div>
 
     <div class="net-pay-box">
-        NET PAY FOR THE MONTH <?= peso($netPay) ?>
+        <span class="label">NET PAY FOR THE MONTH</span>
+        <span class="amount"><?= peso($netPay) ?></span>
     </div>
 
     <div class="half-pay-box">
@@ -331,7 +340,7 @@
             <span>1ST HALF</span>
             <span><?= peso($firstHalf) ?></span>
         </div>
-        <div class="half-item right">
+        <div class="half-item">
             <span>2ND HALF</span>
             <span><?= peso($secondHalf) ?></span>
         </div>
