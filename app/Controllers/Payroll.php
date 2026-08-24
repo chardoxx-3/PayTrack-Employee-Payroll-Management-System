@@ -460,8 +460,6 @@ public function process($employee_id)
         $sheet->getStyle("J{$signRow1}:K{$signRow2}")->getBorders()->getTop()->applyFromArray($thin);
         $sheet->getStyle("Q{$signRow1}:S{$signRow2}")->getBorders()->getTop()->applyFromArray($thin);
         $sheet->getStyle("C{$signRow1}:T{$signRow2}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-
-        $sheet->freezePane("A" . $startRow);
     }
 
 }
