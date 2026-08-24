@@ -167,15 +167,21 @@ public function process($employee_id)
         $first_quincena_input  = (float) ($this->request->getVar('first_quincena') ?? 0);
         $second_quincena_input = (float) ($this->request->getVar('second_quincena') ?? 0);
 
+        $period = date('Y-m');
+        $existing = $payrollModel->where('employee_id', $employee_id)
+                                  ->where('payroll_period', $period)
+                                  ->first();
+
         if ($first_quincena_input > 0 && $second_quincena_input > 0) {
             $first_quincena  = round($first_quincena_input, 2);
             $second_quincena = round($second_quincena_input, 2);
+        } elseif ($existing && !empty($existing['first_quincena']) && !empty($existing['second_quincena'])) {
+            $first_quincena  = (float) $existing['first_quincena'];
+            $second_quincena = (float) $existing['second_quincena'];
         } else {
             $first_quincena  = round($net_pay / 2, 2);
             $second_quincena = round($net_pay - $first_quincena, 2);
         }
-
-        $period = date('Y-m');
 
         $payrollData = [
             'employee_id'       => $employee_id,
@@ -189,10 +195,6 @@ public function process($employee_id)
             'second_quincena'   => $second_quincena,
             'cash_paid'         => $net_pay,
         ];
-
-        $existing = $payrollModel->where('employee_id', $employee_id)
-                                  ->where('payroll_period', $period)
-                                  ->first();
 
         if ($existing) {
             $payrollModel->update($existing['id'], $payrollData);
