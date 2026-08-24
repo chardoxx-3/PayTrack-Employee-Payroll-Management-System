@@ -154,7 +154,7 @@ function employeeDeductions($emp) {
         <div class="text-center mb-2">
             <p class="small lh-sm mb-0">
                 We hereby acknowledge to have received from <strong class="text-decoration-underline">MARY LUSSEL S. PACTO</strong>. Treasurer of <strong class="text-decoration-underline">Mahinog, Camiguin</strong> the sums herein specified opposite our respective names, the same, being full compensation for our services rendered during the period stated below, to the correctness of which we hereby severally certify.
-            </p><br>
+            </p>
         </div>
     </div>
 
@@ -166,11 +166,11 @@ function employeeDeductions($emp) {
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 40px;">NO.</th>
                     <th rowspan="2" class="ps-4" style="vertical-align: middle;">EMPLOYEE</th>
                     <th rowspan="2" style="vertical-align: middle;">DESIGNATION</th>
-                    <th rowspan="2" style="vertical-align: middle;">MONTHLY RATE</th>
-                    <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">REFUND</th>
+                    <th rowspan="2"  class="text-center border-start" style="vertical-align: middle;">MONTHLY RATE</th>
+                    <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">REFUND RATA PERA ACA DIFFERENTIAL</th>
                     <th colspan="3" class="text-center border-start">GSIS</th>
                     <th colspan="2" class="text-center border-start">PAG-IBIG</th>
-                    <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">PHIC</th>
+                    <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">PHIC PHIC-Diff</th>
                     <th colspan="3" class="text-center border-start">BANKS / COOP'S</th>
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">BIR W/T TAX</th>
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">NET PAY</th>
@@ -178,14 +178,14 @@ function employeeDeductions($emp) {
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">SIGNATURE</th>
                 </tr>
                 <tr>
-                    <th class="text-center">PREMIUM</th>
-                    <th class="text-center">CONSO</th>
-                    <th class="text-center">GFAL</th>
-                    <th class="text-center">PREMIUM</th>
-                    <th class="text-center">LOAN</th>
-                    <th class="text-center">LBP</th>
-                    <th class="text-center">MCC</th>
-                    <th class="text-center">1stVB</th>
+                    <th class="text-center">PREMIUM (Personal) OULI diff</th>
+                    <th class="text-center border-start" style="vertical-align: middle;">Conso Policy MPL</th>
+                    <th class="text-center">GFAL EMRGYLN MPL LITE CPL</th>
+                    <th class="text-center border-start" style="vertical-align: middle;">PREMIUM (Personal)</th>
+                    <th class="text-center">SALARY CALAMITY MP2</th>
+                    <th class="text-center border-start" style="vertical-align: middle;">LBP Other Payables</th>
+                    <th class="text-center border-start" style="vertical-align: middle;">MCC (over)</th>
+                    <th class="text-center border-start" style="vertical-align: middle;">1stVB RBT</th>
                 </tr>
             </thead>
             <tbody>
@@ -211,7 +211,7 @@ function employeeDeductions($emp) {
                     <td class="text-end border-start"><?= fmt($emp['bank_lbp'] ?? 0) ?></td>
                     <td class="text-end"><?= fmt($emp['bank_mcc'] ?? 0) ?></td>
                     <td class="text-end"><?= fmt($emp['bank_1stvb'] ?? 0) ?></td>
-                    <td class="text-end border-start fw-bold"><?= fmt($emp['withholding_tax'] ?? 0) ?></td>
+                    <td class="text-end border-start"><?= fmt($emp['withholding_tax'] ?? 0) ?></td>
                     <td class="fw-bold text-success border-start"><?= fmt($tNetPay) ?></td>
                     <td class="border-start">
                         1st Q: <?= peso($emp['first_quincena'] ?? 0) ?><br>
@@ -257,7 +257,7 @@ function employeeDeductions($emp) {
     </div>
 
     <!-- Certification / Approval Footer -->
-    <div class="print-footer mt-4" style="<?= !empty($employees) ? '' : 'display:none;' ?>">
+    <div class="print-footer mt-3" style="<?= !empty($employees) ? '' : 'display:none;' ?>">
         <!-- Row 1: Statement texts -->
         <div style="display: flex; width: 100%; gap: 1rem; align-items: flex-start;">
             <!-- Left: Statement (1) -->
@@ -311,7 +311,7 @@ window.onload = function() {
     window.print();
 };
 window.addEventListener('afterprint', function() {
-    setTimeout(function() { window.close(); }, 2000);
+    window.close();
 });
 </script>
 </body>
