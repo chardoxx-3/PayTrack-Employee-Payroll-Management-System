@@ -77,7 +77,7 @@ function peso($value) {
                 </div>
             </div>
             <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Search</button>
+                <button type="submit" class="btn btn-success w-100">Search</button>
             </div>
         </form>
     </div>
