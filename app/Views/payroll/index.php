@@ -59,7 +59,7 @@ function peso($value) {
         </div>
 <div class="d-flex gap-2">
     <a href="/deduction" class="btn btn-outline-dark btn-sm"><i class="fas fa-sliders-h me-1"></i> Manage Deductions</a>
-    <a href="<?= '/payroll/print' . ($office_id ? '?office_id=' . $office_id : '') ?>" class="btn btn-outline-primary btn-sm"><i class="fas fa-print me-1"></i> Print All</a>
+    <a href="<?= '/payroll/print' . ($office_id ? '?office_id=' . $office_id : '') ?>" class="btn btn-outline-primary btn-sm" target="_blank"><i class="fas fa-print me-1"></i> Print All</a>
     <a href="<?= '/payroll/export' . ($office_id ? '?office_id=' . $office_id : '') ?>" class="btn btn-success btn-sm"><i class="fas fa-file-export me-1"></i> Export All</a>
 </div>
     </div>
