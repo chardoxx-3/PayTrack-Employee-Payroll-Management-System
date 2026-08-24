@@ -2,16 +2,44 @@
 function peso($value) {
     return $value > 0 ? '₱' . number_format($value, 2) : '';
 }
+function safeOfficeName($office_id, $offices) {
+    if (!$office_id) return 'All Offices';
+    $idx = array_search($office_id, array_column($offices ?? [], 'id'));
+    return ($idx !== false && isset($offices[$idx]['office_name'])) ? $offices[$idx]['office_name'] : 'All Offices';
+}
+function sumCol($arr, $col, $extra = 0) {
+    return array_sum(array_filter(array_column($arr, $col))) + $extra;
+}
+function gsisTotal($emp) {
+    return ($emp['gsis_premium'] ?? 0) + ($emp['gsis_policy'] ?? 0) + ($emp['gsis_other'] ?? 0)
+         + ($emp['gsis_ouli'] ?? 0) + ($emp['gsis_diff'] ?? 0);
+}
+function pagibigTotal($emp) {
+    return ($emp['pagibig_premium'] ?? 0) + ($emp['pagibig_loan'] ?? 0) + ($emp['pagibig_mp2'] ?? 0);
+}
+function phicTotal($emp) {
+    return ($emp['phic'] ?? 0) + ($emp['phic_diff'] ?? 0);
+}
+function employeeDeductions($emp) {
+    $t = 0;
+    foreach (['gsis_premium','gsis_policy','gsis_other','gsis_ouli','gsis_diff',
+             'pagibig_premium','pagibig_loan','pagibig_mp2','phic','phic_diff',
+             'withholding_tax','loans','government_cont','other_deduct',
+             'bank_lbp','bank_other_payables','bank_mcc','bank_1stvb','bank_rbt'] as $f) {
+        $t += (float)($emp[$f] ?? 0);
+    }
+    return $t;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Payroll — <?= date('F Y') ?></title>
+    <title>Print Payroll — <?= esc($period_label ?? date('F Y')) ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { font-family: 'IBM Plex Sans', sans-serif !important; }
         body { background: #fff; margin: 0; padding: 0; }
@@ -49,7 +77,6 @@ function peso($value) {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
-            /* Shrink the table so all 18 columns fit on A4 landscape */
             .payroll-table {
                 font-size: 0.65rem;
             }
@@ -64,14 +91,15 @@ function peso($value) {
             .table-responsive {
                 zoom: 0.82;
             }
-            .print-footer .row {
-                gap: 1rem;
-            }
             .print-footer p {
                 font-size: 0.65rem !important;
             }
             .print-footer .fw-bold {
                 font-size: 0.75rem !important;
+            }
+            .page-break {
+                break-before: page;
+                page-break-before: always;
             }
             @page {
                 size: A4 landscape;
@@ -84,32 +112,42 @@ function peso($value) {
 <div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-3 no-print">
         <div>
-            <?php
-                $officeDisplay = 'All Offices';
-                if ($office_id) {
-                    $officeIndex = array_search($office_id, array_column($offices ?? [], 'id'));
-                    if ($officeIndex !== false && isset($offices[$officeIndex]['office_name'])) {
-                        $officeDisplay = $offices[$officeIndex]['office_name'];
-                    }
-                }
-            ?>
-            <h5 class="fw-bold mb-0">Payroll — <?= $period_label ?> — <?= $officeDisplay ?></h5>
-            <p class="text-muted small mb-0">Period of Service: <?= $service_period ?></p>
+            <h5 class="fw-bold mb-0">Payroll — <?= esc($period_label ?? date('F Y')) ?> — <?= safeOfficeName($office_id ?? null, $offices ?? []) ?></h5>
+            <p class="text-muted small mb-0">Period of Service: <?= esc($service_period ?? '') ?></p>
         </div>
-        <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
-            <i class="fas fa-print me-1"></i> Print
-        </button>
-        <small class="text-muted mt-1 d-block no-print">Tip: Uncheck "Headers &amp; footers" and check "Background graphics" in your browser's print dialog. Paper: A4 Landscape.</small>
+        <div>
+            <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
+                <i class="fas fa-print me-1"></i> Print
+            </button>
+            <a href="<?= '/payroll/export' . ($office_id ? '?office_id=' . $office_id : '') ?>" class="btn btn-outline-secondary">
+                <i class="fas fa-file-excel me-1"></i> Export
+            </a>
+            <a href="/payroll" class="btn btn-outline-dark btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Back
+            </a>
+            <small class="text-muted mt-1 d-block">Tip: Uncheck "Headers &amp; footers" and check "Background graphics". Paper: A4 Landscape.</small>
+        </div>
     </div>
 
+    <?php
+    $chunks = array_chunk($employees ?? [], 10);
+    $pageNum = 1;
+    $totalPages = count($chunks);
+    ?>
+
+    <?php foreach ($chunks as $chunkIdx => $employeesChunk): ?>
+    <?php if ($chunkIdx > 0): ?>
+    <div class="page-break"></div>
+    <?php endif; ?>
+
     <!-- Print Header Block -->
-    <div class="print-header-block mb-3">
-        <div class="text-center mb-2">
+    <div class="print-header-block mb-2">
+        <div class="text-center mb-1">
             <h4 class="fw-bold mb-0">LGU-MAHINOG</h4>
-            <p class="mb-0 fw-bold text-decoration-underline small">MUNICIPAL PAYROLL</p>
+            <p class="mb-0 small">MUNICIPAL PAYROLL</p>
         </div>
-        <div class="text-center mb-3">
-            <p class="mb-0 small lh-sm">
+        <div class="text-center mb-2">
+            <p class="small lh-sm mb-0">
                 We hereby acknowledge to have received from <strong class="text-decoration-underline">MARY LUSSEL S. PACTO</strong>. Treasurer of <strong class="text-decoration-underline">Mahinog, Camiguin</strong> the sums herein specified opposite our respective names, the same, being full compensation for our services rendered during the period stated below, to the correctness of which we hereby severally certify.
             </p>
         </div>
@@ -146,26 +184,31 @@ function peso($value) {
                 </tr>
             </thead>
             <tbody>
-                <?php $no = 1; foreach($employees as $emp): ?>
+                <?php $no = $chunkIdx * 10 + 1; foreach($employeesChunk as $emp): ?>
+                <?php
+                    $tDeductions = employeeDeductions($emp);
+                    $tNetPay = ($emp['net_pay'] ?? (($emp['gross_pay'] ?? $emp['salary_rate']) - ($emp['total_deductions'] ?? $tDeductions)));
+                ?>
                 <tr class="border-bottom">
                     <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
                     <td class="ps-4">
                         <div class="fw-bold"><?= esc($emp['full_name']) ?></div>
+                        <small class="text-muted"><?= $emp['employee_id'] ?></small>
                     </td>
-                    <td><?= esc($emp['position']) ?></td>
+                    <td><?= esc($emp['position'] ?? '-') ?></td>
                     <td class="fw-bold text-teal"><?= number_format($emp['salary_rate'], 2) ?></td>
-                    <td class="text-end border-start"><?= peso($emp['refund_rata'] ?? 0) ?></td>
-                    <td class="text-end border-start"><?= peso($emp['gsis_premium'] ?? 0) ?></td>
-                    <td class="text-end"><?= peso($emp['gsis_policy'] ?? 0) ?></td>
-                    <td class="text-end"><?= peso($emp['gsis_other'] ?? 0) ?></td>
-                    <td class="text-end border-start"><?= peso($emp['pagibig_premium'] ?? 0) ?></td>
-                    <td class="text-end"><?= peso($emp['pagibig_loan'] ?? 0) ?></td>
-                    <td class="text-center border-start"><?= peso($emp['phic'] ?? 0) ?></td>
-                    <td class="text-end border-start"><?= peso($emp['bank_lbp'] ?? 0) ?></td>
-                    <td class="text-end"><?= peso($emp['bank_mcc'] ?? 0) ?></td>
-                    <td class="text-end"><?= peso($emp['bank_1stvb'] ?? 0) ?></td>
-                    <td class="text-end border-start fw-bold"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
-                    <td class="fw-bold text-success border-start"><?= peso($emp['net_pay'] ?? 0) ?></td>
+                    <td class="text-end border-start"><?= number_format($emp['refund_rata'] ?? 0, 2) ?></td>
+                    <td class="text-end border-start"><?= number_format($emp['gsis_premium'] ?? 0, 2) ?></td>
+                    <td class="text-end"><?= number_format($emp['gsis_policy'] ?? 0, 2) ?></td>
+                    <td class="text-end"><?= number_format($emp['gsis_other'] ?? 0, 2) ?></td>
+                    <td class="text-end border-start"><?= number_format($emp['pagibig_premium'] ?? 0, 2) ?></td>
+                    <td class="text-end"><?= number_format($emp['pagibig_loan'] ?? 0, 2) ?></td>
+                    <td class="text-center border-start"><?= number_format($emp['phic'] ?? 0, 2) ?></td>
+                    <td class="text-end border-start"><?= number_format($emp['bank_lbp'] ?? 0, 2) ?></td>
+                    <td class="text-end"><?= number_format($emp['bank_mcc'] ?? 0, 2) ?></td>
+                    <td class="text-end"><?= number_format($emp['bank_1stvb'] ?? 0, 2) ?></td>
+                    <td class="text-end border-start fw-bold"><?= number_format($emp['withholding_tax'] ?? 0, 2) ?></td>
+                    <td class="fw-bold text-success border-start"><?= number_format($tNetPay, 2) ?></td>
                     <td class="text-center border-start">
                         <?= peso($emp['first_quincena'] ?? 0) ?><br>
                         <small class="text-muted"><?= peso($emp['second_quincena'] ?? 0) ?></small>
@@ -173,38 +216,35 @@ function peso($value) {
                     <td class="border-start text-center"><?= esc($emp['contact_number'] ?? '-') ?></td>
                 </tr>
                 <?php endforeach; ?>
-                <?php if (empty($employees)): ?>
-                <tr><td colspan="18" class="text-center text-muted py-4">No employees found.</td></tr>
-                <?php endif; ?>
             </tbody>
             <?php if (!empty($employees)): ?>
             <tfoot>
                 <tr class="small">
                     <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
-                    <td class="text-muted border-start fw-bold"><?= peso(array_sum(array_filter(array_column($employees, 'first_quincena')))) ?></td>
+                    <td class="text-muted border-start fw-bold"><?= peso(sumCol($employeesChunk, 'first_quincena')) ?></td>
                     <td class="border-start"></td>
                 </tr>
                 <tr class="small">
                     <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
-                    <td class="text-muted border-start fw-bold"><?= peso(array_sum(array_filter(array_column($employees, 'second_quincena')))) ?></td>
+                    <td class="text-muted border-start fw-bold"><?= peso(sumCol($employeesChunk, 'second_quincena')) ?></td>
                     <td class="border-start"></td>
                 </tr>
                 <tr class="fw-bold">
                     <td colspan="3" class="text-center">TOTAL</td>
-                    <td class="fw-bold"><?= peso(array_sum(array_column($employees, 'salary_rate'))) ?></td>
-                    <td class="text-end border-start"><?= peso(array_sum(array_column($employees, 'refund_rata'))) ?></td>
-                    <td class="text-end border-start"><?= peso(array_sum(array_filter(array_column($employees, 'gsis_premium')))) ?></td>
-                    <td class="text-end"><?= peso(array_sum(array_filter(array_column($employees, 'gsis_policy')))) ?></td>
-                    <td class="text-end"><?= peso(array_sum(array_filter(array_column($employees, 'gsis_other')))) ?></td>
-                    <td class="text-end border-start"><?= peso(array_sum(array_filter(array_column($employees, 'pagibig_premium')))) ?></td>
-                    <td class="text-end"><?= peso(array_sum(array_filter(array_column($employees, 'pagibig_loan')))) ?></td>
-                    <td class="text-center border-start"><?= peso(array_sum(array_filter(array_column($employees, 'phic')))) ?></td>
-                    <td class="text-end border-start"><?= peso(array_sum(array_filter(array_column($employees, 'bank_lbp')))) ?></td>
-                    <td class="text-end"><?= peso(array_sum(array_filter(array_column($employees, 'bank_mcc')))) ?></td>
-                    <td class="text-end"><?= peso(array_sum(array_filter(array_column($employees, 'bank_1stvb')))) ?></td>
-                    <td class="text-end border-start fw-bold"><?= peso(array_sum(array_filter(array_column($employees, 'withholding_tax')))) ?></td>
+                    <td class="fw-bold"><?= number_format(sumCol($employeesChunk, 'salary_rate'), 2) ?></td>
+                    <td class="text-end border-start"><?= number_format(sumCol($employeesChunk, 'refund_rata'), 2) ?></td>
+                    <td class="text-end border-start"><?= number_format(sumCol($employeesChunk, 'gsis_premium'), 2) ?></td>
+                    <td class="text-end"><?= number_format(sumCol($employeesChunk, 'gsis_policy'), 2) ?></td>
+                    <td class="text-end"><?= number_format(sumCol($employeesChunk, 'gsis_other'), 2) ?></td>
+                    <td class="text-end border-start"><?= number_format(sumCol($employeesChunk, 'pagibig_premium'), 2) ?></td>
+                    <td class="text-end"><?= number_format(sumCol($employeesChunk, 'pagibig_loan'), 2) ?></td>
+                    <td class="text-center border-start"><?= number_format(sumCol($employeesChunk, 'phic'), 2) ?></td>
+                    <td class="text-end border-start"><?= number_format(sumCol($employeesChunk, 'bank_lbp'), 2) ?></td>
+                    <td class="text-end"><?= number_format(sumCol($employeesChunk, 'bank_mcc'), 2) ?></td>
+                    <td class="text-end"><?= number_format(sumCol($employeesChunk, 'bank_1stvb'), 2) ?></td>
+                    <td class="text-end border-start fw-bold"><?= number_format(sumCol($employeesChunk, 'withholding_tax'), 2) ?></td>
                     <td class="fw-bold text-success border-start"><?= peso($total_net) ?></td>
-                    <td class="border-start fw-bold"><?= peso(array_sum(array_filter(array_column($employees, 'first_quincena'))) + array_sum(array_filter(array_column($employees, 'second_quincena')))) ?></td>
+                    <td class="border-start fw-bold"><?= peso(sumCol($employeesChunk, 'first_quincena') + sumCol($employeesChunk, 'second_quincena')) ?></td>
                     <td class="border-start"></td>
                 </tr>
             </tfoot>
@@ -213,41 +253,43 @@ function peso($value) {
     </div>
 
     <!-- Certification / Approval Footer -->
-    <div class="print-footer mt-4" style="<?= !empty($employees) ? '' : 'display:none;' ?>">
+    <div class="print-footer mt-3" style="<?= !empty($employees) ? '' : 'display:none;' ?>">
         <div style="display: flex; width: 100%; gap: 1rem;">
             <!-- Left: Statement (1) -->
             <div style="flex: 1; text-align: center;">
                 <p class="small lh-sm mb-2">
                     <strong>(1)</strong> I HEREBY CERTIFY on my official oath that the above PAYROLL is correct, and that services above stated have been duly rendered. Payment for such services is also hereby approved from the appropriation indicated.
                 </p>
-                <div style="border-top: 1px solid #000; padding-top: 5px;">
-                    <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
-                    <p class="small text-muted mb-0">Municipal Mayor</p>
-                </div>
+                <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
+                <p class="small text-muted mb-0">Municipal Mayor</p>
             </div>
             <!-- Center: Statement (4) APPROVED -->
             <div style="flex: 1; text-align: center;">
-                <p class="small mb-2">(4) APPROVED:</p>
-                <div style="border-top: 1px solid #000; padding-top: 5px;">
-                    <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
-                    <p class="small text-muted mb-0">Municipal Mayor</p>
-                </div>
+                <p class="small mb-2"><strong>(4) APPROVED:</strong></p>
+                <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
+                <p class="small text-muted mb-0">Municipal Mayor</p>
             </div>
             <!-- Right: Statement (5) -->
             <div style="flex: 1; text-align: center;">
                 <p class="small lh-sm mb-2">
                     <strong>(5)</strong> I HEREBY CERTIFY on my official oath that I have paid in cash to each official and employee whose name appears on the above roll the amount set opposite his name, under column 17, the having signed or marked his name under column 20 above, in my presence and at the time that payment was made to him in acknowledgement of receipt of the money paid him.
                 </p>
-                <div style="border-top: 1px solid #000; padding-top: 5px;">
-                    <p class="fw-bold mb-0">MARY LUSSEL S. PACTO</p>
-                    <p class="small text-muted mb-0">Disbursing Officer</p>
-                </div>
+                <p class="fw-bold mb-0">MARY LUSSEL S. PACTO</p>
+                <p class="small text-muted mb-0">Disbursing Officer</p>
             </div>
         </div>
-        <div style="margin-top: 10px; text-align: left;">
-            <p class="small mb-0">Date: <?= date('F d, Y') ?></p>
-        </div>
     </div>
+
+    <div class="text-center mt-2 no-print">
+        <small class="text-muted">Page <?= $pageNum++ ?> of <?= $totalPages ?></small>
+    </div>
+    <?php endforeach; ?>
+
+    <?php if (empty($employees)): ?>
+    <div class="text-center py-4">
+        <p class="text-muted">No employees with payroll data for this period.</p>
+    </div>
+    <?php endif; ?>
 </div>
 
 <script>
