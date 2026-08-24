@@ -284,14 +284,14 @@ function peso($value) {
                                 <label for="firstQuincena" class="form-label text-muted small fw-bold text-uppercase mb-1">1st Quincena</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white">₱</span>
-                                    <input type="number" step="0.01" class="form-control" id="firstQuincena" name="first_quincena" placeholder="0.00">
+                                    <input type="text" inputmode="decimal" class="form-control" id="firstQuincena" name="first_quincena" placeholder="0.00">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="secondQuincena" class="form-label text-muted small fw-bold text-uppercase mb-1">2nd Quincena</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-white">₱</span>
-                                    <input type="number" step="0.01" class="form-control" id="secondQuincena" name="second_quincena" placeholder="0.00" readonly>
+                                    <input type="text" inputmode="decimal" class="form-control" id="secondQuincena" name="second_quincena" placeholder="0.00" readonly>
                                 </div>
                             </div>
                         </div>
@@ -315,6 +315,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalNetPayEl = document.getElementById('modalNetPay');
     let currentNetPay = 0;
 
+    function formatNumber(value) {
+        const num = parseFloat(value) || 0;
+        return num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function parseFormattedNumber(value) {
+        return parseFloat(value.replace(/,/g, '')) || 0;
+    }
+
     processButtons.forEach(function(btn) {
         btn.addEventListener('click', function() {
             const employeeName = btn.getAttribute('data-employee-name');
@@ -332,8 +341,8 @@ document.addEventListener('DOMContentLoaded', function() {
             processForm.action = '/payroll/process/' + btn.getAttribute('data-employee-id');
 
             if (existingFirstQ > 0 && existingSecondQ > 0) {
-                firstQuincenaInput.value = existingFirstQ.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                secondQuincenaInput.value = existingSecondQ.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                firstQuincenaInput.value = formatNumber(existingFirstQ);
+                secondQuincenaInput.value = formatNumber(existingSecondQ);
             } else {
                 firstQuincenaInput.value = '';
                 secondQuincenaInput.value = '';
@@ -341,15 +350,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    processForm.addEventListener('submit', function() {
-        firstQuincenaInput.value = firstQuincenaInput.value.replace(/,/g, '');
-        secondQuincenaInput.value = secondQuincenaInput.value.replace(/,/g, '');
-    });
-
     firstQuincenaInput.addEventListener('input', function() {
-        const firstQ = parseFloat(this.value.replace(/,/g, '')) || 0;
+        const rawValue = this.value.replace(/,/g, '');
+        const firstQ = parseFloat(rawValue) || 0;
         const secondQ = currentNetPay - firstQ;
-        secondQuincenaInput.value = secondQ > 0 ? secondQ.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '';
+        secondQuincenaInput.value = secondQ > 0 ? formatNumber(secondQ) : '';
+        if (rawValue && !isNaN(firstQ)) {
+            this.value = formatNumber(firstQ);
+        }
     });
 
     let selectedRow = null;
