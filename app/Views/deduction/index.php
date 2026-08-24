@@ -179,7 +179,7 @@ function peso($value) {
                 <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?><br>2nd Q: <?= peso($secondQ) ?></td>
                 <td class="text-muted small border-start text-end"><?= esc($r['contact_number'] ?? '') ?></td>
                 <td class="text-end pe-4 text-nowrap">
-                    <a href="/deduction/manage/<?= $r['id'] ?>" class="btn btn-primary btn-sm px-3 rounded-pill">Edit</a>
+                    <a href="/deduction/manage/<?= $r['id'] ?>" class="btn btn-success btn-sm px-3 rounded-pill">Edit</a>
                 </td>
     </tr>
             <?php endforeach; ?>
