@@ -130,7 +130,7 @@ function employeeDeductions($emp) {
     </div>
 
     <?php
-    $chunks = array_chunk($employees ?? [], 10);
+    $chunks = array_chunk($employees ?? [], 6);
     $pageNum = 1;
     $totalPages = count($chunks);
     ?>
