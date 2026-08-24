@@ -27,7 +27,16 @@ function peso($value) {
 <div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-3 no-print">
         <div>
-            <h5 class="fw-bold mb-0">Payroll — <?= $period_label ?> — <?= $office_id ? ($offices[array_search($office_id, array_column($offices, 'id'))]['office_name'] ?? 'All Offices' : 'All Offices') ?></h5>
+            <?php
+    $officeDisplay = 'All Offices';
+    if ($office_id) {
+        $officeIndex = array_search($office_id, array_column($offices ?? [], 'id'));
+        if ($officeIndex !== false && isset($offices[$officeIndex]['office_name'])) {
+            $officeDisplay = $offices[$officeIndex]['office_name'];
+        }
+    }
+?>
+<h5 class="fw-bold mb-0">Payroll — <?= $period_label ?> — <?= $officeDisplay ?></h5>
             <p class="text-muted small mb-0">Period of Service: <?= $service_period ?></p>
         </div>
         <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
