@@ -34,6 +34,7 @@ function peso($value) {
             .no-print { display: none !important; }
             body { background: #fff; }
             .table-responsive { overflow: visible; }
+            @page { margin: 0; }
         }
     </style>
 </head>
@@ -56,6 +57,7 @@ function peso($value) {
         <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
             <i class="fas fa-print me-1"></i> Print
         </button>
+        <small class="text-muted mt-1 d-block no-print">Tip: uncheck "Headers &amp; footers" in your browser's print dialog to remove date/URL.</small>
     </div>
 
     <div class="table-responsive">
