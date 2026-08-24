@@ -389,7 +389,7 @@ public function process($employee_id)
             $sheet->setCellValue("R{$r2}", (float) ($emp['second_quincena'] ?? 0) ?: "=Q{$r1}-R{$r1}");
             $quincenaRefs[] = ["R{$r1}", "R{$r2}", "Q{$r1}"];
 
-            $sheet->setCellValue("T{$r1}", $emp['atm_account_no'] ?? '');
+            $sheet->setCellValue("T{$r1}", $emp['contact_number'] ?? '');
 
             // Row/column merges within the block
             foreach (['A', 'B', 'C', 'D', 'E'] as $col) {
@@ -404,7 +404,13 @@ public function process($employee_id)
             $sheet->getStyle("D{$r1}:T{$r4}")->getAlignment()
                 ->setHorizontal(Alignment::HORIZONTAL_CENTER)->setVertical(Alignment::VERTICAL_CENTER);
             $sheet->getStyle("E{$r1}:R{$r4}")->getNumberFormat()->setFormatCode($currencyFmt);
-            $sheet->getStyle("A{$r1}:T{$r4}")->getBorders()->getAllBorders()->applyFromArray($thin);
+            // Outline only — one rectangle per column across its 4-row span,
+            // not a full internal grid. This is what keeps the sheet's lines
+            // as light as the source instead of the denser look a full
+            // per-cell border produces.
+            foreach (['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T'] as $col) {
+                $sheet->getStyle("{$col}{$r1}:{$col}{$r4}")->getBorders()->getOutline()->applyFromArray($thin);
+            }
 
             $r = $r4 + 1;
         }
