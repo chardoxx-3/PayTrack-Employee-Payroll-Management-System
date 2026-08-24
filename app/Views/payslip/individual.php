@@ -4,6 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payslip — <?= esc($employee['full_name'] ?? '') ?></title>
+    <?php
+    function peso($value) {
+        return $value > 0 ? '₱' . number_format($value, 2) : '';
+    }
+    function fmt($value) {
+        $value = (float)($value ?? 0);
+        return $value != 0 ? number_format($value, 2) : '';
+    }
+    function gsisTotal($emp) {
+        return ($emp['gsis_premium'] ?? 0) + ($emp['gsis_policy'] ?? 0) + ($emp['gsis_other'] ?? 0)
+             + ($emp['gsis_ouli'] ?? 0) + ($emp['gsis_diff'] ?? 0);
+    }
+    function pagibigTotal($emp) {
+        return ($emp['pagibig_premium'] ?? 0) + ($emp['pagibig_loan'] ?? 0) + ($emp['pagibig_mp2'] ?? 0);
+    }
+    function phicTotal($emp) {
+        return ($emp['phic'] ?? 0) + ($emp['phic_diff'] ?? 0);
+    }
+    function employeeDeductions($emp) {
+        $t = 0;
+        foreach (['gsis_premium','gsis_policy','gsis_other','gsis_ouli','gsis_diff',
+                 'pagibig_premium','pagibig_loan','pagibig_mp2','phic','phic_diff',
+                 'withholding_tax','loans','government_cont','other_deduct',
+                 'bank_lbp','bank_other_payables','bank_mcc','bank_1stvb','bank_rbt'] as $f) {
+            $t += (float)($emp[$f] ?? 0);
+        }
+        return $t;
+    }
+
+    $periodStart = '';
+    $periodEnd = '';
+    if (!empty($period_label)) {
+        $periodStart = date('m/d/Y', strtotime($period_label));
+        $periodEnd = date('m/d/Y', strtotime('last day of this month', strtotime($period_label)));
+    }
+
+    $basicPay = $employee['salary_rate'] ?? 0;
+    $rata = $employee['refund_rata'] ?? 0;
+    $totalEarnings = $basicPay + $rata;
+    $totalDeductions = employeeDeductions($employee);
+    $netPay = $employee['net_pay'] ?? ($totalEarnings - $totalDeductions);
+    $firstHalf = $employee['first_quincena'] ?? 0;
+    $secondHalf = $employee['second_quincena'] ?? 0;
+    ?>
     <style>
         * { font-family: Arial, sans-serif !important; box-sizing: border-box; }
         body { background: #fff; margin: 0; padding: 0; color: #000; }
