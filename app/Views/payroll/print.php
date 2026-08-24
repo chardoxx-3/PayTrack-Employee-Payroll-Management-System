@@ -145,12 +145,12 @@ function employeeDeductions($emp) {
     <div class="print-header-block mb-2">
         <div class="text-center mb-1">
             <h4 class="fw-bold mb-0">LGU-MAHINOG</h4>
-            <p class="mb-0 small">MUNICIPAL PAYROLL</p>
+            <p class="mb-0 small">MUNICIPAL PAYROLL</p><br>
         </div>
         <div class="text-center mb-2">
             <p class="small lh-sm mb-0">
                 We hereby acknowledge to have received from <strong class="text-decoration-underline">MARY LUSSEL S. PACTO</strong>. Treasurer of <strong class="text-decoration-underline">Mahinog, Camiguin</strong> the sums herein specified opposite our respective names, the same, being full compensation for our services rendered during the period stated below, to the correctness of which we hereby severally certify.
-            </p>
+            </p><br>
         </div>
     </div>
 
@@ -253,29 +253,39 @@ function employeeDeductions($emp) {
     </div>
 
     <!-- Certification / Approval Footer -->
-    <div class="print-footer mt-3" style="<?= !empty($employees) ? '' : 'display:none;' ?>">
-        <div style="display: flex; width: 100%; gap: 1rem;">
+    <div class="print-footer mt-4" style="<?= !empty($employees) ? '' : 'display:none;' ?>">
+        <!-- Row 1: Statement texts -->
+        <div style="display: flex; width: 100%; gap: 1rem; align-items: flex-end;">
             <!-- Left: Statement (1) -->
             <div style="flex: 1; text-align: center;">
-                <p class="small lh-sm mb-2">
+                <p class="small lh-sm mb-0">
                     <strong>(1)</strong> I HEREBY CERTIFY on my official oath that the above PAYROLL is correct, and that services above stated have been duly rendered. Payment for such services is also hereby approved from the appropriation indicated.
                 </p>
-                <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
-                <p class="small text-muted mb-0">Municipal Mayor</p>
             </div>
             <!-- Center: Statement (4) APPROVED -->
             <div style="flex: 1; text-align: center;">
-                <p class="small mb-2"><strong>(4) APPROVED:</strong></p>
-                <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
-                <p class="small text-muted mb-0">Municipal Mayor</p>
+                <p class="small mb-0"><strong>(4) APPROVED:</strong></p>
             </div>
             <!-- Right: Statement (5) -->
             <div style="flex: 1; text-align: center;">
-                <p class="small lh-sm mb-2">
+                <p class="small lh-sm mb-0">
                     <strong>(5)</strong> I HEREBY CERTIFY on my official oath that I have paid in cash to each official and employee whose name appears on the above roll the amount set opposite his name, under column 17, the having signed or marked his name under column 20 above, in my presence and at the time that payment was made to him in acknowledgement of receipt of the money paid him.
                 </p>
+            </div>
+        </div>
+        <!-- Row 2: Signature names (aligned horizontally) -->
+        <div style="display: flex; width: 100%; gap: 1rem; margin-top: 1.5rem;">
+            <div style="flex: 1; text-align: center;">
+                <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
+                <p class="small text-muted mb-0">Municipal Mayor</p>
+            </div>
+            <div style="flex: 1; text-align: center;">
+                <p class="fw-bold mb-0">REY LAWRENCE K. TAN</p>
+                <p class="small text-muted mb-0">Municipal Mayor</p>
+            </div>
+            <div style="flex: 1; text-align: center;">
                 <p class="fw-bold mb-0">MARY LUSSEL S. PACTO</p>
-                <p class="small text-muted mb-0">Disbursing Officer</p>
+                <p class="small text-muted mb-0">Disburishing Officer</p>
             </div>
         </div>
     </div>
