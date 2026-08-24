@@ -30,24 +30,19 @@ function peso($value) {
             margin-bottom: 0;
         }
         .text-teal { color: #0d5c4e !important; }
-
-        @page {
-            size: A4 landscape;
-            margin: 0;
-        }
-
         @media print {
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print { display: none !important; }
-            body { background: #fff; margin: 0; padding: 0; }
+            body { background: #fff; }
             .table-responsive { overflow: visible; }
             .payroll-table thead th {
                 background-color: #0d2d27 !important;
                 color: #e6f4f1 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
-            .payroll-table th,
-            .payroll-table td {
-                border: 1px solid #000 !important;
+            @page {
+                size: A4 landscape;
+                margin: 0;
             }
         }
     </style>
@@ -68,18 +63,12 @@ function peso($value) {
             <h5 class="fw-bold mb-0">Payroll — <?= $period_label ?> — <?= $officeDisplay ?></h5>
             <p class="text-muted small mb-0">Period of Service: <?= $service_period ?></p>
         </div>
-        <button type="button" class="btn btn-success btn-sm" onclick="printPayroll()">
-            <i class="fas fa-print me-1"></i> Print
+        <div class="alert alert-warning py-2 no-print" role="alert">
+            <small class="mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Before printing: uncheck <strong>"Headers &amp; footers"</strong> and check <strong>"Background graphics"</strong> in your browser's print dialog (More settings ▼).</small>
+        </div>
+        <button type="button" class="btn btn-success btn-sm no-print" onclick="handlePrint()">
+            <i class="fas fa-print me-1"></i> Print Payroll
         </button>
-    </div>
-
-    <div class="alert alert-warning no-print" style="font-size: 0.8rem; margin-bottom: 1rem;">
-        <i class="fas fa-exclamation-triangle me-1"></i>
-        <strong>Print Settings Required:</strong>
-        Uncheck <em>"Headers &amp; footers"</em> to remove the date/time and URL/page number.<br>
-        Check <em>"Background graphics"</em> to keep the teal header color.<br>
-        Paper size: <strong>A4 Landscape</strong>
-    </div>
     </div>
 
     <div class="table-responsive">
@@ -170,43 +159,12 @@ function peso($value) {
 </div>
 
 <script>
-function printPayroll() {
-    var tableHTML = document.querySelector('div.table-responsive').outerHTML;
-    var headerHTML = document.querySelector('.print-header').outerHTML;
-
-    var printWindow = window.open('', '_blank', 'width=1200,height=900');
-    printWindow.document.write(
-        '<!DOCTYPE html><html><head><title>Print Payroll</title>' +
-        '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">' +
-        '<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">' +
-        '<style>' +
-        '*{font-family:"IBM Plex Sans",sans-serif}!important{' +
-        '@page{margin:0;size:A4 landscape}body{margin:0;padding:20px;background:#fff}' +
-        '.payroll-table thead th{background:#0d2d27!important;color:#e6f4f1!important}' +
-        '.payroll-table th,.payroll-table td{border:1px solid #000!important}' +
-        '.payroll-table{width:100%;border-collapse:collapse}' +
-        '.text-teal{color:#0d5c4e!important}' +
-        '</style></head><body>' +
-        headerHTML + tableHTML +
-        '</body></html>'
-    );
-    printWindow.document.close();
-    setTimeout(function() {
-        printWindow.focus();
-        printWindow.print();
-    }, 500);
+function handlePrint() {
+    if (!confirm('Chrome/Firefox users: In the print dialog, uncheck "Headers & footers" and check "Background graphics" before printing.\n\nClick OK to proceed to print.')) {
+        return;
+    }
+    window.print();
 }
-
-window.addEventListener('beforeprint', function() {
-    var s = document.createElement('style');
-    s.id = 'force-page-margin';
-    s.textContent = '@page { margin: 0 !important; }';
-    document.head.appendChild(s);
-});
-window.addEventListener('afterprint', function() {
-    var s = document.getElementById('force-page-margin');
-    if (s) s.remove();
-});
 </script>
 </body>
 </html>
