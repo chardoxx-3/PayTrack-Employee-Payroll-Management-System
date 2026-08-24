@@ -1,42 +1,56 @@
-<?= $this->extend('layout/main') ?>
-
-<?= $this->section('content') ?>
-<style>
-    .payroll-table thead th {
-        background-color: #0d2d27 !important;
-        color: #e6f4f1 !important;
-    }
-    .payroll-table th,
-    .payroll-table td {
-        border: 1px solid #dee2e6 !important;
-    }
-    .payroll-table tbody tr {
-        border: 1px solid #dee2e6 !important;
-    }
-    @media print {
-        body { background: #fff; }
-        .no-print { display: none !important; }
-        .payroll-table { margin-bottom: 0; }
-    }
-</style>
 <?php
 function peso($value) {
     return $value > 0 ? '₱' . number_format($value, 2) : '';
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Payroll — <?= date('F Y') ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'IBM Plex Sans', sans-serif !important; }
+        body { background: #fff; margin: 0; padding: 0; }
+        .payroll-table thead th {
+            background-color: #0d2d27 !important;
+            color: #e6f4f1 !important;
+        }
+        .payroll-table th,
+        .payroll-table td {
+            border: 1px solid #dee2e6 !important;
+        }
+        .payroll-table tbody tr {
+            border: 1px solid #dee2e6 !important;
+        }
+        .payroll-table {
+            margin-bottom: 0;
+        }
+        .text-teal { color: #0d5c4e !important; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff; }
+            .table-responsive { overflow: visible; }
+        }
+    </style>
+</head>
+<body>
 <div class="container-fluid py-3">
     <div class="d-flex justify-content-between align-items-center mb-3 no-print">
         <div>
             <?php
-    $officeDisplay = 'All Offices';
-    if ($office_id) {
-        $officeIndex = array_search($office_id, array_column($offices ?? [], 'id'));
-        if ($officeIndex !== false && isset($offices[$officeIndex]['office_name'])) {
-            $officeDisplay = $offices[$officeIndex]['office_name'];
-        }
-    }
-?>
-<h5 class="fw-bold mb-0">Payroll — <?= $period_label ?> — <?= $officeDisplay ?></h5>
+                $officeDisplay = 'All Offices';
+                if ($office_id) {
+                    $officeIndex = array_search($office_id, array_column($offices ?? [], 'id'));
+                    if ($officeIndex !== false && isset($offices[$officeIndex]['office_name'])) {
+                        $officeDisplay = $offices[$officeIndex]['office_name'];
+                    }
+                }
+            ?>
+            <h5 class="fw-bold mb-0">Payroll — <?= $period_label ?> — <?= $officeDisplay ?></h5>
             <p class="text-muted small mb-0">Period of Service: <?= $service_period ?></p>
         </div>
         <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
@@ -45,7 +59,7 @@ function peso($value) {
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover bg-white rounded shadow-sm align-middle payroll-table">
+        <table class="table table-border-bottom-0 payroll-table align-middle">
             <thead class="text-muted small fw-bold">
                 <tr>
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 40px;">NO.</th>
@@ -136,5 +150,5 @@ window.onload = function() {
     window.print();
 };
 </script>
-
-<?= $this->endSection() ?>
+</body>
+</html>
