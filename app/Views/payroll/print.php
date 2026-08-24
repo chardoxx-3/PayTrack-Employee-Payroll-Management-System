@@ -41,8 +41,8 @@ function peso($value) {
                 print-color-adjust: exact;
             }
             @page {
-                size: A4;
-                margin: 0.5in;
+                size: A4 landscape;
+                margin: 0;
             }
         }
     </style>
@@ -66,7 +66,7 @@ function peso($value) {
         <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
             <i class="fas fa-print me-1"></i> Print
         </button>
-        <small class="text-muted mt-1 d-block no-print">Tip: Uncheck "Headers &amp; footers" and check "Background graphics" in your browser's print dialog. Paper: A4.</small>
+        <small class="text-muted mt-1 d-block no-print">Tip: Uncheck "Headers &amp; footers" and check "Background graphics" in your browser's print dialog. Paper: A4 Landscape.</small>
     </div>
 
     <div class="table-responsive">
