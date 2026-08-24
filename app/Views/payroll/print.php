@@ -63,12 +63,10 @@ function peso($value) {
             <h5 class="fw-bold mb-0">Payroll — <?= $period_label ?> — <?= $officeDisplay ?></h5>
             <p class="text-muted small mb-0">Period of Service: <?= $service_period ?></p>
         </div>
-        <div class="alert alert-warning py-2 no-print" role="alert">
-            <small class="mb-0"><i class="fas fa-exclamation-triangle me-1"></i> Before printing: uncheck <strong>"Headers &amp; footers"</strong> and check <strong>"Background graphics"</strong> in your browser's print dialog (More settings ▼).</small>
-        </div>
-        <button type="button" class="btn btn-success btn-sm no-print" onclick="handlePrint()">
-            <i class="fas fa-print me-1"></i> Print Payroll
+        <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
+            <i class="fas fa-print me-1"></i> Print
         </button>
+        <small class="text-muted mt-1 d-block no-print">Tip: Uncheck "Headers &amp; footers" and check "Background graphics" in your browser's print dialog. Paper: A4 Landscape.</small>
     </div>
 
     <div class="table-responsive">
@@ -159,12 +157,9 @@ function peso($value) {
 </div>
 
 <script>
-function handlePrint() {
-    if (!confirm('Chrome/Firefox users: In the print dialog, uncheck "Headers & footers" and check "Background graphics" before printing.\n\nClick OK to proceed to print.')) {
-        return;
-    }
+window.onload = function() {
     window.print();
-}
+};
 </script>
 </body>
 </html>
