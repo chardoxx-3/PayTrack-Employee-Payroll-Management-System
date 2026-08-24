@@ -332,8 +332,8 @@ document.addEventListener('DOMContentLoaded', function() {
             processForm.action = '/payroll/process/' + btn.getAttribute('data-employee-id');
 
             if (existingFirstQ > 0 && existingSecondQ > 0) {
-                firstQuincenaInput.value = existingFirstQ.toFixed(2);
-                secondQuincenaInput.value = existingSecondQ.toFixed(2);
+                firstQuincenaInput.value = existingFirstQ.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                secondQuincenaInput.value = existingSecondQ.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             } else {
                 firstQuincenaInput.value = '';
                 secondQuincenaInput.value = '';
@@ -341,10 +341,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    processForm.addEventListener('submit', function() {
+        firstQuincenaInput.value = firstQuincenaInput.value.replace(/,/g, '');
+        secondQuincenaInput.value = secondQuincenaInput.value.replace(/,/g, '');
+    });
+
     firstQuincenaInput.addEventListener('input', function() {
-        const firstQ = parseFloat(this.value) || 0;
+        const firstQ = parseFloat(this.value.replace(/,/g, '')) || 0;
         const secondQ = currentNetPay - firstQ;
-        secondQuincenaInput.value = secondQ > 0 ? secondQ.toFixed(2) : '';
+        secondQuincenaInput.value = secondQ > 0 ? secondQ.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '';
     });
 
     let selectedRow = null;
