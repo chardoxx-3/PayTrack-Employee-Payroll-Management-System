@@ -41,12 +41,18 @@ public function update()
         'gsis_premium'     => $this->request->getVar('gsis_premium'),
         'gsis_policy'      => $this->request->getVar('gsis_policy'),
         'gsis_other'       => $this->request->getVar('gsis_other'),
+        'gsis_ouli'        => $this->request->getVar('gsis_ouli'),          // NEW
+        'gsis_diff'        => $this->request->getVar('gsis_diff'),          // NEW
         'pagibig_premium'  => $this->request->getVar('pagibig_premium'),
         'pagibig_loan'     => $this->request->getVar('pagibig_loan'),
+        'pagibig_mp2'      => $this->request->getVar('pagibig_mp2'),        // NEW
         'phic'             => $this->request->getVar('phic'),
+        'phic_diff'        => $this->request->getVar('phic_diff'),         // NEW
         'bank_lbp'         => $this->request->getVar('bank_lbp'),
+        'bank_other_payables' => $this->request->getVar('bank_other_payables'), // NEW
         'bank_mcc'         => $this->request->getVar('bank_mcc'),
         'bank_1stvb'       => $this->request->getVar('bank_1stvb'),
+        'bank_rbt'         => $this->request->getVar('bank_rbt'),           // NEW
     ];
 
     // Handle case where no deduction row exists yet for this employee
@@ -64,6 +70,12 @@ public function update()
     $salary_rate = $this->request->getVar('salary_rate');
     if ($salary_rate !== null && $salary_rate !== '') {
         $empModel->update($emp_id, ['salary_rate' => (float) $salary_rate]);
+    }
+
+    // NEW — persist the ATM/bank account number shown in the payroll's SIGNATURE column
+    $atm_account_no = $this->request->getVar('atm_account_no');
+    if ($atm_account_no !== null) {
+        $empModel->update($emp_id, ['atm_account_no' => $atm_account_no]);
     }
 
     // Recalculate & save the current period's payroll record so the Payroll list
@@ -85,12 +97,18 @@ public function update()
         (float) ($data['gsis_premium'] ?? 0) +
         (float) ($data['gsis_policy'] ?? 0) +
         (float) ($data['gsis_other'] ?? 0) +
+        (float) ($data['gsis_ouli'] ?? 0) +           // NEW
+        (float) ($data['gsis_diff'] ?? 0) +            // NEW
         (float) ($data['pagibig_premium'] ?? 0) +
         (float) ($data['pagibig_loan'] ?? 0) +
+        (float) ($data['pagibig_mp2'] ?? 0) +           // NEW
         (float) ($data['phic'] ?? 0) +
+        (float) ($data['phic_diff'] ?? 0) +             // NEW
         (float) ($data['bank_lbp'] ?? 0) +
+        (float) ($data['bank_other_payables'] ?? 0) +   // NEW
         (float) ($data['bank_mcc'] ?? 0) +
-        (float) ($data['bank_1stvb'] ?? 0);
+        (float) ($data['bank_1stvb'] ?? 0) +
+        (float) ($data['bank_rbt'] ?? 0);               // NEW
 
     $net_pay = $gross_pay - $total_deductions;
 
@@ -138,10 +156,12 @@ public function update()
 
     $empModel->select('employees.*, offices.office_name,
                         deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
-                        deductions.pagibig_premium, deductions.pagibig_loan,
-                        deductions.phic, deductions.withholding_tax,
+                        deductions.gsis_ouli, deductions.gsis_diff,
+                        deductions.pagibig_premium, deductions.pagibig_loan, deductions.pagibig_mp2,
+                        deductions.phic, deductions.phic_diff, deductions.withholding_tax,
                         deductions.loans, deductions.government_cont, deductions.other_deduct,
-                        deductions.bank_lbp, deductions.bank_mcc, deductions.bank_1stvb,
+                        deductions.bank_lbp, deductions.bank_other_payables, deductions.bank_mcc,
+                        deductions.bank_1stvb, deductions.bank_rbt,
                         payroll_records.id as payroll_id, payroll_records.refund_rata,
                         payroll_records.net_pay, payroll_records.first_quincena, payroll_records.second_quincena')
              ->join('offices', 'offices.id = employees.office_id', 'left')

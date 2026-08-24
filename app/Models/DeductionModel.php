@@ -19,12 +19,18 @@ protected $allowedFields    = [
     'gsis_premium',
     'gsis_policy',
     'gsis_other',
+    'gsis_ouli',           // NEW — GSIS "OULI" row, stacks under the same GSIS column as gsis_premium
+    'gsis_diff',           // NEW — GSIS "DIFF-GSIS" row, stacks under the same GSIS column
     'pagibig_premium',
     'pagibig_loan',
+    'pagibig_mp2',         // NEW — Pag-IBIG "MP2" row, stacks under the same column as pagibig_loan
     'phic',
+    'phic_diff',           // NEW — "PHIC-Diff" row, stacks under the same column as phic
     'bank_lbp',
+    'bank_other_payables', // NEW — "Other Payables" row, stacks under the same column as bank_lbp
     'bank_mcc',
-    'bank_1stvb'
+    'bank_1stvb',
+    'bank_rbt'             // NEW — "RBT" row, stacks under the same column as bank_1stvb
 ];
 
     /**
@@ -50,8 +56,11 @@ public function searchWithDeductions($keyword = null, $office_id = null, $period
                                employees.position, employees.office_id, employees.salary_rate,
                                deductions.withholding_tax, deductions.loans, deductions.government_cont, deductions.other_deduct,
                                deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
-                               deductions.pagibig_premium, deductions.pagibig_loan, deductions.phic,
-                               deductions.bank_lbp, deductions.bank_mcc, deductions.bank_1stvb,
+                               deductions.gsis_ouli, deductions.gsis_diff,
+                               deductions.pagibig_premium, deductions.pagibig_loan, deductions.pagibig_mp2, deductions.phic,
+                               deductions.phic_diff,
+                               deductions.bank_lbp, deductions.bank_other_payables, deductions.bank_mcc,
+                               deductions.bank_1stvb, deductions.bank_rbt,
                                payroll_records.id as payroll_id, payroll_records.refund_rata,
                                payroll_records.net_pay, payroll_records.first_quincena, payroll_records.second_quincena')
                      ->join('employees', 'employees.id = deductions.employee_id', 'right')

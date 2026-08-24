@@ -11,14 +11,15 @@ class EmployeeModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
 protected $allowedFields    = [
-        'employee_id', // Organization's Unique ID
+        'employee_id',
         'full_name', 
         'office_id', 
         'position', 
         'contact_number',
         'salary_rate', 
         'employment_status', 
-        'is_active'
+        'is_active',
+        'atm_account_no'
     ];
 
 protected $validationRules = [
