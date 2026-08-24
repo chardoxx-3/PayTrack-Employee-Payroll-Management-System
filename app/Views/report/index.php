@@ -27,7 +27,9 @@
                             <label class="form-label text-muted small fw-bold">OFFICE UNIT</label>
                             <select name="office_id" class="form-select">
                                 <option value="all">All Offices</option>
-                                <!-- Office loops -->
+                                <?php foreach($offices as $office): ?>
+                                    <option value="<?= $office['id'] ?>"><?= esc($office['office_name']) ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">
@@ -43,16 +45,30 @@
             <div class="row g-3">
                 <div class="col-6">
                     <div class="card border-0 shadow-sm p-4 text-center">
-                        <i class="fas fa-download fa-2x text-primary mb-2"></i>
-                        <p class="text-muted small mb-0">Total Processed (YTD)</p>
-                        <h4 class="fw-bold">₱ 1,450,000.00</h4>
+                        <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                        <p class="text-muted small mb-0">Employees Processed</p>
+                        <h4 class="fw-bold"><?= number_format($total_employees) ?> <?= $total_employees == 1 ? 'Employee' : 'Employees' ?></h4>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="card border-0 shadow-sm p-4 text-center">
-                        <i class="fas fa-file-pdf fa-2x text-danger mb-2"></i>
-                        <p class="text-muted small mb-0">Reports Archived</p>
-                        <h4 class="fw-bold">128 Files</h4>
+                        <i class="fas fa-coins fa-2x text-success mb-2"></i>
+                        <p class="text-muted small mb-0">Total Net Pay (<?= date('F Y') ?>)</p>
+                        <h4 class="fw-bold">₱<?= number_format($total_net, 2) ?></h4>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card border-0 shadow-sm p-4 text-center">
+                        <i class="fas fa-calculator fa-2x text-warning mb-2"></i>
+                        <p class="text-muted small mb-0">Total Gross Pay</p>
+                        <h4 class="fw-bold">₱<?= number_format($total_gross, 2) ?></h4>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card border-0 shadow-sm p-4 text-center">
+                        <i class="fas fa-file-alt fa-2x text-info mb-2"></i>
+                        <p class="text-muted small mb-0">Total Deductions</p>
+                        <h4 class="fw-bold text-danger">₱<?= number_format($total_deductions, 2) ?></h4>
                     </div>
                 </div>
             </div>
