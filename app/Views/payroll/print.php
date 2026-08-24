@@ -255,7 +255,7 @@ function employeeDeductions($emp) {
     <!-- Certification / Approval Footer -->
     <div class="print-footer mt-4" style="<?= !empty($employees) ? '' : 'display:none;' ?>">
         <!-- Row 1: Statement texts -->
-        <div style="display: flex; width: 100%; gap: 1rem; align-items: flex-end;">
+        <div style="display: flex; width: 100%; gap: 1rem; align-items: flex-start;">
             <!-- Left: Statement (1) -->
             <div style="flex: 1; text-align: center;">
                 <p class="small lh-sm mb-0">
