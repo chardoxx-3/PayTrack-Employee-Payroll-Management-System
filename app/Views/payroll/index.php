@@ -90,11 +90,11 @@ function peso($value) {
         <th rowspan="2" class="text-center" style="vertical-align: middle; width: 40px;">NO.</th>
         <th class="ps-4" rowspan="2" style="vertical-align: middle;">EMPLOYEE</th>
         <th rowspan="2" style="vertical-align: middle;">DESIGNATION</th>
-        <th rowspan="2" style="vertical-align: middle;">MONTHLY RATE</th>
-        <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">REFUND</th>
+        <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">MONTHLY RATE</th>
+        <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">REFUND RATA PERA ACA DIFFERENTIAL</th>
         <th colspan="3" class="text-center border-start">GSIS</th>
         <th colspan="2" class="text-center border-start">PAG-IBIG</th>
-        <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">PHIC</th>
+        <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">PHIC PHIC-Diff</th>
         <th colspan="3" class="text-center border-start">BANKS / COOP'S</th>
         <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">BIR TAX</th>
         <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">NET PAY</th>
@@ -103,14 +103,14 @@ function peso($value) {
         <th rowspan="2" class="text-end pe-4" style="vertical-align: middle;">ACTION</th>
     </tr>
     <tr>
-        <th class="text-center small border-start">Premium</th>
-        <th class="text-center small">Conso/MPL</th>
-        <th class="text-center small">GFAL/Other</th>
-        <th class="text-center small border-start">Premium</th>
-        <th class="text-center small">Loan/MP2</th>
-        <th class="text-center small border-start">LBP</th>
-        <th class="text-center small">MCC</th>
-        <th class="text-center small">1stVB</th>
+        <th class="text-center small border-start">PREMIUM (Personal) OULI diff</th>
+        <th class="text-center small">Conso Policy MPL</th>
+        <th class="text-center small">GFAL EMRGYLN MPL LITE CPL</th>
+        <th class="text-center small border-start">PREMIUM (Personal)</th>
+        <th class="text-center small">SALARY CALAMITY MP2</th>
+        <th class="text-center small border-start">LBP Other Payables</th>
+        <th class="text-center small" style="vertical-align: middle;">MCC (over)</th>
+        <th class="text-center small" style="vertical-align: middle;">1stVB RBT</th>
     </tr>
 </thead>
 <tbody>
