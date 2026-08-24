@@ -133,7 +133,17 @@ function peso($value) {
             <?php if (!empty($employees)): ?>
             <tfoot>
                 <tr class="small">
-                    <td colspan="3" class="text-center fw-bold">TOTAL</td>
+                    <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
+                    <td class="text-muted border-start fw-bold"><?= peso(array_sum(array_filter(array_column($employees, 'first_quincena')))) ?></td>
+                    <td class="border-start"></td>
+                </tr>
+                <tr class="small">
+                    <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
+                    <td class="text-muted border-start fw-bold"><?= peso(array_sum(array_filter(array_column($employees, 'second_quincena')))) ?></td>
+                    <td class="border-start"></td>
+                </tr>
+                <tr class="fw-bold">
+                    <td colspan="3" class="text-center">TOTAL</td>
                     <td class="fw-bold"><?= peso(array_sum(array_column($employees, 'salary_rate'))) ?></td>
                     <td class="text-end border-start"><?= peso(array_sum(array_column($employees, 'refund_rata'))) ?></td>
                     <td class="text-end border-start"><?= peso(array_sum(array_filter(array_column($employees, 'gsis_premium')))) ?></td>
@@ -147,7 +157,7 @@ function peso($value) {
                     <td class="text-end"><?= peso(array_sum(array_filter(array_column($employees, 'bank_1stvb')))) ?></td>
                     <td class="text-end border-start fw-bold"><?= peso(array_sum(array_filter(array_column($employees, 'withholding_tax')))) ?></td>
                     <td class="fw-bold text-success border-start"><?= peso($total_net) ?></td>
-                    <td class="border-start"><?= peso(array_sum(array_filter(array_column($employees, 'first_quincena'))) + array_sum(array_filter(array_column($employees, 'second_quincena')))) ?></td>
+                    <td class="border-start fw-bold"><?= peso(array_sum(array_filter(array_column($employees, 'first_quincena'))) + array_sum(array_filter(array_column($employees, 'second_quincena')))) ?></td>
                     <td class="border-start"></td>
                 </tr>
             </tfoot>
