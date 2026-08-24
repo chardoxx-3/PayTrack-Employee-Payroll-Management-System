@@ -16,7 +16,6 @@
         border-left: 4px solid var(--bs-primary);
     }
     .metric-card .metric-value {
-        font-family: 'Fraunces', serif;
         font-weight: 600;
     }
     .metric-teal { border-left-color: #0d5c4e; }
@@ -33,7 +32,6 @@
         box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
     .stat-value {
-        font-family: 'Fraunces', serif;
         font-size: 1.75rem;
         font-weight: 600;
     }
@@ -64,7 +62,7 @@
     </div>
 
     <!-- Metric Cards -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-3">
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 metric-card metric-teal">
                 <div class="stat-label">Total Employees</div>
@@ -96,7 +94,7 @@
     </div>
 
     <!-- Financial Summary Cards -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-3">
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 text-center">
                 <div class="stat-label">Total Gross Pay</div>
@@ -127,7 +125,7 @@
     </div>
 
     <!-- Charts Row -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-3">
         <!-- Payroll by Office - Bar Chart -->
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm p-4 chart-card h-100">
@@ -145,7 +143,7 @@
     </div>
 
     <!-- Office Distribution + Employment Status -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-3">
         <div class="col-lg-6">
             <div class="card border-0 shadow-sm p-4 chart-card h-100">
                 <h6 class="fw-bold mb-3">Employees by Office</h6>
