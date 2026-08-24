@@ -160,16 +160,6 @@ public function import()
             $rawSalary = is_string($salaryRate) ? str_replace([',', ' '], '', $salaryRate) : $salaryRate;
             $hasValidSalary = is_numeric($rawSalary) && (float) $rawSalary > 0;
 
-            $deductionData = [
-                'gsis_premium'    => $toFloat($row[6]  ?? 0),
-                'pagibig_premium' => $toFloat($row[9]  ?? 0),
-                'phic'            => $toFloat($row[11] ?? 0),
-                'bank_lbp'        => $toFloat($row[12] ?? 0),
-                'bank_mcc'        => $toFloat($row[13] ?? 0),
-                'bank_1stvb'      => $toFloat($row[14] ?? 0),
-                'withholding_tax' => $toFloat($row[15] ?? 0),
-            ];
-
             // Refund/Rata isn't always on the very next row (some blocks have a blank
             // spacer row first), so find the end of this employee's block — the next
             // numbered employee row, or the sheet's "Total" row — and take the FIRST
@@ -192,6 +182,32 @@ public function import()
                 }
                 $blockEnd++;
             }
+
+            // Some blocks carry a second "DIFFERENTIAL" line below the employee's main
+            // row (see row 10's header: "DIFFERENTIAL"/"DIFF-GSIS"/"PHIC-Diff") that adds
+            // to the same GSIS/PAG-IBIG/PHIC columns as a correction for a prior period.
+            // Sum every row in the block per column instead of reading the name row only,
+            // or those differential amounts get silently dropped.
+            $sumColumn = function (int $col) use ($rows, $i, $blockEnd, $toFloat) {
+                $sum = 0.0;
+                for ($r = $i; $r < $blockEnd; $r++) {
+                    $sum += $toFloat($rows[$r][$col] ?? 0);
+                }
+                return $sum;
+            };
+
+            $deductionData = [
+                'gsis_premium'    => $sumColumn(6),  // GSIS Premium (Personal) / OULI / DIFF-GSIS
+                'gsis_policy'     => $sumColumn(7),  // GSIS Conso Policy / MPL
+                'gsis_other'      => $sumColumn(8),  // GSIS GFAL EMRGYLN / MPL LITE / CPL
+                'pagibig_premium' => $sumColumn(9),  // Pag-IBIG Premium (Personal)
+                'pagibig_loan'    => $sumColumn(10), // Pag-IBIG Salary Loan / MP2
+                'phic'            => $sumColumn(11), // PHIC / PHIC-Diff
+                'bank_lbp'        => $sumColumn(12),
+                'bank_mcc'        => $sumColumn(13),
+                'bank_1stvb'      => $sumColumn(14),
+                'withholding_tax' => $sumColumn(15),
+            ];
 
             $refundRata = 0;
             for ($r = $i; $r < $blockEnd; $r++) {
