@@ -108,6 +108,7 @@ function peso($value) {
                     <td class="text-center">
                         <a href="/employee/edit/<?= $emp['id'] ?>" class="btn btn-sm btn-outline-secondary border-0"><i class="fas fa-edit"></i></a>
                         <a href="/deduction/manage/<?= $emp['id'] ?>" class="btn btn-sm btn-outline-info border-0"><i class="fas fa-file-invoice"></i></a>
+                        <a href="/employee/delete/<?= $emp['id'] ?>" class="btn btn-sm btn-outline-danger border-0" onclick="return confirm('Delete this employee? This cannot be undone.')"><i class="fas fa-trash-alt"></i></a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
