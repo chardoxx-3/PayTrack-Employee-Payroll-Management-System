@@ -30,19 +30,24 @@ function peso($value) {
             margin-bottom: 0;
         }
         .text-teal { color: #0d5c4e !important; }
+
+        @page {
+            size: A4 landscape;
+            margin: 0;
+        }
+
         @media print {
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .no-print { display: none !important; }
-            body { background: #fff; }
+            body { background: #fff; margin: 0; padding: 0; }
             .table-responsive { overflow: visible; }
             .payroll-table thead th {
                 background-color: #0d2d27 !important;
                 color: #e6f4f1 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
             }
-            @page {
-                size: A4 landscape;
-                margin: 0;
+            .payroll-table th,
+            .payroll-table td {
+                border: 1px solid #000 !important;
             }
         }
     </style>
@@ -66,7 +71,15 @@ function peso($value) {
         <button type="button" class="btn btn-success btn-sm" onclick="window.print()">
             <i class="fas fa-print me-1"></i> Print
         </button>
-        <small class="text-muted mt-1 d-block no-print">Tip: Uncheck "Headers &amp; footers" and check "Background graphics" in your browser's print dialog. Paper: A4 Landscape.</small>
+    </div>
+
+    <div class="alert alert-warning no-print" style="font-size: 0.8rem; margin-bottom: 1rem;">
+        <i class="fas fa-exclamation-triangle me-1"></i>
+        <strong>Print Settings Required:</strong>
+        Uncheck <em>"Headers &amp; footers"</em> to remove the date/time and URL/page number.<br>
+        Check <em>"Background graphics"</em> to keep the teal header color.<br>
+        Paper size: <strong>A4 Landscape</strong>
+    </div>
     </div>
 
     <div class="table-responsive">
