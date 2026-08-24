@@ -92,8 +92,8 @@ function peso($value) {
                     <th style="vertical-align: middle;">OFFICE</th>
                     <th style="vertical-align: middle;">DESIGNATION</th>
                     <th style="vertical-align: middle;">CONTACT NUMBER</th>
-                    <th style="vertical-align: middle;">STATUS</th>
-                    <th class="text-end" style="vertical-align: middle;">ACTIONS</th>
+                    <th class="text-center" style="vertical-align: middle;">STATUS</th>
+                    <th class="text-center" style="vertical-align: middle;">ACTIONS</th>
                 </tr>
             </thead>
             <tbody>
@@ -104,8 +104,8 @@ function peso($value) {
                     <td class="align-middle"><span class="text-muted small"><?= esc($emp['office_name'] ?? '—') ?></span></td>
                     <td class="align-middle"><span class="text-muted small"><?= esc($emp['position'] ?? '—') ?></span></td>
                     <td class="align-middle"><span class="text-muted small"><?= esc($emp['contact_number'] ?? '—') ?></span></td>
-                    <td class="align-middle"><span class="badge rounded-pill bg-success">Active</span></td>
-                    <td class="text-end">
+                    <td class="align-middle text-center"><span class="badge rounded-pill bg-success">Active</span></td>
+                    <td class="text-center">
                         <a href="/employee/edit/<?= $emp['id'] ?>" class="btn btn-sm btn-outline-secondary border-0"><i class="fas fa-edit"></i></a>
                         <a href="/deduction/manage/<?= $emp['id'] ?>" class="btn btn-sm btn-outline-info border-0"><i class="fas fa-file-invoice"></i></a>
                     </td>
