@@ -91,7 +91,7 @@ class Payroll extends BaseController
             $empModel->where('employees.office_id', $officeId);
         }
 
-        $data['employees'] = $empModel->orderBy('offices.office_name', 'ASC')->findAll();
+        $data['employees'] = $empModel->orderBy('employees.id', 'ASC')->findAll();
         $data['office_id'] = $officeId;
         $data['offices'] = $officeModel->getOfficesOrdered();
         $data['period'] = $period;
