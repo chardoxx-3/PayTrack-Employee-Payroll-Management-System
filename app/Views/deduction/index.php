@@ -87,29 +87,29 @@ function peso($value) {
         <thead class="text-muted small fw-bold">
             <tr>
                 <th rowspan="2" class="text-center" style="vertical-align: middle; width: 40px;">NO.</th>
-                <th class="ps-4" rowspan="2" style="vertical-align: middle;">EMPLOYEE</th>
-                <th rowspan="2" style="vertical-align: middle;">DESIGNATION</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">MONTHLY RATE</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">REFUND RATA PERA ACA DIFFERENTIAL</th>
+                <th class="ps-4" rowspan="2" style="vertical-align: middle; width: 150px;">EMPLOYEE</th>
+                <th rowspan="2" style="vertical-align: middle; width: 120px;">DESIGNATION</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 100px;">MONTHLY RATE</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 100px;">REFUND RATA PERA ACA DIFFERENTIAL</th>
                 <th colspan="3" class="text-center border-start">GSIS</th>
                 <th colspan="2" class="text-center border-start">PAG-IBIG</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">PHIC PHIC-Diff</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 100px;">PHIC PHIC-Diff</th>
                 <th colspan="3" class="text-center border-start">BANKS / COOP'S</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">BIR W/T TAX</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">NET PAY</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">QUINCENA</th>
-                <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">SIGNATURE</th>
-                <th rowspan="2" class="text-end pe-4" style="vertical-align: middle;">ACTION</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 90px;">BIR W/T TAX</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 90px;">NET PAY</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 150px;">QUINCENA</th>
+                <th rowspan="2" class="text-center border-start" style="vertical-align: middle; width: 100px;">SIGNATURE</th>
+                <th rowspan="2" class="text-end pe-4" style="vertical-align: middle; width: 50px;">ACTION</th>
             </tr>
             <tr>
-                <th class="text-center small border-start">PREMIUM (Personal) OULI diff</th>
-                <th class="text-center small">Conso Policy MPL</th>
-                <th class="text-center small">GFAL EMRGYLN MPL LITE CPL</th>
-                <th class="text-center small border-start">PREMIUM (Personal)</th>
-                <th class="text-center small">SALARY CALAMITY MP2</th>
-                <th class="text-center small border-start">LBP Other Payables</th>
-                <th class="text-center small" style="vertical-align: middle;">MCC (over)</th>
-                <th class="text-center small" style="vertical-align: middle;">1stVB RBT</th>
+                <th class="text-center small border-start" style="width: 100px;">PREMIUM (Personal) OULI diff</th>
+                <th class="text-center small" style="vertical-align: middle; width: 100px;">Conso Policy MPL</th>
+                <th class="text-center small" style="vertical-align: middle; width: 100px;">GFAL EMRGYLN MPL LITE CPL</th>
+                <th class="text-center small border-start" style="vertical-align: middle; width: 100px;">PREMIUM (Personal)</th>
+                <th class="text-center small" style="vertical-align: middle; width: 100px;">SALARY CALAMITY</th>
+                <th class="text-center small border-start" style="vertical-align: middle; width: 100px;">LBP Other Payables</th>
+                <th class="text-center small" style="vertical-align: middle; width: 80px;">MCC (over)</th>
+                <th class="text-center small" style="vertical-align: middle; width: 80px;">1stVB RBT</th>
             </tr>
         </thead>
         <tbody>
