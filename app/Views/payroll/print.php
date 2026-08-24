@@ -211,8 +211,8 @@ function employeeDeductions($emp) {
                     <td class="text-end border-start fw-bold"><?= number_format($emp['withholding_tax'] ?? 0, 2) ?></td>
                     <td class="fw-bold text-success border-start"><?= number_format($tNetPay, 2) ?></td>
                     <td class="text-center border-start">
-                        <?= peso($emp['first_quincena'] ?? 0) ?><br>
-                        <small class="text-muted"><?= peso($emp['second_quincena'] ?? 0) ?></small>
+                        1st Q: <?= peso($emp['first_quincena'] ?? 0) ?><br>
+                        <small class="text-muted">2nd Q: <?= peso($emp['second_quincena'] ?? 0) ?></small>
                     </td>
                     <td class="border-start text-center"><?= esc($emp['contact_number'] ?? '-') ?></td>
                 </tr>
