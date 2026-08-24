@@ -311,7 +311,7 @@ window.onload = function() {
     window.print();
 };
 window.addEventListener('afterprint', function() {
-    window.close();
+    setTimeout(function() { window.close(); }, 2000);
 });
 </script>
 </body>
