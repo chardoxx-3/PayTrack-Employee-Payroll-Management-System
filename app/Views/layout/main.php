@@ -146,7 +146,6 @@
             <a href="/dashboard" class="nav-link <?= url_is('dashboard*') ? 'active' : '' ?>"><i class="fas fa-chart-pie"></i> Dashboard</a>
             <a href="/employee" class="nav-link <?= url_is('employee*') ? 'active' : '' ?>"><i class="fas fa-user-tie"></i> Employees</a>
             <a href="/payroll" class="nav-link <?= url_is('payroll*') ? 'active' : '' ?>"><i class="fas fa-wallet"></i> Payroll</a>
-            <a href="/payslip" class="nav-link <?= url_is('payslip*') ? 'active' : '' ?>"><i class="fas fa-file-invoice"></i> Payslips</a>
             <a href="/report" class="nav-link <?= url_is('report*') ? 'active' : '' ?>"><i class="fas fa-file-alt"></i> Reports</a>
             <hr class="mx-3">
             <a href="/user" class="nav-link <?= url_is('user*') ? 'active' : '' ?>"><i class="fas fa-users-cog"></i> User Management</a>
