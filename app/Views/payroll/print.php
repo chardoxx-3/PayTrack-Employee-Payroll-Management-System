@@ -130,7 +130,8 @@ function employeeDeductions($emp) {
     </div>
 
     <?php
-    $chunks = array_chunk($employees ?? [], 6);
+    $pageSize = count($employees ?? []) > 10 ? ceil(count($employees ?? []) / 2) : 10;
+    $chunks = array_chunk($employees ?? [], (int)$pageSize);
     $pageNum = 1;
     $totalPages = count($chunks);
     ?>
