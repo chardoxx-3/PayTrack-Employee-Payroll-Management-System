@@ -284,7 +284,7 @@ function employeeDeductions($emp) {
                 <p class="small text-muted mb-0">Municipal Mayor</p>
             </div>
             <div style="flex: 1; text-align: center;">
-                <p class="fw-bold mb-0">MARY LUSSEL S. PACTO</p>
+                <p class="fw-bold mb-0 text-decoration-underline">MARY LUSSEL S. PACTO</p>
                 <p class="small text-muted mb-0">Disburishing Officer</p>
             </div>
         </div>
