@@ -151,7 +151,6 @@ public function import()
             $fullName      = trim($row[1] ?? '');
             $designation   = trim($row[2] ?? '');
             $salaryRate    = $row[4] ?? null;
-            $contactNumber = trim($row[19] ?? '');
 
             if (!is_numeric($no) || $fullName === '' || is_numeric($fullName)) {
                 continue;
@@ -208,6 +207,19 @@ public function import()
                 'bank_1stvb'      => $sumColumn(14),
                 'withholding_tax' => $sumColumn(15),
             ];
+
+            // The "SIGNATURE" column (19) actually holds the employee's contact
+            // number, not a signature - and it's rarely on the name row itself,
+            // it typically lands 1-3 rows below within the block. Scan the whole
+            // block and take the first cell that looks like a phone number.
+            $contactNumber = '';
+            for ($r = $i; $r < $blockEnd; $r++) {
+                $rawContact = trim((string) ($rows[$r][19] ?? ''));
+                if ($rawContact !== '' && preg_match('/^\d{7,15}$/', $rawContact)) {
+                    $contactNumber = $rawContact;
+                    break;
+                }
+            }
 
             $refundRata = 0;
             for ($r = $i; $r < $blockEnd; $r++) {
