@@ -2,6 +2,10 @@
 function peso($value) {
     return $value > 0 ? '₱' . number_format($value, 2) : '';
 }
+function fmt($value) {
+    $value = (float)($value ?? 0);
+    return $value != 0 ? number_format($value, 2) : '';
+}
 function safeOfficeName($office_id, $offices) {
     if (!$office_id) return 'All Offices';
     $idx = array_search($office_id, array_column($offices ?? [], 'id'));
@@ -168,20 +172,20 @@ function employeeDeductions($emp) {
                     <th colspan="2" class="text-center border-start">PAG-IBIG</th>
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">PHIC</th>
                     <th colspan="3" class="text-center border-start">BANKS / COOP'S</th>
-                    <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">BIR TAX</th>
+                    <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">BIR W/T TAX</th>
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">NET PAY</th>
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">QUINCENA</th>
                     <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">SIGNATURE</th>
                 </tr>
                 <tr>
-                    <th class="text-center small border-start">Premium</th>
-                    <th class="text-center small">Conso/MPL</th>
-                    <th class="text-center small">GFAL/Other</th>
-                    <th class="text-center small border-start">Premium</th>
-                    <th class="text-center small">Loan/MP2</th>
-                    <th class="text-center small border-start">LBP</th>
-                    <th class="text-center small">MCC</th>
-                    <th class="text-center small">1stVB</th>
+                    <th class="text-center">PREMIUM</th>
+                    <th class="text-center">CONSO</th>
+                    <th class="text-center">GFAL</th>
+                    <th class="text-center">PREMIUM</th>
+                    <th class="text-center">LOAN</th>
+                    <th class="text-center">LBP</th>
+                    <th class="text-center">MCC</th>
+                    <th class="text-center">1stVB</th>
                 </tr>
             </thead>
             <tbody>
@@ -196,52 +200,55 @@ function employeeDeductions($emp) {
                         <div class="fw-bold"><?= esc($emp['full_name']) ?></div>
                     </td>
                     <td><?= esc($emp['position'] ?? '-') ?></td>
-                    <td class="fw-bold text-teal"><?= peso($emp['salary_rate']) ?></td>
-                    <td class="text-muted small text-end border-start"><?= peso($emp['refund_rata'] ?? 0) ?></td>
-                    <td class="text-danger small text-end border-start"><?= peso($emp['gsis_premium'] ?? 0) ?></td>
-                    <td class="text-danger small text-end"><?= peso($emp['gsis_policy'] ?? 0) ?></td>
-                    <td class="text-danger small text-end"><?= peso($emp['gsis_other'] ?? 0) ?></td>
-                    <td class="text-danger small text-end border-start"><?= peso($emp['pagibig_premium'] ?? 0) ?></td>
-                    <td class="text-danger small text-end"><?= peso($emp['pagibig_loan'] ?? 0) ?></td>
-                    <td class="text-danger small text-end border-start"><?= peso($emp['phic'] ?? 0) ?></td>
-                    <td class="text-danger small text-end border-start"><?= peso($emp['bank_lbp'] ?? 0) ?></td>
-                    <td class="text-danger small text-end"><?= peso($emp['bank_mcc'] ?? 0) ?></td>
-                    <td class="text-danger small text-end"><?= peso($emp['bank_1stvb'] ?? 0) ?></td>
-                    <td class="text-danger small text-end border-start fw-bold"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
-                    <td class="fw-bold text-success border-start"><?= peso($tNetPay) ?></td>
-                    <td class="text-muted small border-start">1st Q: <?= peso($emp['first_quincena'] ?? 0) ?><br>2nd Q: <?= peso($emp['second_quincena'] ?? 0) ?></td>
-                    <td class="text-muted small border-start text-end"><?= esc($emp['contact_number'] ?? '-') ?></td>
+                    <td class="fw-bold text-teal"><?= fmt($emp['salary_rate']) ?></td>
+                    <td class="text-end border-start"><?= fmt($emp['refund_rata'] ?? 0) ?></td>
+                    <td class="text-end border-start"><?= fmt($emp['gsis_premium'] ?? 0) ?></td>
+                    <td class="text-end"><?= fmt($emp['gsis_policy'] ?? 0) ?></td>
+                    <td class="text-end"><?= fmt($emp['gsis_other'] ?? 0) ?></td>
+                    <td class="text-end border-start"><?= fmt($emp['pagibig_premium'] ?? 0) ?></td>
+                    <td class="text-end"><?= fmt($emp['pagibig_loan'] ?? 0) ?></td>
+                    <td class="text-center border-start"><?= fmt($emp['phic'] ?? 0) ?></td>
+                    <td class="text-end border-start"><?= fmt($emp['bank_lbp'] ?? 0) ?></td>
+                    <td class="text-end"><?= fmt($emp['bank_mcc'] ?? 0) ?></td>
+                    <td class="text-end"><?= fmt($emp['bank_1stvb'] ?? 0) ?></td>
+                    <td class="text-end border-start fw-bold"><?= fmt($emp['withholding_tax'] ?? 0) ?></td>
+                    <td class="fw-bold text-success border-start"><?= fmt($tNetPay) ?></td>
+                    <td class="border-start">
+                        1st Q: <?= peso($emp['first_quincena'] ?? 0) ?><br>
+                        2nd Q: <?= peso($emp['second_quincena'] ?? 0) ?>
+                    </td>
+                    <td class="border-start text-center"><?= esc($emp['contact_number'] ?? '-') ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
             <?php if (!empty($employees)): ?>
             <tfoot>
-                <tr class="small">
+                <tr>
                     <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
                     <td class="text-muted border-start fw-bold"><?= peso(sumCol($employeesChunk, 'first_quincena')) ?></td>
                     <td class="border-start"></td>
                 </tr>
-                <tr class="small">
+                <tr>
                     <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
                     <td class="text-muted border-start fw-bold"><?= peso(sumCol($employeesChunk, 'second_quincena')) ?></td>
                     <td class="border-start"></td>
                 </tr>
                 <tr class="fw-bold">
                     <td colspan="3" class="text-center">TOTAL</td>
-                    <td class="fw-bold"><?= peso(sumCol($employeesChunk, 'salary_rate')) ?></td>
-                    <td class="text-end border-start"><?= peso(sumCol($employeesChunk, 'refund_rata')) ?></td>
-                    <td class="text-end border-start"><?= peso(sumCol($employeesChunk, 'gsis_premium')) ?></td>
-                    <td class="text-end"><?= peso(sumCol($employeesChunk, 'gsis_policy')) ?></td>
-                    <td class="text-end"><?= peso(sumCol($employeesChunk, 'gsis_other')) ?></td>
-                    <td class="text-end border-start"><?= peso(sumCol($employeesChunk, 'pagibig_premium')) ?></td>
-                    <td class="text-end"><?= peso(sumCol($employeesChunk, 'pagibig_loan')) ?></td>
-                    <td class="text-end border-start"><?= peso(sumCol($employeesChunk, 'phic')) ?></td>
-                    <td class="text-end border-start"><?= peso(sumCol($employeesChunk, 'bank_lbp')) ?></td>
-                    <td class="text-end"><?= peso(sumCol($employeesChunk, 'bank_mcc')) ?></td>
-                    <td class="text-end"><?= peso(sumCol($employeesChunk, 'bank_1stvb')) ?></td>
-                    <td class="text-end border-start"><?= peso(sumCol($employeesChunk, 'withholding_tax')) ?></td>
-                    <td class="text-end border-start"><?= peso($total_net) ?></td>
-                    <td class="text-end border-start"><?= peso(sumCol($employeesChunk, 'first_quincena') + sumCol($employeesChunk, 'second_quincena')) ?></td>
+                    <td class="fw-bold"><?= fmt(sumCol($employeesChunk, 'salary_rate')) ?></td>
+                    <td class="text-end border-start"><?= fmt(sumCol($employeesChunk, 'refund_rata')) ?></td>
+                    <td class="text-end border-start"><?= fmt(sumCol($employeesChunk, 'gsis_premium')) ?></td>
+                    <td class="text-end"><?= fmt(sumCol($employeesChunk, 'gsis_policy')) ?></td>
+                    <td class="text-end"><?= fmt(sumCol($employeesChunk, 'gsis_other')) ?></td>
+                    <td class="text-end border-start"><?= fmt(sumCol($employeesChunk, 'pagibig_premium')) ?></td>
+                    <td class="text-end"><?= fmt(sumCol($employeesChunk, 'pagibig_loan')) ?></td>
+                    <td class="text-center border-start"><?= fmt(sumCol($employeesChunk, 'phic')) ?></td>
+                    <td class="text-end border-start"><?= fmt(sumCol($employeesChunk, 'bank_lbp')) ?></td>
+                    <td class="text-end"><?= fmt(sumCol($employeesChunk, 'bank_mcc')) ?></td>
+                    <td class="text-end"><?= fmt(sumCol($employeesChunk, 'bank_1stvb')) ?></td>
+                    <td class="text-end border-start fw-bold"><?= fmt(sumCol($employeesChunk, 'withholding_tax')) ?></td>
+                    <td class="fw-bold text-success border-start"><?= peso($total_net) ?></td>
+                    <td class="border-start fw-bold"><?= peso(sumCol($employeesChunk, 'first_quincena') + sumCol($employeesChunk, 'second_quincena')) ?></td>
                     <td class="border-start"></td>
                 </tr>
             </tfoot>
