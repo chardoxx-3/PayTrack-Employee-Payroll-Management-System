@@ -97,7 +97,7 @@ function peso($value) {
     <div class="print-header-block mb-3">
         <div class="text-center mb-2">
             <h4 class="fw-bold mb-0">LGU-MAHINOG</h4>
-            <p class="mb-0 small">MUNICIPAL PAYROLL</p>
+            <p class="mb-0 fw-bold text-decoration-underline small">MUNICIPAL PAYROLL</p>
         </div>
         <div class="text-center mb-3">
             <p class="mb-0 small lh-sm">
