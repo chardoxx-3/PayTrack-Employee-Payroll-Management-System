@@ -44,6 +44,7 @@ $routes->group('deduction', ['filter' => 'auth'], function($routes) {
 $routes->group('payroll', ['filter' => 'auth'], function($routes) {
     $routes->get('/', 'Payroll::index');
     $routes->get('export', 'Payroll::export');
+    $routes->get('print', 'Payroll::printAll');
     $routes->match(['get', 'post'], 'process/(:num)', 'Payroll::process/$1');
 });
 

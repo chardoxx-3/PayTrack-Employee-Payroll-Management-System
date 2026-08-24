@@ -21,44 +21,97 @@ class Payroll extends BaseController
     private const MAYOR_NAME      = 'REY LAWRENCE K. TAN';
     private const MAYOR_TITLE     = 'Municipal Mayor';
 
-public function index()
-{
-    $officeId = $this->request->getVar('office_id');
-    $period = date('Y-m');
-    $empModel = new EmployeeModel();
-    $officeModel = new \App\Models\OfficeModel();
+    public function index()
+    {
+        $officeId = $this->request->getVar('office_id');
+        $period = date('Y-m');
+        $empModel = new EmployeeModel();
+        $officeModel = new \App\Models\OfficeModel();
 
-    $data['offices'] = $officeModel->getOfficesOrdered();
+        $data['offices'] = $officeModel->getOfficesOrdered();
 
-    // Default to MAYOR'S office when no office_id is set (first page load)
-    if (!$officeId && !empty($data['offices'])) {
-        foreach ($data['offices'] as $office) {
-            if (stripos($office['office_name'], 'MAYOR') !== false) {
-                $officeId = $office['id'];
-                break;
+        // Default to MAYOR'S office when no office_id is set (first page load)
+        if (!$officeId && !empty($data['offices'])) {
+            foreach ($data['offices'] as $office) {
+                if (stripos($office['office_name'], 'MAYOR') !== false) {
+                    $officeId = $office['id'];
+                    break;
+                }
             }
         }
+
+        $empModel->select('employees.*,
+                            offices.office_name,
+                            deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
+                            deductions.pagibig_premium, deductions.pagibig_loan,
+                            deductions.phic, deductions.withholding_tax,
+                            deductions.bank_lbp, deductions.bank_mcc, deductions.bank_1stvb,
+                            payroll_records.id as payroll_id, payroll_records.refund_rata,
+                            payroll_records.total_deductions, payroll_records.net_pay,
+                            payroll_records.first_quincena, payroll_records.second_quincena')
+                 ->join('offices', 'offices.id = employees.office_id', 'left')
+                 ->join('deductions', 'deductions.employee_id = employees.id', 'left')
+                 ->join('payroll_records', "payroll_records.employee_id = employees.id AND payroll_records.payroll_period = '{$period}'", 'left');
+
+        $data['employees'] = $officeId ?
+            $empModel->where('employees.office_id', $officeId)->findAll() :
+            $empModel->findAll();
+
+        $data['office_id'] = $officeId;
+
+        return view('payroll/index', $data);
     }
 
-$empModel->select('employees.*,
-                    deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
-                    deductions.pagibig_premium, deductions.pagibig_loan,
-                    deductions.phic, deductions.withholding_tax,
-                    deductions.bank_lbp, deductions.bank_mcc, deductions.bank_1stvb,
-                    payroll_records.id as payroll_id, payroll_records.refund_rata,
-                    payroll_records.total_deductions, payroll_records.net_pay,
-                    payroll_records.first_quincena, payroll_records.second_quincena')
-             ->join('deductions', 'deductions.employee_id = employees.id', 'left')
-             ->join('payroll_records', "payroll_records.employee_id = employees.id AND payroll_records.payroll_period = '{$period}'", 'left');
+    public function printAll()
+    {
+        $officeId = $this->request->getVar('office_id');
+        $period = date('Y-m');
 
-    $data['employees'] = $officeId ?
-        $empModel->where('employees.office_id', $officeId)->findAll() :
-        $empModel->findAll();
+        $empModel = new EmployeeModel();
+        $officeModel = new \App\Models\OfficeModel();
 
-    $data['office_id'] = $officeId;
+        $empModel->select('employees.*,
+                            offices.office_name,
+                            deductions.gsis_premium, deductions.gsis_policy, deductions.gsis_other,
+                            deductions.gsis_ouli, deductions.gsis_diff,
+                            deductions.pagibig_premium, deductions.pagibig_loan, deductions.pagibig_mp2,
+                            deductions.phic, deductions.phic_diff, deductions.withholding_tax,
+                            deductions.loans, deductions.government_cont, deductions.other_deduct,
+                            deductions.bank_lbp, deductions.bank_other_payables, deductions.bank_mcc,
+                            deductions.bank_1stvb, deductions.bank_rbt,
+                            payroll_records.refund_rata,
+                            payroll_records.total_deductions, payroll_records.net_pay,
+                            payroll_records.first_quincena, payroll_records.second_quincena,
+                            payroll_records.cash_paid, payroll_records.gross_pay')
+                 ->join('offices', 'offices.id = employees.office_id', 'left')
+                 ->join('deductions', 'deductions.employee_id = employees.id', 'left')
+                 ->join('payroll_records', "payroll_records.employee_id = employees.id AND payroll_records.payroll_period = '{$period}'", 'left');
 
-    return view('payroll/index', $data);
-}
+        if ($officeId) {
+            $empModel->where('employees.office_id', $officeId);
+        }
+
+        $data['employees'] = $empModel->orderBy('offices.office_name', 'ASC')->findAll();
+        $data['office_id'] = $officeId;
+        $data['offices'] = $officeModel->getOfficesOrdered();
+        $data['period'] = $period;
+        $data['period_label'] = date('F Y');
+        $data['service_period'] = date('m/01/Y') . '-' . date('m/t/Y');
+
+        $grossTotal = 0;
+        $deductTotal = 0;
+        $netTotal = 0;
+        foreach ($data['employees'] as $emp) {
+            $grossTotal += (float)($emp['gross_pay'] ?? $emp['salary_rate']);
+            $deductTotal += (float)($emp['total_deductions'] ?? 0);
+            $netTotal += (float)($emp['net_pay'] ?? 0);
+        }
+        $data['total_gross'] = $grossTotal;
+        $data['total_deductions'] = $deductTotal;
+        $data['total_net'] = $netTotal;
+
+        return view('payroll/print', $data);
+    }
 
 public function process($employee_id)
     {
