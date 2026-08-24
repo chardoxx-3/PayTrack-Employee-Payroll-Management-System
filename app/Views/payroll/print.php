@@ -40,9 +40,24 @@ function peso($value) {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
+            /* Shrink the table so all 18 columns fit on A4 landscape */
+            .payroll-table {
+                font-size: 0.65rem;
+            }
+            .payroll-table thead th,
+            .payroll-table tbody td {
+                padding: 3px 4px !important;
+                font-size: 0.65rem;
+            }
+            .payroll-table thead th {
+                font-size: 0.6rem;
+            }
+            .table-responsive {
+                zoom: 0.82;
+            }
             @page {
                 size: A4 landscape;
-                margin: 0;
+                margin: 0.25in;
             }
         }
     </style>
