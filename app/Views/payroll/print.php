@@ -30,6 +30,15 @@ function peso($value) {
             margin-bottom: 0;
         }
         .text-teal { color: #0d5c4e !important; }
+        .print-header-block h4 {
+            font-size: 1.1rem;
+        }
+        .print-header-block p {
+            font-size: 0.8rem;
+        }
+        .print-header-block p.lh-sm {
+            line-height: 1.3;
+        }
         @media print {
             .no-print { display: none !important; }
             body { background: #fff; }
@@ -84,6 +93,20 @@ function peso($value) {
         <small class="text-muted mt-1 d-block no-print">Tip: Uncheck "Headers &amp; footers" and check "Background graphics" in your browser's print dialog. Paper: A4 Landscape.</small>
     </div>
 
+    <!-- Print Header Block -->
+    <div class="print-header-block mb-3">
+        <div class="text-center mb-2">
+            <h4 class="fw-bold mb-0">LGU-MAHINOG</h4>
+            <p class="mb-0 small">MUNICIPAL PAYROLL</p>
+        </div>
+        <div class="text-center mb-3">
+            <p class="mb-0 small lh-sm">
+                We hereby acknowledge to have received from <strong class="text-decoration-underline">MARY LUSSEL S. PACTO</strong>. Treasurer of <strong class="text-decoration-underline">Mahinog, Camiguin</strong> the sums herein specified opposite our respective names, the same, being full compensation for our services rendered during the period stated below, to the correctness of which we hereby severally certify.
+            </p>
+        </div>
+    </div>
+
+    <!-- Payroll Table -->
     <div class="table-responsive">
         <table class="table table-border-bottom-0 payroll-table align-middle">
             <thead class="text-muted small fw-bold">
