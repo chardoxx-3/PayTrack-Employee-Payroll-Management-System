@@ -36,17 +36,11 @@
     background-color: rgba(13, 92, 78, 0.85) !important;
 }
 
-    .row-selected td .btn {
+.row-selected td .btn {
     color: #ffffff !important;
     background-color: #0d5c4e !important;
     border-color: #0d5c4e !important;
 }
-
-    .signature-cell {
-        font-family: 'Courier New', monospace;
-        font-size: 0.85rem;
-    }
-
 
 
 </style>
@@ -103,6 +97,7 @@ function peso($value) {
         <th colspan="3" class="text-center border-start">BANKS / COOP'S</th>
         <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">BIR TAX</th>
         <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">NET PAY</th>
+        <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">QUINCENA</th>
         <th rowspan="2" class="text-center border-start" style="vertical-align: middle;">SIGNATURE</th>
         <th rowspan="2" class="text-end pe-4" style="vertical-align: middle;">ACTION</th>
     </tr>
@@ -179,7 +174,7 @@ function peso($value) {
         <td class="text-danger small text-end border-start"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
         <td class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
         <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?><br>2nd Q: <?= peso($secondQ) ?></td>
-        <td class="text-center border-start signature-cell"><?= esc($emp['contact_number'] ?? '-') ?></td>
+        <td class="text-muted small border-start text-end"><?= esc($emp['contact_number'] ?? '') ?></td>
         <td class="text-center" style="width: 50px;">
             <div class="dropdown">
                 <button class="btn btn-link text-dark p-2" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 36px; min-height: 36px;">
@@ -211,34 +206,37 @@ function peso($value) {
         <tr><td colspan="19" class="text-center text-muted py-4">No employees found.</td></tr>
     <?php endif; ?>
 
-    <tr class="small">
-        <td colspan="17" class="text-end fw-bold">1st Quincena:</td>
-        <td class="text-muted border-start fw-bold">₱<?= number_format($totalFirstQ, 2) ?></td>
-        <td colspan="1"></td>
-    </tr>
-    <tr class="small">
-        <td colspan="17" class="text-end fw-bold">2nd Quincena:</td>
-        <td class="text-muted border-start fw-bold">₱<?= number_format($totalSecondQ, 2) ?></td>
-        <td colspan="1"></td>
-    </tr>
-    <tr class="fw-bold">
-        <td colspan="3" class="text-center">TOTAL</td>
-        <td class="text-end"><?= peso($totalSalaryRate) ?></td>
-        <td class="text-end border-start"><?= peso($totalRefund) ?></td>
-        <td class="text-end border-start"><?= peso($totalGsisPremium) ?></td>
-        <td class="text-end"><?= peso($totalGsisPolicy) ?></td>
-        <td class="text-end"><?= peso($totalGsisOther) ?></td>
-        <td class="text-end border-start"><?= peso($totalPagibigPremium) ?></td>
-        <td class="text-end"><?= peso($totalPagibigLoan) ?></td>
-        <td class="text-end border-start"><?= peso($totalPhic) ?></td>
-        <td class="text-end border-start"><?= peso($totalBankLbp) ?></td>
-        <td class="text-end"><?= peso($totalBankMcc) ?></td>
-        <td class="text-end"><?= peso($totalBank1stvb) ?></td>
-        <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
-        <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
-        <td class="text-end border-start"><?= peso($totalFirstQ + $totalSecondQ) ?></td>
-        <td colspan="2"></td>
-    </tr>
+        <tr class="small">
+            <td colspan="16" class="text-end fw-bold">1st Quincena:</td>
+            <td class="text-muted border-start fw-bold">₱<?= number_format($totalFirstQ, 2) ?></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+        </tr>
+        <tr class="small">
+            <td colspan="16" class="text-end fw-bold">2nd Quincena:</td>
+            <td class="text-muted border-start fw-bold">₱<?= number_format($totalSecondQ, 2) ?></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+        </tr>
+        <tr class="fw-bold">
+            <td colspan="3" class="text-center">TOTAL</td>
+            <td class="text-end"><?= peso($totalSalaryRate) ?></td>
+            <td class="text-end border-start"><?= peso($totalRefund) ?></td>
+            <td class="text-end border-start"><?= peso($totalGsisPremium) ?></td>
+            <td class="text-end"><?= peso($totalGsisPolicy) ?></td>
+            <td class="text-end"><?= peso($totalGsisOther) ?></td>
+            <td class="text-end border-start"><?= peso($totalPagibigPremium) ?></td>
+            <td class="text-end"><?= peso($totalPagibigLoan) ?></td>
+            <td class="text-end border-start"><?= peso($totalPhic) ?></td>
+            <td class="text-end border-start"><?= peso($totalBankLbp) ?></td>
+            <td class="text-end"><?= peso($totalBankMcc) ?></td>
+            <td class="text-end"><?= peso($totalBank1stvb) ?></td>
+            <td class="text-end border-start"><?= peso($totalWithholdingTax) ?></td>
+            <td class="text-end border-start"><?= peso($totalNetPay) ?></td>
+            <td class="text-end border-start"><?= peso($totalFirstQ + $totalSecondQ) ?></td>
+            <td colspan="1"></td>
+            <td colspan="1"></td>
+        </tr>
     </tbody>
         </table>
     </div>
