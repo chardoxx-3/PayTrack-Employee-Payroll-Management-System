@@ -159,10 +159,9 @@ function peso($value) {
             ?>
     <tr class="border-bottom">
         <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
-                <td class="ps-4">
+        <td class="ps-4">
 <div class="fw-bold"><?= esc($r['full_name']) ?></div>
-<small class="text-muted"><?= esc($r['employee_id']) ?></small>
-                </td>
+        </td>
                 <td><?= esc($r['position']) ?></td>
                 <td><?= peso($r['salary_rate'] ?? 0) ?></td>
                 <td class="text-muted small text-end border-start"><?= peso($r['refund_rata'] ?? 0) ?></td>

@@ -15,14 +15,26 @@ class Employee extends BaseController
         $officeFilter = $this->request->getVar('office_id');
         $search = $this->request->getVar('search');
 
-$query = $model->select('employees.*, offices.office_name')
+        $data['offices'] = $officeModel->getOfficesOrdered();
+
+        if (!$officeFilter && !empty($data['offices'])) {
+            foreach ($data['offices'] as $office) {
+                if (stripos($office['office_name'], 'MAYOR') !== false) {
+                    $officeFilter = $office['id'];
+                    break;
+                }
+            }
+        }
+
+        $query = $model->select('employees.*, offices.office_name')
                        ->join('offices', 'offices.id = employees.office_id', 'left');
 
         if ($officeFilter) $query->where('office_id', $officeFilter);
         if ($search) $query->like('full_name', $search)->orLike('employee_id', $search);
 
         $data['employees'] = $query->findAll();
-        $data['offices'] = $officeModel->findAll();
+        $data['office_id'] = $officeFilter;
+        $data['search']    = $search;
         
         return view('employee/index', $data);
     }

@@ -157,7 +157,6 @@ function peso($value) {
         <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
         <td class="ps-4">
             <div class="fw-bold"><?= $emp['full_name'] ?></div>
-            <small class="text-muted"><?= $emp['employee_id'] ?></small>
         </td>
         <td><?= $emp['position'] ?></td>
         <td><?= peso($emp['salary_rate']) ?></td>

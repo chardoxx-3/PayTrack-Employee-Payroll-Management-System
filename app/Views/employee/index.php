@@ -37,12 +37,12 @@
                     <select name="office_id" class="form-select border-light bg-light" onchange="this.form.submit()">
                         <option value="">All Offices (Filter by Unit)</option>
                         <?php foreach($offices as $office): ?>
-                            <option value="<?= $office['id'] ?>"><?= $office['office_name'] ?></option>
+                            <option value="<?= $office['id'] ?>" <?= (isset($office_id) && $office_id == $office['id']) ? 'selected' : '' ?>><?= $office['office_name'] ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <input type="text" name="search" class="form-control border-light bg-light" placeholder="Search ID or Name...">
+                    <input type="text" name="search" class="form-control border-light bg-light" placeholder="Search ID or Name..." value="<?= esc($search ?? '') ?>">
                 </div>
             </form>
 
@@ -50,7 +50,6 @@
                 <table class="table table-hover align-middle employee-table">
                 <thead class="text-muted small fw-bold">
     <tr>
-        <th>EMPLOYEE ID</th>
         <th>FULL NAME</th>
         <th>OFFICE</th>
         <th>DESIGNATION</th>
@@ -62,8 +61,7 @@
                     <tbody>
 <?php foreach($employees as $emp): ?>
 <tr>
-    <td class="fw-bold text-primary"><?= $emp['employee_id'] ?></td>
-    <td><?= $emp['full_name'] ?></td>
+    <td class="fw-bold text-primary"><?= esc($emp['full_name']) ?></td>
     <td><span class="text-muted small"><?= $emp['office_name'] ?? '—' ?></span></td>
     <td><span class="text-muted small"><?= $emp['position'] ?? '—' ?></span></td>
     <td><span class="text-muted small"><?= $emp['contact_number'] ?? '—' ?></span></td>
