@@ -110,19 +110,30 @@ public function update()
         (float) ($data['bank_1stvb'] ?? 0) +
         (float) ($data['bank_rbt'] ?? 0);               // NEW
 
-    $net_pay = $gross_pay - $total_deductions;
+    $net_pay = ($gross_pay + $refund_rata) - $total_deductions;
+
+    $existingPayroll = $payrollModel->where('employee_id', $emp_id)
+                                     ->where('payroll_period', $period)
+                                     ->first();
+
+    if ($existingPayroll && isset($existingPayroll['first_quincena']) && (float)$existingPayroll['first_quincena'] > 0 && (float)$existingPayroll['first_quincena'] <= $net_pay) {
+        $first_quincena  = (float)$existingPayroll['first_quincena'];
+        $second_quincena = round($net_pay - $first_quincena, 2);
+    } else {
+        $first_quincena  = round($net_pay / 2, 2);
+        $second_quincena = round($net_pay - $first_quincena, 2);
+    }
 
     $payrollData = [
         'refund_rata'      => $refund_rata,
         'gross_pay'        => $gross_pay,
         'total_deductions' => $total_deductions,
-        'net_pay'          => $net_pay,
-        'cash_paid'        => $net_pay,
+        'net_pay'          => $second_quincena,
+        'first_quincena'   => $first_quincena,
+        'second_quincena'  => $second_quincena,
+        'cash_paid'        => $second_quincena,
     ];
 
-    $existingPayroll = $payrollModel->where('employee_id', $emp_id)
-                                     ->where('payroll_period', $period)
-                                     ->first();
     if ($existingPayroll) {
         $payrollModel->update($existingPayroll['id'], $payrollData);
     } else {

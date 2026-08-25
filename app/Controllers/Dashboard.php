@@ -11,12 +11,40 @@ class Dashboard extends BaseController
         $db = \Config\Database::connect();
         $period = date('Y-m');
 
-        $data['total_employees'] = $db->table('employees')->countAll();
-        $data['total_offices'] = $db->table('offices')->countAll();
+        $officeRows = $db->table('offices')->select('id, office_name')->get()->getResultArray();
+        $rataOfficeIds = [];
+        foreach ($officeRows as $officeRow) {
+            $norm = preg_replace('/[^A-Z0-9]/', '', strtoupper($officeRow['office_name'] ?? ''));
+            if (strpos($norm, 'RATA') !== false) {
+                $rataOfficeIds[] = (int)$officeRow['id'];
+            }
+        }
 
-        $processedCount = $db->table('payroll_records')
-            ->where('payroll_period', $period)
-            ->countAllResults();
+        $empCountQuery = $db->table('employees');
+        if (!empty($rataOfficeIds)) {
+            $empCountQuery->groupStart()
+                ->whereNotIn('office_id', $rataOfficeIds)
+                ->orWhere('office_id IS NULL')
+                ->groupEnd();
+        }
+        $data['total_employees'] = $empCountQuery->countAllResults();
+
+        $officeCountQuery = $db->table('offices');
+        if (!empty($rataOfficeIds)) {
+            $officeCountQuery->whereNotIn('id', $rataOfficeIds);
+        }
+        $data['total_offices'] = $officeCountQuery->countAllResults();
+
+        $processedQuery = $db->table('payroll_records pr')
+            ->join('employees e', 'e.id = pr.employee_id')
+            ->where('pr.payroll_period', $period);
+        if (!empty($rataOfficeIds)) {
+            $processedQuery->groupStart()
+                ->whereNotIn('e.office_id', $rataOfficeIds)
+                ->orWhere('e.office_id IS NULL')
+                ->groupEnd();
+        }
+        $processedCount = $processedQuery->countAllResults();
         $data['processed_payroll'] = $processedCount;
         $data['pending_payroll'] = max(0, $data['total_employees'] - $processedCount);
 
@@ -78,9 +106,16 @@ class Dashboard extends BaseController
             ->getResultArray();
         $data['payroll_by_office'] = $payrollByOffice;
 
-        $employeesByOffice = $db->table('employees e')
+        $employeesByOfficeQuery = $db->table('employees e')
             ->select('o.office_name, COUNT(*) as count', false)
-            ->join('offices o', 'o.id = e.office_id', 'left')
+            ->join('offices o', 'o.id = e.office_id', 'left');
+        if (!empty($rataOfficeIds)) {
+            $employeesByOfficeQuery->groupStart()
+                ->whereNotIn('e.office_id', $rataOfficeIds)
+                ->orWhere('e.office_id IS NULL')
+                ->groupEnd();
+        }
+        $employeesByOffice = $employeesByOfficeQuery
             ->groupBy('o.office_name')
             ->orderBy('count', 'DESC')
             ->get()
@@ -98,14 +133,21 @@ class Dashboard extends BaseController
             ->getResultArray();
         $data['recent_payroll'] = $recentPayroll;
 
-        $topDeductions = $db->table('employees e')
+        $topDeductionsQuery = $db->table('employees e')
             ->select('e.id, e.employee_id as emp_code, e.full_name, o.office_name,
                         (d.gsis_premium + d.gsis_policy + d.gsis_other + d.pagibig_premium +
                          d.pagibig_loan + d.phic + d.bank_lbp + d.bank_mcc + d.bank_1stvb +
                          d.withholding_tax + d.loans + d.government_cont + d.other_deduct) as total_deduct', false)
             ->join('offices o', 'o.id = e.office_id', 'left')
             ->join('deductions d', 'd.employee_id = e.id', 'left')
-            ->where('e.is_active', 1)
+            ->where('e.is_active', 1);
+        if (!empty($rataOfficeIds)) {
+            $topDeductionsQuery->groupStart()
+                ->whereNotIn('e.office_id', $rataOfficeIds)
+                ->orWhere('e.office_id IS NULL')
+                ->groupEnd();
+        }
+        $topDeductions = $topDeductionsQuery
             ->having('total_deduct > 0')
             ->orderBy('total_deduct', 'DESC')
             ->limit(5)
@@ -113,14 +155,28 @@ class Dashboard extends BaseController
             ->getResultArray();
         $data['top_deductions'] = $topDeductions;
 
-        $employmentStatus = $db->table('employees')
+        $empStatusQuery = $db->table('employees');
+        if (!empty($rataOfficeIds)) {
+            $empStatusQuery->groupStart()
+                ->whereNotIn('office_id', $rataOfficeIds)
+                ->orWhere('office_id IS NULL')
+                ->groupEnd();
+        }
+        $employmentStatus = $empStatusQuery
             ->select('employment_status, COUNT(*) as count', false)
             ->groupBy('employment_status')
             ->get()
             ->getResultArray();
         $data['employment_status_counts'] = $employmentStatus;
 
-        $avgSalary = $db->table('employees')
+        $avgSalaryQuery = $db->table('employees');
+        if (!empty($rataOfficeIds)) {
+            $avgSalaryQuery->groupStart()
+                ->whereNotIn('office_id', $rataOfficeIds)
+                ->orWhere('office_id IS NULL')
+                ->groupEnd();
+        }
+        $avgSalary = $avgSalaryQuery
             ->selectAvg('salary_rate')
             ->get()
             ->getRow()

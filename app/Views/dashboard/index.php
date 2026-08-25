@@ -67,28 +67,24 @@
             <div class="card border-0 shadow-sm p-3 metric-card metric-teal">
                 <div class="stat-label">Total Employees</div>
                 <div class="stat-value text-teal"><?= $total_employees ?></div>
-                <div class="text-muted small mt-1"><i class="fas fa-user-tie me-1"></i> <?= $deduction_rate ?>% deduction rate</div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 metric-card metric-info">
                 <div class="stat-label">Office Units</div>
                 <div class="stat-value text-primary"><?= $total_offices ?></div>
-                <div class="text-muted small mt-1"><i class="fas fa-building me-1"></i> Avg salary: ₱<?= number_format($avg_salary, 2) ?></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 metric-card metric-green">
                 <div class="stat-label">Payroll Processed</div>
                 <div class="stat-value text-success"><?= $processed_payroll ?>/<?= $total_employees ?></div>
-                <div class="text-muted small mt-1"><i class="fas fa-percentage me-1"></i> <?= $payroll_completion_rate ?>% completion</div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 metric-card metric-warning">
                 <div class="stat-label">Pending Payroll</div>
                 <div class="stat-value text-warning"><?= $pending_payroll ?></div>
-                <div class="text-muted small mt-1"><i class="fas fa-clock me-1"></i> awaiting processing</div>
             </div>
         </div>
     </div>
@@ -99,28 +95,24 @@
             <div class="card border-0 shadow-sm p-3 text-center">
                 <div class="stat-label">Total Gross Pay</div>
                 <div class="stat-value text-teal">₱<?= number_format($total_gross_pay, 2) ?></div>
-                <div class="text-muted small mt-1">Avg per employee: ₱<?= number_format($processed_payroll > 0 ? $total_gross_pay / $processed_payroll : 0, 2) ?></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 text-center">
                 <div class="stat-label">Total Deductions</div>
                 <div class="stat-value text-danger">₱<?= number_format($total_deductions, 2) ?></div>
-                <div class="text-muted small mt-1">Avg per employee: ₱<?= number_format($avg_deduction, 2) ?></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 text-center">
                 <div class="stat-label">Total Net Pay</div>
                 <div class="stat-value text-success">₱<?= number_format($total_net_pay, 2) ?></div>
-                <div class="text-muted small mt-1">Avg per employee: ₱<?= number_format($avg_net_pay, 2) ?></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 text-center">
                 <div class="stat-label">Total Cash Paid</div>
                 <div class="stat-value text-primary">₱<?= number_format($total_cash_paid, 2) ?></div>
-                <div class="text-muted small mt-1">Refund/Rata: ₱<?= number_format($total_refund_rata, 2) ?></div>
             </div>
         </div>
     </div>
