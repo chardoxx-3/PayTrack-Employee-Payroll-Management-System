@@ -134,25 +134,37 @@ function peso($value) {
     foreach($employees as $emp):
     ?>
     <?php
-        $totalDeductions = $emp['total_deductions'] ?? 0;
-        $netPay = $emp['net_pay'] ?? ($emp['salary_rate'] - $totalDeductions);
-        $firstQ = $emp['first_quincena'] ?? round($netPay / 2, 2);
-        $secondQ = $emp['second_quincena'] ?? round($netPay - $firstQ, 2);
+        $totalDeductions = (float)($emp['total_deductions'] ?? 0);
+        $salaryRate = (float)($emp['salary_rate'] ?? 0);
+        $refundRata = (float)($emp['refund_rata'] ?? 0);
+        
+        // Calculate Total Net Pay = (Salary Rate + Refund/Rata) - Total Deductions
+        $netPay = ($salaryRate + $refundRata) - $totalDeductions;
+        
+        // Calculate 1st Quincena & 2nd Quincena (Remaining Net Pay)
+        if (isset($emp['first_quincena']) && $emp['first_quincena'] !== null && (float)$emp['first_quincena'] > 0 && (float)$emp['first_quincena'] <= $netPay) {
+            $firstQ = (float)$emp['first_quincena'];
+            $secondQ = round($netPay - $firstQ, 2);
+        } else {
+            $firstQ = round($netPay / 2, 2);
+            $secondQ = round($netPay - $firstQ, 2);
+        }
+        
         $totalFirstQ += $firstQ;
         $totalSecondQ += $secondQ;
-        $totalSalaryRate += $emp['salary_rate'] ?? 0;
-        $totalRefund += $emp['refund_rata'] ?? 0;
-        $totalGsisPremium += $emp['gsis_premium'] ?? 0;
-        $totalGsisPolicy += $emp['gsis_policy'] ?? 0;
-        $totalGsisOther += $emp['gsis_other'] ?? 0;
-        $totalPagibigPremium += $emp['pagibig_premium'] ?? 0;
-        $totalPagibigLoan += $emp['pagibig_loan'] ?? 0;
-        $totalPhic += $emp['phic'] ?? 0;
-        $totalBankLbp += $emp['bank_lbp'] ?? 0;
-        $totalBankMcc += $emp['bank_mcc'] ?? 0;
-        $totalBank1stvb += $emp['bank_1stvb'] ?? 0;
-        $totalWithholdingTax += $emp['withholding_tax'] ?? 0;
-        $totalNetPay += $netPay;
+        $totalSalaryRate += $salaryRate;
+        $totalRefund += $refundRata;
+        $totalGsisPremium += (float)($emp['gsis_premium'] ?? 0);
+        $totalGsisPolicy += (float)($emp['gsis_policy'] ?? 0);
+        $totalGsisOther += (float)($emp['gsis_other'] ?? 0);
+        $totalPagibigPremium += (float)($emp['pagibig_premium'] ?? 0);
+        $totalPagibigLoan += (float)($emp['pagibig_loan'] ?? 0);
+        $totalPhic += (float)($emp['phic'] ?? 0);
+        $totalBankLbp += (float)($emp['bank_lbp'] ?? 0);
+        $totalBankMcc += (float)($emp['bank_mcc'] ?? 0);
+        $totalBank1stvb += (float)($emp['bank_1stvb'] ?? 0);
+        $totalWithholdingTax += (float)($emp['withholding_tax'] ?? 0);
+        $totalNetPay += $secondQ;
     ?>
     <tr class="border-bottom">
         <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
@@ -172,7 +184,7 @@ function peso($value) {
         <td class="text-danger small text-end"><?= peso($emp['bank_mcc'] ?? 0) ?></td>
         <td class="text-danger small text-end"><?= peso($emp['bank_1stvb'] ?? 0) ?></td>
         <td class="text-danger small text-end border-start"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
-        <td class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
+        <td class="fw-bold text-success border-start"><?= peso($secondQ) ?></td>
         <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?><br>2nd Q: <?= peso($secondQ) ?></td>
         <td class="text-muted small border-start text-end"><?= esc($emp['contact_number'] ?? '') ?></td>
         <td class="text-center" style="width: 50px;">
@@ -269,7 +281,7 @@ function peso($value) {
                                     <div class="card-body py-3 px-4">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div>
-                                                <label class="form-label text-muted small fw-bold text-uppercase mb-0">Net Pay</label>
+                                                <label class="form-label text-muted small fw-bold text-uppercase mb-0">Total Net Pay (After Deductions)</label>
                                             </div>
                                             <div class="fw-bold text-success fs-5" id="modalNetPay"></div>
                                         </div>
@@ -279,6 +291,12 @@ function peso($value) {
                         </div>
                     </div>
                     <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label text-muted small fw-bold text-uppercase mb-0">Quincena Breakdown</label>
+                            <button type="button" id="splitHalfBtn" class="btn btn-outline-primary btn-sm py-1 px-2" style="font-size: 0.75rem;">
+                                <i class="fas fa-divide me-1"></i> Split 50/50 Half
+                            </button>
+                        </div>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="firstQuincena" class="form-label text-muted small fw-bold text-uppercase mb-1">1st Quincena</label>
@@ -286,6 +304,7 @@ function peso($value) {
                                     <span class="input-group-text bg-white">₱</span>
                                     <input type="text" inputmode="decimal" class="form-control money-format" id="firstQuincena" name="first_quincena" placeholder="0.00">
                                 </div>
+                                <small class="text-muted" style="font-size: 0.75rem;">Advance / 1st half pay</small>
                             </div>
                             <div class="col-md-6">
                                 <label for="secondQuincena" class="form-label text-muted small fw-bold text-uppercase mb-1">2nd Quincena</label>
@@ -293,6 +312,7 @@ function peso($value) {
                                     <span class="input-group-text bg-white">₱</span>
                                     <input type="text" inputmode="decimal" class="form-control money-format" id="secondQuincena" name="second_quincena" placeholder="0.00" readonly>
                                 </div>
+                                <small class="text-success fw-bold" id="remainingNetPayText" style="font-size: 0.75rem;">Remaining Net Pay: ₱0.00</small>
                             </div>
                         </div>
                     </div>
@@ -312,7 +332,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const processForm = document.getElementById('processForm');
     const firstQuincenaInput = document.getElementById('firstQuincena');
     const secondQuincenaInput = document.getElementById('secondQuincena');
+    const splitHalfBtn = document.getElementById('splitHalfBtn');
     const modalNetPayEl = document.getElementById('modalNetPay');
+    const remainingTextEl = document.getElementById('remainingNetPayText');
     let currentNetPay = 0;
 
     function unformatMoney(value) {
@@ -326,13 +348,18 @@ document.addEventListener('DOMContentLoaded', function() {
         return decPart !== undefined ? `${intPart}.${decPart}` : intPart;
     }
 
+    function updateRemaining(secondQ) {
+        if (remainingTextEl) {
+            remainingTextEl.textContent = 'Remaining Net Pay: ₱' + secondQ.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+    }
+
     processButtons.forEach(function(btn) {
         btn.addEventListener('click', function() {
             const employeeName = btn.getAttribute('data-employee-name');
             const designation = btn.getAttribute('data-designation');
             const netPay = parseFloat(btn.getAttribute('data-net-pay')) || 0;
             const existingFirstQ = parseFloat(btn.getAttribute('data-first-quincena')) || 0;
-            const existingSecondQ = parseFloat(btn.getAttribute('data-second-quincena')) || 0;
 
             currentNetPay = netPay;
 
@@ -342,27 +369,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
             processForm.action = '/payroll/process/' + btn.getAttribute('data-employee-id');
 
-            if (existingFirstQ > 0 && existingSecondQ > 0) {
-                firstQuincenaInput.value = addCommas(existingFirstQ.toFixed(2));
-                secondQuincenaInput.value = addCommas(existingSecondQ.toFixed(2));
-            } else {
-                firstQuincenaInput.value = '';
-                secondQuincenaInput.value = '';
-            }
+            let firstQ = (existingFirstQ > 0 && existingFirstQ <= netPay) ? existingFirstQ : Math.round((netPay / 2) * 100) / 100;
+            let secondQ = Math.max(0, Math.round((netPay - firstQ) * 100) / 100);
+
+            firstQuincenaInput.value = addCommas(firstQ.toFixed(2));
+            secondQuincenaInput.value = addCommas(secondQ.toFixed(2));
+            updateRemaining(secondQ);
         });
     });
 
-    firstQuincenaInput.addEventListener('input', function() {
-        let raw = unformatMoney(this.value).replace(/[^0-9.]/g, '');
+    if (splitHalfBtn) {
+        splitHalfBtn.addEventListener('click', function() {
+            const half = Math.round((currentNetPay / 2) * 100) / 100;
+            const secondQ = Math.max(0, Math.round((currentNetPay - half) * 100) / 100);
+            firstQuincenaInput.value = addCommas(half.toFixed(2));
+            secondQuincenaInput.value = addCommas(secondQ.toFixed(2));
+            updateRemaining(secondQ);
+        });
+    }
+
+    function recalculateFromFirstQ() {
+        let raw = unformatMoney(firstQuincenaInput.value).replace(/[^0-9.]/g, '');
         const firstDot = raw.indexOf('.');
         if (firstDot !== -1) {
             raw = raw.slice(0, firstDot + 1) + raw.slice(firstDot + 1).replace(/\./g, '');
         }
-        this.value = addCommas(raw);
-        const firstQ = parseFloat(unformatMoney(this.value)) || 0;
-        const secondQ = currentNetPay - firstQ;
-        secondQuincenaInput.value = secondQ > 0 ? addCommas(secondQ.toFixed(2)) : '';
-    });
+        firstQuincenaInput.value = addCommas(raw);
+        const firstQ = parseFloat(unformatMoney(firstQuincenaInput.value)) || 0;
+        const secondQ = Math.max(0, Math.round((currentNetPay - firstQ) * 100) / 100);
+        secondQuincenaInput.value = addCommas(secondQ.toFixed(2));
+        updateRemaining(secondQ);
+    }
+
+    firstQuincenaInput.addEventListener('input', recalculateFromFirstQ);
 
     firstQuincenaInput.addEventListener('focus', function() {
         const raw = unformatMoney(this.value);
@@ -373,30 +412,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     firstQuincenaInput.addEventListener('blur', function() {
         const raw = unformatMoney(this.value);
-        if (raw === '' || isNaN(parseFloat(raw))) {
-            this.value = '0.00';
-        } else {
-            this.value = addCommas(parseFloat(raw).toFixed(2));
+        let firstQ = parseFloat(raw);
+        if (isNaN(firstQ) || firstQ < 0) {
+            firstQ = 0;
+        } else if (firstQ > currentNetPay) {
+            firstQ = currentNetPay;
         }
-        const firstQ = parseFloat(unformatMoney(this.value)) || 0;
-        const secondQ = currentNetPay - firstQ;
-        secondQuincenaInput.value = secondQ > 0 ? addCommas(secondQ.toFixed(2)) : '';
-    });
-
-    secondQuincenaInput.addEventListener('focus', function() {
-        const raw = unformatMoney(this.value);
-        if (raw === '' || parseFloat(raw) === 0) {
-            this.value = '';
-        }
-    });
-
-    secondQuincenaInput.addEventListener('blur', function() {
-        const raw = unformatMoney(this.value);
-        if (raw === '' || isNaN(parseFloat(raw))) {
-            this.value = '0.00';
-        } else {
-            this.value = addCommas(parseFloat(raw).toFixed(2));
-        }
+        this.value = addCommas(firstQ.toFixed(2));
+        const secondQ = Math.max(0, Math.round((currentNetPay - firstQ) * 100) / 100);
+        secondQuincenaInput.value = addCommas(secondQ.toFixed(2));
+        updateRemaining(secondQ);
     });
 
     processForm.addEventListener('submit', function() {

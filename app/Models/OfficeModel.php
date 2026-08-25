@@ -20,8 +20,9 @@ class OfficeModel extends Model
     /**
      * Custom office ordering for dropdowns: fixed priority list first,
      * unmatched offices next, "rata" offices last, "VICE-SB rata" absolute last.
+     * Pass $excludeRata = true to exclude RATA offices.
      */
-    public function getOfficesOrdered()
+    public function getOfficesOrdered(bool $excludeRata = false)
     {
         $priority = [
             "MAYOR'S", 'VICE-SB', 'MCR', 'MPDC', "ENGR'NG", 'ACCTG.', 'MTO',
@@ -29,6 +30,12 @@ class OfficeModel extends Model
         ];
 
         $offices = $this->findAll();
+
+        if ($excludeRata) {
+            $offices = array_values(array_filter($offices, function ($o) {
+                return strpos($this->normalize($o['office_name'] ?? ''), 'RATA') === false;
+            }));
+        }
 
         usort($offices, function ($a, $b) use ($priority) {
             return $this->officeSortRank($a['office_name'], $priority)

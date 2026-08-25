@@ -101,11 +101,26 @@ class Payroll extends BaseController
         $grossTotal = 0;
         $deductTotal = 0;
         $netTotal = 0;
-        foreach ($data['employees'] as $emp) {
-            $grossTotal += (float)($emp['gross_pay'] ?? $emp['salary_rate']);
-            $deductTotal += (float)($emp['total_deductions'] ?? 0);
-            $netTotal += (float)($emp['net_pay'] ?? 0);
+        foreach ($data['employees'] as &$emp) {
+            $salary = (float)($emp['salary_rate'] ?? 0);
+            $rata = (float)($emp['refund_rata'] ?? 0);
+            $deduct = (float)($emp['total_deductions'] ?? 0);
+            $net = ($salary + $rata) - $deduct;
+            $emp['net_pay'] = $net;
+
+            if (isset($emp['first_quincena']) && $emp['first_quincena'] !== null && (float)$emp['first_quincena'] > 0) {
+                $emp['first_quincena'] = (float)$emp['first_quincena'];
+                $emp['second_quincena'] = round($net - (float)$emp['first_quincena'], 2);
+            } else {
+                $emp['first_quincena'] = round($net / 2, 2);
+                $emp['second_quincena'] = round($net - (float)$emp['first_quincena'], 2);
+            }
+
+            $grossTotal += (float)($emp['gross_pay'] ?? $salary);
+            $deductTotal += $deduct;
+            $netTotal += $net;
         }
+        unset($emp);
         $data['total_gross'] = $grossTotal;
         $data['total_deductions'] = $deductTotal;
         $data['total_net'] = $netTotal;
@@ -126,62 +141,47 @@ public function process($employee_id)
         }
 
         $deduct = $deductModel->where('employee_id', $employee_id)->first();
-
-        $deduct = $deduct ?? [
-            'withholding_tax' => 0,
-            'loans'           => 0,
-            'government_cont' => 0,
-            'other_deduct'    => 0,
-            'gsis_premium'    => 0,
-            'gsis_policy'     => 0,
-            'gsis_other'      => 0,
-            'pagibig_premium' => 0,
-            'pagibig_loan'    => 0,
-            'phic'            => 0,
-            'bank_lbp'        => 0,
-            'bank_mcc'        => 0,
-            'bank_1stvb'      => 0,
-        ];
+        $deduct = $deduct ?? [];
 
         $refund_rata = (float) ($this->request->getVar('refund_rata') ?? 0);
-
-        $gross_pay = $emp['salary_rate'];
+        $gross_pay = (float) ($emp['salary_rate'] ?? 0);
 
         $total_deductions =
-            ($deduct['withholding_tax'] ?? 0) +
-            ($deduct['loans'] ?? 0) +
-            ($deduct['government_cont'] ?? 0) +
-            ($deduct['other_deduct'] ?? 0) +
-            ($deduct['gsis_premium'] ?? 0) +
-            ($deduct['gsis_policy'] ?? 0) +
-            ($deduct['gsis_other'] ?? 0) +
-            ($deduct['pagibig_premium'] ?? 0) +
-            ($deduct['pagibig_loan'] ?? 0) +
-            ($deduct['phic'] ?? 0) +
-            ($deduct['bank_lbp'] ?? 0) +
-            ($deduct['bank_mcc'] ?? 0) +
-            ($deduct['bank_1stvb'] ?? 0);
+            (float) ($deduct['withholding_tax'] ?? 0) +
+            (float) ($deduct['loans'] ?? 0) +
+            (float) ($deduct['government_cont'] ?? 0) +
+            (float) ($deduct['other_deduct'] ?? 0) +
+            (float) ($deduct['gsis_premium'] ?? 0) +
+            (float) ($deduct['gsis_policy'] ?? 0) +
+            (float) ($deduct['gsis_other'] ?? 0) +
+            (float) ($deduct['gsis_ouli'] ?? 0) +
+            (float) ($deduct['gsis_diff'] ?? 0) +
+            (float) ($deduct['pagibig_premium'] ?? 0) +
+            (float) ($deduct['pagibig_loan'] ?? 0) +
+            (float) ($deduct['pagibig_mp2'] ?? 0) +
+            (float) ($deduct['phic'] ?? 0) +
+            (float) ($deduct['phic_diff'] ?? 0) +
+            (float) ($deduct['bank_lbp'] ?? 0) +
+            (float) ($deduct['bank_other_payables'] ?? 0) +
+            (float) ($deduct['bank_mcc'] ?? 0) +
+            (float) ($deduct['bank_1stvb'] ?? 0) +
+            (float) ($deduct['bank_rbt'] ?? 0);
 
-        $net_pay = $gross_pay - $total_deductions;
+        $net_pay = ($gross_pay + $refund_rata) - $total_deductions;
 
-        $first_quincena_input  = (float) ($this->request->getVar('first_quincena') ?? 0);
-        $second_quincena_input = (float) ($this->request->getVar('second_quincena') ?? 0);
+        $first_quincena_input = $this->request->getVar('first_quincena');
+        if ($first_quincena_input !== null && $first_quincena_input !== '') {
+            $first_quincena  = round((float) $first_quincena_input, 2);
+            $second_quincena = round($net_pay - $first_quincena, 2);
+        } else {
+            $first_quincena  = round($net_pay / 2, 2);
+            $second_quincena = round($net_pay - $first_quincena, 2);
+        }
 
         $period = date('Y-m');
         $existing = $payrollModel->where('employee_id', $employee_id)
                                   ->where('payroll_period', $period)
                                   ->first();
-
-        if ($first_quincena_input > 0 && $second_quincena_input > 0) {
-            $first_quincena  = round($first_quincena_input, 2);
-            $second_quincena = round($second_quincena_input, 2);
-        } elseif ($existing && !empty($existing['first_quincena']) && !empty($existing['second_quincena'])) {
-            $first_quincena  = (float) $existing['first_quincena'];
-            $second_quincena = (float) $existing['second_quincena'];
-        } else {
-            $first_quincena  = round($net_pay / 2, 2);
-            $second_quincena = round($net_pay - $first_quincena, 2);
-        }
 
         $payrollData = [
             'employee_id'       => $employee_id,
@@ -190,10 +190,10 @@ public function process($employee_id)
             'refund_rata'       => $refund_rata,
             'gross_pay'         => $gross_pay,
             'total_deductions'  => $total_deductions,
-            'net_pay'           => $net_pay,
+            'net_pay'           => $second_quincena,
             'first_quincena'    => $first_quincena,
             'second_quincena'   => $second_quincena,
-            'cash_paid'         => $net_pay,
+            'cash_paid'         => $second_quincena,
         ];
 
         if ($existing) {

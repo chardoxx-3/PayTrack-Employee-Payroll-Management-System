@@ -15,7 +15,8 @@ class Employee extends BaseController
         $officeFilter = $this->request->getVar('office_id');
         $search = $this->request->getVar('search');
 
-        $data['offices'] = $officeModel->getOfficesOrdered();
+        // Exclude RATA and VICE-SB RATA from offices dropdown in Employee Records
+        $data['offices'] = $officeModel->getOfficesOrdered(true);
 
         if (!$officeFilter && !empty($data['offices'])) {
             foreach ($data['offices'] as $office) {
@@ -26,11 +27,40 @@ class Employee extends BaseController
             }
         }
 
+        // Collect all RATA office IDs to always exclude their records from Employee Records
+        $allOffices = $officeModel->findAll();
+        $rataOfficeIds = [];
+        foreach ($allOffices as $o) {
+            $norm = preg_replace('/[^A-Z0-9]/', '', strtoupper($o['office_name'] ?? ''));
+            if (strpos($norm, 'RATA') !== false) {
+                $rataOfficeIds[] = (int)$o['id'];
+            }
+        }
+
         $query = $model->select('employees.*, offices.office_name')
                        ->join('offices', 'offices.id = employees.office_id', 'left');
 
-        if ($officeFilter) $query->where('office_id', $officeFilter);
-        if ($search) $query->like('full_name', $search)->orLike('employee_id', $search);
+        if ($officeFilter) {
+            $query->where('employees.office_id', $officeFilter);
+        } elseif (!empty($rataOfficeIds)) {
+            $query->groupStart()
+                  ->whereNotIn('employees.office_id', $rataOfficeIds)
+                  ->orWhere('employees.office_id IS NULL')
+                  ->groupEnd();
+        }
+
+        if ($search) {
+            $query->groupStart()
+                  ->like('employees.full_name', $search)
+                  ->orLike('employees.employee_id', $search)
+                  ->groupEnd();
+            if (!empty($rataOfficeIds) && !$officeFilter) {
+                $query->groupStart()
+                      ->whereNotIn('employees.office_id', $rataOfficeIds)
+                      ->orWhere('employees.office_id IS NULL')
+                      ->groupEnd();
+            }
+        }
 
         $data['employees'] = $query->findAll();
         $data['office_id'] = $officeFilter;
@@ -87,7 +117,7 @@ public function create()
     $nextNumber = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
     $data['generated_id'] = "EMP-{$year}-{$nextNumber}";
 
-    $data['offices'] = $officeModel->findAll();
+    $data['offices'] = $officeModel->getOfficesOrdered(true);
     return view('employee/create', $data);
 }
 
@@ -97,7 +127,7 @@ public function edit($id)
     $officeModel = new OfficeModel();
 
     $data['employee'] = $model->find($id);
-    $data['offices']  = $officeModel->findAll();
+    $data['offices']  = $officeModel->getOfficesOrdered(true);
 
     if (!$data['employee']) {
         return redirect()->to('/employee')->with('errors', 'Employee not found.');
@@ -451,9 +481,7 @@ private function importRataOnlySheet(
             $deductionData['other_deduct'] = $unmapped;
         }
 
-        $existing = $model->where('office_id', $officeId)
-                           ->where('full_name', $fullName)
-                           ->first();
+        $existing = $model->where('full_name', $fullName)->first();
 
         if ($existing) {
             $model->update($existing['id'], ['position' => $designation ?: $existing['position']]);
