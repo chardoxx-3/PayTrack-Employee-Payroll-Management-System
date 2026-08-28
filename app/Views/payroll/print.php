@@ -48,8 +48,8 @@ function employeeDeductions($emp) {
         * { font-family: 'IBM Plex Sans', sans-serif !important; }
         body { background: #fff; margin: 0; padding: 0; }
         .payroll-table thead th {
-            background-color: #0d2d27 !important;
-            color: #e6f4f1 !important;
+            background-color: #0f2a4a !important;
+            color: #fff !important;
         }
         .payroll-table th,
         .payroll-table td {
@@ -61,7 +61,7 @@ function employeeDeductions($emp) {
         .payroll-table {
             margin-bottom: 0;
         }
-        .text-teal { color: #0d5c4e !important; }
+        .text-navy { color: #12305c !important; }
         .print-header-block h4 {
             font-size: 1.1rem;
         }
@@ -76,8 +76,8 @@ function employeeDeductions($emp) {
             body { background: #fff; }
             .table-responsive { overflow: visible; }
             .payroll-table thead th {
-                background-color: #0d2d27 !important;
-                color: #e6f4f1 !important;
+                background-color: #0f2a4a !important;
+                color: #fff !important;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
@@ -200,7 +200,7 @@ function employeeDeductions($emp) {
                         <div class="fw-bold"><?= esc($emp['full_name']) ?></div>
                     </td>
                     <td><?= esc($emp['position'] ?? '-') ?></td>
-                    <td class="fw-bold text-teal"><?= fmt($emp['salary_rate']) ?></td>
+                    <td class="fw-bold text-navy"><?= fmt($emp['salary_rate']) ?></td>
                     <td class="text-end border-start"><?= fmt($emp['refund_rata'] ?? 0) ?></td>
                     <td class="text-end border-start"><?= fmt($emp['gsis_premium'] ?? 0) ?></td>
                     <td class="text-end"><?= fmt($emp['gsis_policy'] ?? 0) ?></td>

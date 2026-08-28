@@ -8,7 +8,7 @@
     </div>
 
     <!-- Payslip Paper Design -->
-    <div class="payslip-card mx-auto bg-white p-5 shadow-lg" style="max-width: 800px; border-top: 5px solid #0d5c4e;">
+    <div class="payslip-card mx-auto bg-white p-5 shadow-lg" style="max-width: 800px; border-top: 5px solid #12305c;">
         <div class="row mb-4">
             <div class="col-6">
                 <h4 class="fw-bold text-primary mb-0">COMPANY NAME</h4>

@@ -4,8 +4,7 @@
 <style>
     .dashboard-card {
         background: #fff;
-        border: 1px solid #e7dcc0;
-        border-radius: 0.5rem;
+        border: 1px solid var(--line);
         box-shadow: 0 1px 3px rgba(0,0,0,0.06);
         transition: box-shadow 0.2s, transform 0.2s;
     }
@@ -18,17 +17,16 @@
     .metric-card .metric-value {
         font-weight: 600;
     }
-    .metric-teal { border-left-color: #0d5c4e; }
+    .metric-navy { border-left-color: var(--navy-800); }
     .metric-green { border-left-color: #1a7d5b; }
     .metric-warning { border-left-color: #d97706; }
     .metric-info { border-left-color: #0d6efd; }
-    .bg-teal { background-color: #0d5c4e !important; }
-    .bg-teal-light { background-color: #e6f4f1 !important; }
-    .text-teal { color: #0d5c4e !important; }
+    .bg-navy { background-color: var(--navy-800) !important; }
+    .bg-navy-light { background-color: var(--navy-subtle) !important; }
+    .text-navy { color: var(--navy-700) !important; }
     .chart-card {
         background: #fff;
-        border: 1px solid #e7dcc0;
-        border-radius: 0.5rem;
+        border: 1px solid var(--line);
         box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
     .stat-value {
@@ -39,11 +37,11 @@
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        color: #574a30;
+        color: var(--ink-soft);
     }
     .table-analytics th {
-        background-color: #0d2d27 !important;
-        color: #e6f4f1 !important;
+        background-color: var(--navy-800) !important;
+        color: #fff !important;
         font-size: 0.8rem;
     }
     .table-analytics td {
@@ -64,9 +62,9 @@
     <!-- Metric Cards -->
     <div class="row g-3 mb-3">
         <div class="col-6 col-md-3">
-            <div class="card border-0 shadow-sm p-3 metric-card metric-teal">
+            <div class="card border-0 shadow-sm p-3 metric-card metric-navy">
                 <div class="stat-label">Total Employees</div>
-                <div class="stat-value text-teal"><?= $total_employees ?></div>
+                <div class="stat-value text-navy"><?= $total_employees ?></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
@@ -94,7 +92,7 @@
         <div class="col-6 col-md-3">
             <div class="card border-0 shadow-sm p-3 text-center">
                 <div class="stat-label">Total Gross Pay</div>
-                <div class="stat-value text-teal">₱<?= number_format($total_gross_pay, 2) ?></div>
+                <div class="stat-value text-navy">₱<?= number_format($total_gross_pay, 2) ?></div>
             </div>
         </div>
         <div class="col-6 col-md-3">
@@ -186,7 +184,7 @@
                                     <small class="text-muted"><?= $r['emp_code'] ?></small>
                                 </td>
                                 <td><span class="text-muted small"><?= esc($r['office_name'] ?? '—') ?></span></td>
-                                <td class="text-end fw-bold text-teal">₱<?= number_format($r['gross_pay'], 2) ?></td>
+                                <td class="text-end fw-bold text-navy">₱<?= number_format($r['gross_pay'], 2) ?></td>
                                 <td class="text-end text-danger">₱<?= number_format($r['total_deductions'], 2) ?></td>
                                 <td class="text-end fw-bold text-success">₱<?= number_format($r['net_pay'], 2) ?></td>
                             </tr>
@@ -250,8 +248,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 {
                     label: 'Gross Pay',
                     data: payrollByOfficeData.map(r => parseFloat(r.gross)),
-                    backgroundColor: 'rgba(13, 92, 78, 0.7)',
-                    borderColor: 'rgba(13, 92, 78, 1)',
+                    backgroundColor: 'rgba(15, 42, 74, 0.7)',
+                    borderColor: 'rgba(15, 42, 74, 1)',
                     borderWidth: 1,
                     borderRadius: 4,
                 },
@@ -308,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 data: deductionsData.map(d => d.value),
                 backgroundColor: [
-                    'rgba(13, 92, 78, 0.8)',  'rgba(13, 92, 78, 0.6)',  'rgba(13, 92, 78, 0.4)',
+                    'rgba(15, 42, 74, 0.8)',  'rgba(15, 42, 74, 0.6)',  'rgba(15, 42, 74, 0.4)',
                     'rgba(217, 119, 6, 0.8)',  'rgba(217, 119, 6, 0.6)',
                     'rgba(108, 117, 151, 0.8)',
                     'rgba(13, 110, 255, 0.7)',  'rgba(13, 110, 255, 0.5)', 'rgba(13, 110, 255, 0.3)',
@@ -316,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'rgba(108, 117, 151, 0.6)', 'rgba(108, 117, 151, 0.4)', 'rgba(220, 53, 69, 0.5)',
                 ],
                 hoverBackgroundColor: [
-                    'rgba(13, 92, 78, 1)',    'rgba(13, 92, 78, 0.9)',   'rgba(13, 92, 78, 0.8)',
+                    'rgba(15, 42, 74, 1)',    'rgba(15, 42, 74, 0.9)',   'rgba(15, 42, 74, 0.8)',
                     'rgba(217, 119, 6, 1)',   'rgba(217, 119, 6, 0.9)',
                     'rgba(108, 117, 151, 1)',
                     'rgba(13, 110, 255, 0.9)', 'rgba(13, 110, 255, 0.8)', 'rgba(13, 110, 255, 0.7)',
@@ -352,8 +350,8 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Employees',
                 data: empByOfficeData.map(r => parseInt(r.count)),
-                backgroundColor: 'rgba(13, 92, 78, 0.7)',
-                borderColor: 'rgba(13, 92, 78, 1)',
+                backgroundColor: 'rgba(15, 42, 74, 0.7)',
+                borderColor: 'rgba(15, 42, 74, 1)',
                 borderWidth: 1,
                 borderRadius: 4,
             }]
