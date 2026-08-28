@@ -3,24 +3,23 @@
 <?= $this->section('content') ?>
 <style>
     .erp-card {
-        border: 1px solid #e7dcc0;
+        border: 1px solid var(--line);
         box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
     .erp-card .card-header {
-        background: linear-gradient(135deg, #0d2d27 0%, #0d5c4e 100%);
+        background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-700) 100%);
         border: none;
     }
-    .bg-teal { background-color: #0d5c4e !important; }
-    .bg-teal-light { background-color: #e6f4f1 !important; }
-    .text-teal { color: #0d5c4e !important; }
+    .bg-navy { background-color: var(--navy-800) !important; }
+    .bg-navy-light { background-color: var(--navy-subtle) !important; }
+    .text-navy { color: var(--navy-700) !important; }
     .pay-summary-strip {
-        background: linear-gradient(135deg, #0d2d27 0%, #0d5c4e 100%);
-        border-radius: 10px;
+        background: linear-gradient(135deg, var(--navy-800) 0%, var(--navy-700) 100%);
         padding: 1.5rem 1.75rem;
         margin-bottom: 1.5rem;
     }
     .pay-summary-strip .pay-label {
-        color: #e6f4f1;
+        color: var(--navy-subtle);
         font-size: 0.75rem;
         font-weight: 700;
         letter-spacing: 0.06em;
@@ -30,7 +29,7 @@
     .pay-summary-strip .input-group-text {
         background: rgba(255,255,255,0.1);
         border: 1px solid rgba(255,255,255,0.15);
-        color: #e6f4f1;
+        color: var(--navy-subtle);
     }
     .pay-summary-strip input {
         background: rgba(255,255,255,0.05);
@@ -45,9 +44,8 @@
         color: #f87171 !important;
     }
     .deduction-section {
-        border: 1px solid #e7dcc0;
-        border-left: 4px solid #0d5c4e;
-        border-radius: 8px;
+        border: 1px solid var(--line);
+        border-left: 4px solid var(--navy-600);
         padding: 1.25rem 1.5rem 1.5rem;
         margin-bottom: 1.25rem;
         background: #fff;
@@ -64,9 +62,8 @@
     .deduction-section-icon {
         width: 32px;
         height: 32px;
-        border-radius: 8px;
-        background: #0d5c4e;
-        color: #e6f4f1;
+        background: var(--navy-700);
+        color: var(--navy-subtle);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -78,30 +75,29 @@
         font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: #0d2d27;
+        color: var(--navy-800);
         margin: 0;
     }
     .form-label.deduction-label {
-        color: #574a30 !important;
+        color: var(--ink-soft) !important;
         font-weight: 600;
     }
     .input-group-text.deduction-prefix {
-        background: #f5faf6 !important;
+        background: var(--navy-subtle) !important;
         border: 1px solid #dee2e6 !important;
-        color: #0d5c4e !important;
+        color: var(--navy-700) !important;
     }
     .deduction-input.form-control {
         border: 1px solid #dee2e6 !important;
     }
     .deduction-input.form-control:focus {
-        border-color: #0d5c4e;
-        box-shadow: 0 0 0 0.15rem rgba(13, 92, 78, 0.15);
+        border-color: var(--navy-600);
+        box-shadow: 0 0 0 0.15rem rgba(15, 42, 74, 0.15);
     }
     .info-bar {
-        background: #f5faf6;
-        border-radius: 8px;
+        background: var(--navy-subtle);
         padding: 0.75rem 1rem;
-        border: 1px solid #e7dcc0;
+        border: 1px solid var(--line);
     }
 </style>
 <div class="container-fluid py-4">
@@ -120,7 +116,7 @@
                     <h6 class="mb-0 fw-bold">Employee Information</h6>
                 </div>
                 <div class="card-body p-4 text-center">
-                    <div class="avatar bg-teal text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:80px;height:80px;font-size:2rem;">
+                    <div class="avatar bg-navy text-white mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:80px;height:80px;font-size:2rem;">
                         <?= substr($employee['full_name'], 0, 1) ?>
                     </div>
                     <h5 class="fw-bold mb-1"><?= esc($employee['full_name']) ?></h5>
@@ -153,7 +149,7 @@
                         </div>
                         <div class="d-flex justify-content-between py-2">
                             <span class="text-muted small fw-bold">Monthly Rate</span>
-                            <span class="small fw-bold text-teal">₱<?= number_format($employee['salary_rate'], 2) ?></span>
+                            <span class="small fw-bold text-navy">₱<?= number_format($employee['salary_rate'], 2) ?></span>
                         </div>
                     </div>
                 </div>

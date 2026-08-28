@@ -3,8 +3,8 @@
 <?= $this->section('content') ?>
 <style>
 .employee-table thead th {
-    background-color: #0d2d27 !important;
-    color: #e6f4f1 !important;
+    background-color: var(--navy-800) !important;
+    color: #fff !important;
 }
 
 .employee-table th,
@@ -13,33 +13,33 @@
 }
 
 .employee-table tbody tr:hover {
-    background-color: #f5faf6 !important;
+    background-color: var(--navy-subtle) !important;
 }
 
 .employee-table .row-selected {
-    background-color: #d4edda !important;
-    border-left: 3px solid #0d5c4e !important;
+    background-color: var(--navy-subtle) !important;
+    border-left: 3px solid var(--navy-600) !important;
 }
 
 .employee-table .row-selected td {
-    background-color: #d4edda !important;
+    background-color: var(--navy-subtle) !important;
     color: #1e293b !important;
 }
 
 .employee-table .row-selected td small,
 .employee-table .row-selected td .text-muted {
-    color: #4a635f !important;
+    color: #4a5f7a !important;
 }
 
 .employee-table .row-selected td .badge {
     color: #ffffff !important;
-    background-color: rgba(13, 92, 78, 0.85) !important;
+    background-color: var(--navy-600) !important;
 }
 
 .employee-table .row-selected td .btn {
     color: #ffffff !important;
-    background-color: #0d5c4e !important;
-    border-color: #0d5c4e !important;
+    background-color: var(--navy-600) !important;
+    border-color: var(--navy-600) !important;
 }
 </style>
 <?php
