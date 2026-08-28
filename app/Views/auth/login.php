@@ -4,42 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In | Payroll Management System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gov-navy: #0f172a;
-            --gov-navy-light: #1e293b;
-            --gov-teal: #0d5c4e;
-            --gov-teal-hover: #0a4a3f;
-            --gov-teal-subtle: #e6f4f1;
-            --gov-gray-50: #f8fafc;
-            --gov-gray-100: #f1f5f9;
-            --gov-gray-200: #e2e8f0;
-            --gov-gray-300: #cbd5e1;
-            --gov-gray-400: #94a3b8;
-            --gov-gray-500: #64748b;
-            --gov-gray-600: #475569;
-            --gov-gray-700: #334155;
-            --gov-gray-800: #1e293b;
-            --gov-error: #dc2626;
-            --gov-error-bg: #fef2f2;
-            --gov-error-border: #fecaca;
-            --focus-ring: rgba(13, 92, 78, 0.25);
+            --navy: #0f2a4a;
+            --navy-light: #1d3f66;
+            --navy-subtle: #eef3f9;
+            --ink: #1a2233;
+            --muted: #6b7a90;
+            --border: #dde4ee;
+            --white: #ffffff;
+            --gold: #c9a227;
+            --error: #c0392b;
+            --error-bg: #fdf1f0;
+            --error-border: #f3d3d0;
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
+        html, body { height: 100%; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            color: var(--gov-gray-800);
-            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--ink);
+            background: linear-gradient(180deg, #f6f8fb 0%, #edf1f6 100%);
         }
 
         .login-page {
@@ -47,14 +35,15 @@
             min-height: 100vh;
         }
 
+        /* ---- left: brand panel ---- */
         .login-brand {
             flex: 0 0 420px;
-            background: linear-gradient(160deg, var(--gov-navy) 0%, var(--gov-navy-light) 100%);
+            background: linear-gradient(165deg, var(--navy) 0%, var(--navy-light) 100%);
             color: #ffffff;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            padding: 60px 48px;
+            justify-content: space-between;
+            padding: 56px 44px;
             position: relative;
             overflow: hidden;
         }
@@ -62,129 +51,149 @@
         .login-brand::before {
             content: "";
             position: absolute;
-            top: -50%;
+            top: -20%;
             right: -30%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(13, 92, 78, 0.15) 0%, transparent 70%);
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
             border-radius: 50%;
         }
 
-        .login-brand::after {
-            content: "";
-            position: absolute;
-            bottom: -40%;
-            left: -20%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
-            border-radius: 50%;
+        .brand-head {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-seal {
+            width: 46px;
+            height: 46px;
+            border: 1px solid rgba(255,255,255,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .brand-seal small {
+            font-size: 0.55rem;
+            letter-spacing: 0.2em;
+            display: block;
+            text-align: center;
+        }
+
+        .brand-logo-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            line-height: 1.5;
+        }
+
+        .brand-logo-text span {
+            opacity: 0.7;
+            font-weight: 400;
         }
 
         .brand-content {
             position: relative;
             z-index: 1;
-        }
-
-        .brand-seal {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 56px;
-            height: 56px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
-            border-radius: 14px;
-            margin-bottom: 32px;
-            backdrop-filter: blur(10px);
-        }
-
-        .brand-seal i {
-            font-size: 24px;
-            color: #ffffff;
+            margin: 40px 0;
         }
 
         .brand-title {
-            font-size: 2rem;
+            font-size: 1.9rem;
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 1.25;
+            letter-spacing: -0.01em;
             margin-bottom: 16px;
-            letter-spacing: -0.02em;
         }
 
         .brand-subtitle {
-            font-size: 1rem;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
-            margin-bottom: 48px;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.72);
+            line-height: 1.7;
             max-width: 320px;
         }
 
         .brand-features {
+            position: relative;
+            z-index: 1;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }
 
         .brand-feature {
             display: flex;
             align-items: center;
-            gap: 14px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.85);
+            gap: 12px;
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.85);
         }
 
-        .brand-feature i {
-            width: 20px;
-            text-align: center;
-            color: var(--gov-teal);
-            font-size: 0.95rem;
+        .brand-feature .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
         }
 
+        .brand-foot {
+            position: relative;
+            z-index: 1;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        /* ---- right: form panel ---- */
         .login-main {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 40px;
-            position: relative;
         }
 
         .login-card {
             width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            border: 1px solid var(--gov-gray-200);
-            border-radius: 16px;
-            padding: 44px 40px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.06);
+            max-width: 520px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 40px 36px;
+            box-shadow: 0 1px 2px rgba(15, 42, 74, 0.04), 0 12px 32px rgba(15, 42, 74, 0.08);
         }
 
         .login-header {
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .login-title {
-            font-size: 1.75rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: var(--gov-gray-800);
-            margin: 0 0 8px;
+            color: var(--ink);
+            margin: 0 0 6px;
             letter-spacing: -0.01em;
         }
 
         .login-subtitle {
             font-size: 0.9rem;
-            color: var(--gov-gray-500);
+            color: var(--muted);
             margin: 0;
-            line-height: 1.5;
         }
 
         .login-alert {
-            background: var(--gov-error-bg);
-            border: 1px solid var(--gov-error-border);
-            color: var(--gov-error);
-            border-radius: 10px;
-            padding: 12px 16px;
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            color: var(--error);
+            padding: 12px 14px;
             font-size: 0.85rem;
             margin-bottom: 20px;
             display: flex;
@@ -192,26 +201,16 @@
             gap: 10px;
         }
 
-        .login-alert:empty {
-            display: none;
-        }
+        .login-alert:empty { display: none; }
 
-        .login-alert i {
-            margin-top: 2px;
-            flex-shrink: 0;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 18px; }
 
         .form-label {
             display: block;
             font-size: 0.8rem;
             font-weight: 600;
-            color: var(--gov-gray-700);
-            margin-bottom: 8px;
-            letter-spacing: 0.01em;
+            color: var(--ink);
+            margin-bottom: 7px;
         }
 
         .form-control {
@@ -219,47 +218,38 @@
             padding: 12px 14px;
             font-size: 0.95rem;
             font-family: inherit;
-            color: var(--gov-gray-800);
-            background: #ffffff;
-            border: 1.5px solid var(--gov-gray-200);
-            border-radius: 10px;
+            color: var(--ink);
+            background: var(--white);
+            border: 1px solid var(--border);
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
-        .form-control::placeholder {
-            color: var(--gov-gray-400);
-        }
+        .form-control::placeholder { color: #aab6c5; }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--gov-teal);
-            box-shadow: 0 0 0 3px var(--focus-ring);
+            border-color: var(--navy-light);
+            box-shadow: 0 0 0 3px rgba(29, 63, 102, 0.12);
         }
 
-        .password-field {
-            position: relative;
-        }
+        .password-field { position: relative; }
 
         .password-toggle {
             position: absolute;
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--gov-gray-400);
+            color: var(--muted);
             cursor: pointer;
             padding: 6px;
             font-size: 0.95rem;
-            transition: color 0.15s ease;
-            border-radius: 6px;
         }
 
-        .password-toggle:hover,
-        .password-toggle:focus {
-            color: var(--gov-gray-600);
-            outline: none;
-            background: var(--gov-gray-100);
+        .password-toggle:hover {
+            color: var(--navy);
+            background: var(--navy-subtle);
         }
 
         .btn-login {
@@ -269,71 +259,51 @@
             font-weight: 600;
             font-family: inherit;
             color: #ffffff;
-            background: var(--gov-teal);
+            background: var(--navy);
             border: none;
-            border-radius: 10px;
             cursor: pointer;
-            margin-top: 8px;
-            transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            margin-top: 6px;
+            transition: background 0.15s ease;
         }
 
         .btn-login:hover {
-            background: var(--gov-teal-hover);
-            box-shadow: 0 4px 12px rgba(13, 92, 78, 0.2);
-        }
-
-        .btn-login:active {
-            transform: translateY(0);
+            background: var(--navy-light);
         }
 
         .login-footer {
             text-align: center;
-            margin-top: 28px;
+            margin-top: 26px;
             font-size: 0.85rem;
-            color: var(--gov-gray-500);
-            line-height: 1.6;
+            color: var(--muted);
+            line-height: 1.7;
         }
 
         .login-footer a {
-            color: var(--gov-teal);
+            color: var(--navy);
             text-decoration: none;
             font-weight: 600;
         }
 
-        .login-footer a:hover {
-            text-decoration: underline;
-        }
+        .login-footer a:hover { text-decoration: underline; }
 
         .login-footer .secure-note {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 16px;
-            font-size: 0.8rem;
-            color: var(--gov-gray-400);
-            padding-top: 16px;
-            border-top: 1px solid var(--gov-gray-100);
-        }
-
-        .login-footer .secure-note i {
-            font-size: 0.9rem;
-            color: var(--gov-gray-400);
+            margin-top: 14px;
+            font-size: 0.78rem;
+            color: #93a1b4;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
         }
 
         @media (max-width: 991.98px) {
-            .login-brand {
-                display: none;
-            }
-            .login-main {
-                padding: 24px;
-            }
+            .login-brand { display: none; }
+            .login-main { padding: 24px; }
         }
 
         @media (max-width: 480px) {
-            .login-card {
-                padding: 32px 24px;
-            }
+            .login-card { padding: 32px 24px; }
         }
     </style>
 </head>
@@ -341,32 +311,29 @@
 
 <div class="login-page">
     <div class="login-brand">
-        <div class="brand-content">
+        <div class="brand-head">
             <div class="brand-seal">
-                <i class="fas fa-building-columns"></i>
+                LGU
             </div>
-            <h1 class="brand-title">Payroll Management System</h1>
-            <p class="brand-subtitle">A centralized platform for accurate, transparent, and efficient payroll processing across all offices.</p>
-
-            <div class="brand-features">
-                <div class="brand-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Centralized payroll database</span>
-                </div>
-                <div class="brand-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Office-based filtering</span>
-                </div>
-                <div class="brand-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Instant payslip generation</span>
-                </div>
-                <div class="brand-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Secure access and audit logging</span>
-                </div>
+            <div class="brand-logo-text">
+                Municipality of Mahinog<br>
+                <span>Province of Camiguin</span>
             </div>
         </div>
+
+        <div class="brand-content">
+            <h1 class="brand-title">Payroll Management System</h1>
+            <p class="brand-subtitle">A centralized platform for accurate, transparent, and efficient payroll processing across all offices.</p>
+        </div>
+
+        <div class="brand-features">
+            <div class="brand-feature"><span class="dot"></span> Centralized payroll database</div>
+            <div class="brand-feature"><span class="dot"></span> Office-based filtering</div>
+            <div class="brand-feature"><span class="dot"></span> Instant payslip generation</div>
+            <div class="brand-feature"><span class="dot"></span> Secure access &amp; audit logging</div>
+        </div>
+
+        <div class="brand-foot">© <?= date('Y') ?> LGU-Mahinog</div>
     </div>
 
     <div class="login-main">
@@ -377,7 +344,6 @@
             </div>
 
             <div class="login-alert" id="loginAlert">
-                <i class="fas fa-circle-exclamation"></i>
                 <span><?= session()->getFlashdata('error') ?></span>
             </div>
 
@@ -391,7 +357,7 @@
                     <div class="password-field">
                         <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
                         <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Show password">
-                            <i class="fas fa-eye" id="eyeIcon"></i>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
                     </div>
                 </div>
@@ -401,7 +367,7 @@
             <div class="login-footer">
                 <div>Forgot password? <a href="#">Contact your system administrator</a></div>
                 <div class="secure-note">
-                    <i class="fas fa-shield-halved"></i>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                     <span>Authorized personnel only. All activity is logged.</span>
                 </div>
             </div>
@@ -412,15 +378,13 @@
 <script>
     function togglePassword() {
         const input = document.getElementById('password');
-        const icon = document.getElementById('eyeIcon');
+        const icon = document.querySelector('.password-toggle');
         if (input.type === 'password') {
             input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
+            icon.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
         } else {
             input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+            icon.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
         }
     }
 
