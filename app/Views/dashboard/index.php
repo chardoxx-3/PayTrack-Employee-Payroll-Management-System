@@ -115,6 +115,43 @@
         </div>
     </div>
 
+    <!-- All-Time Cumulative Analytics Banner -->
+    <div class="card border-0 shadow-sm p-4 mb-4" style="background: linear-gradient(135deg, #0d2d27 0%, #0a4a3f 100%); color: #fffdf6;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h6 class="fw-bold mb-1 text-uppercase" style="letter-spacing: 0.05em; color: #8fb8b0;"><i class="fas fa-infinity me-2"></i>All-Time Cumulative System Analytics</h6>
+                <small class="text-light opacity-75">Historical summary across all processed periods (Total Records: <?= number_format($all_time_records_count) ?>)</small>
+            </div>
+            <span class="badge bg-light text-dark px-3 py-2 fw-semibold">Lifetime System Totals</span>
+        </div>
+        <div class="row g-3 text-center mt-1">
+            <div class="col-6 col-md-3">
+                <div class="p-2 rounded" style="background: rgba(255,255,255,0.08);">
+                    <small class="d-block text-uppercase text-light opacity-75" style="font-size: 0.7rem;">Lifetime Gross Pay</small>
+                    <span class="fs-5 fw-bold text-white">₱<?= number_format($all_time_gross, 2) ?></span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2 rounded" style="background: rgba(255,255,255,0.08);">
+                    <small class="d-block text-uppercase text-light opacity-75" style="font-size: 0.7rem;">Lifetime Deductions</small>
+                    <span class="fs-5 fw-bold" style="color: #f87171;">₱<?= number_format($all_time_deductions, 2) ?></span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2 rounded" style="background: rgba(255,255,255,0.08);">
+                    <small class="d-block text-uppercase text-light opacity-75" style="font-size: 0.7rem;">Lifetime Net Pay</small>
+                    <span class="fs-5 fw-bold" style="color: #4ade80;">₱<?= number_format($all_time_net, 2) ?></span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-2 rounded" style="background: rgba(255,255,255,0.08);">
+                    <small class="d-block text-uppercase text-light opacity-75" style="font-size: 0.7rem;">Lifetime Cash Paid</small>
+                    <span class="fs-5 fw-bold" style="color: #60a5fa;">₱<?= number_format($all_time_cash, 2) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Charts Row -->
     <div class="row g-3 mb-3">
         <!-- Payroll by Office - Bar Chart -->
@@ -132,6 +169,18 @@
                 <h6 class="fw-bold mb-3">Deductions Breakdown</h6>
                 <div style="position: relative; height: 320px;">
                     <canvas id="deductionsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Trend Chart Row -->
+    <div class="row g-3 mb-3">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm p-4 chart-card">
+                <h6 class="fw-bold mb-3"><i class="fas fa-chart-line text-primary me-2"></i>Historical Monthly Payroll Trend</h6>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="monthlyTrendChart"></canvas>
                 </div>
             </div>
         </div>
@@ -387,6 +436,65 @@ document.addEventListener('DOMContentLoaded', function() {
             maintainAspectRatio: false,
             plugins: {
                 legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    // Historical Monthly Payroll Trend Chart
+    const trendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+    const monthlyTrendData = <?= json_encode($monthly_trend) ?>;
+    new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: monthlyTrendData.map(r => r.payroll_period),
+            datasets: [
+                {
+                    label: 'Gross Pay',
+                    data: monthlyTrendData.map(r => parseFloat(r.gross)),
+                    borderColor: '#0d5c4e',
+                    backgroundColor: 'rgba(13, 92, 78, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'Deductions',
+                    data: monthlyTrendData.map(r => parseFloat(r.deductions)),
+                    borderColor: '#d97706',
+                    backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'Net Pay',
+                    data: monthlyTrendData.map(r => parseFloat(r.net)),
+                    borderColor: '#1a7d5b',
+                    backgroundColor: 'rgba(26, 125, 91, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            return ctx.dataset.label + ': ₱' + Number(ctx.raw).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: {
+                        callback: function(value) {
+                            return '₱' + value.toLocaleString('en-US');
+                        }
+                    }
+                }
             }
         }
     });

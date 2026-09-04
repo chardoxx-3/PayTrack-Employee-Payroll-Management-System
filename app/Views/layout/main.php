@@ -58,16 +58,17 @@
         }
 
         #sidebar .brand-seal {
-            width: 38px;
-            height: 38px;
-            border: 2px solid var(--navy-500);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 44px;
+            height: 44px;
             flex-shrink: 0;
+            overflow: hidden;
         }
 
-        #sidebar .brand-seal i { color: var(--navy-500); font-size: 14px; }
+        #sidebar .brand-seal img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
 
         #sidebar .brand-text h4 {
             font-family: 'IBM Plex Sans', sans-serif;
@@ -144,7 +145,7 @@
     <!-- Sidebar -->
     <nav id="sidebar" class="d-none d-md-block">
         <div class="brand-row">
-            <div class="brand-seal"><i class="fas fa-scale-balanced"></i></div>
+            <div class="brand-seal"><img src="<?= base_url('mahinoglgu.png') ?>" alt="LGU Mahinog Logo"></div>
             <div class="brand-text">
                 <h4>PMS <span>Admin</span></h4>
                 <small>Payroll Management System</small>
@@ -154,6 +155,7 @@
             <a href="/dashboard" class="nav-link <?= url_is('dashboard*') ? 'active' : '' ?>"><i class="fas fa-chart-pie"></i> Dashboard</a>
             <a href="/employee" class="nav-link <?= url_is('employee*') ? 'active' : '' ?>"><i class="fas fa-user-tie"></i> Employees</a>
             <a href="/payroll" class="nav-link <?= url_is('payroll*') ? 'active' : '' ?>"><i class="fas fa-wallet"></i> Payroll</a>
+            <a href="/deduction" class="nav-link <?= url_is('deduction*') ? 'active' : '' ?>"><i class="fas fa-sliders-h"></i> Deductions</a>
             <a href="/report" class="nav-link <?= url_is('report*') ? 'active' : '' ?>"><i class="fas fa-file-alt"></i> Reports</a>
             <hr class="mx-3">
             <a href="/user" class="nav-link <?= url_is('user*') ? 'active' : '' ?>"><i class="fas fa-users-cog"></i> User Management</a>
@@ -174,6 +176,28 @@
         </nav>
 
         <div class="p-4">
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show mb-4 shadow-sm border-0" role="alert">
+                    <i class="fas fa-check-circle me-2"></i><?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show mb-4 shadow-sm border-0" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i><?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('errors')): ?>
+                <div class="alert alert-danger alert-dismissible fade show mb-4 shadow-sm border-0" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <?php 
+                        $errs = session()->getFlashdata('errors');
+                        echo is_array($errs) ? implode('<br>', $errs) : $errs;
+                    ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
             <?= $this->renderSection('content') ?>
         </div>
     </main>
