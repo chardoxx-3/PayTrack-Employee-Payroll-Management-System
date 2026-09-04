@@ -128,10 +128,10 @@ public function update()
         'refund_rata'      => $refund_rata,
         'gross_pay'        => $gross_pay,
         'total_deductions' => $total_deductions,
-        'net_pay'          => $second_quincena,
+        'net_pay'          => $net_pay,
         'first_quincena'   => $first_quincena,
         'second_quincena'  => $second_quincena,
-        'cash_paid'        => $second_quincena,
+        'cash_paid'        => $net_pay,
     ];
 
     if ($existingPayroll) {

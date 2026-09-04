@@ -64,6 +64,71 @@ class Dashboard extends BaseController
         $data['total_refund_rata'] = (float)($summary->refund_rata ?? 0);
         $data['total_cash_paid'] = (float)($summary->cash_paid ?? 0);
 
+        // All-Time Cumulative Analytics
+        $allTimeSummary = $db->table('payroll_records')
+            ->selectSum('gross_pay')
+            ->selectSum('total_deductions')
+            ->selectSum('net_pay')
+            ->selectSum('cash_paid')
+            ->select('COUNT(*) as total_records')
+            ->get()
+            ->getRow();
+
+        $data['all_time_gross'] = (float)($allTimeSummary->gross_pay ?? 0);
+        $data['all_time_deductions'] = (float)($allTimeSummary->total_deductions ?? 0);
+        $data['all_time_net'] = (float)($allTimeSummary->net_pay ?? 0);
+        $data['all_time_cash'] = (float)($allTimeSummary->cash_paid ?? 0);
+        $data['all_time_records_count'] = (int)($allTimeSummary->total_records ?? 0);
+
+        // Historical Monthly Payroll Trend (6-month sequence with active roster fallback)
+        $monthlyTrend = [];
+        $recordsByPeriod = [];
+        $rawTrend = $db->table('payroll_records')
+            ->select('payroll_period, SUM(gross_pay) as gross, SUM(total_deductions) as deductions, SUM(net_pay) as net', false)
+            ->groupBy('payroll_period')
+            ->get()
+            ->getResultArray();
+
+        foreach ($rawTrend as $r) {
+            $recordsByPeriod[$r['payroll_period']] = $r;
+        }
+
+        $baseGrossRow = $db->table('employees')->where('is_active', 1)->selectSum('salary_rate')->get()->getRow();
+        $baseGross = (float)($baseGrossRow->salary_rate ?? 0);
+        
+        $baseDeductRow = $db->table('deductions')
+            ->select('SUM(gsis_premium + gsis_policy + gsis_other + gsis_ouli + gsis_diff +
+                        pagibig_premium + pagibig_loan + pagibig_mp2 + phic + phic_diff +
+                        bank_lbp + bank_other_payables + bank_mcc + bank_1stvb + bank_rbt +
+                        withholding_tax + loans + government_cont + other_deduct) as total_deduct', false)
+            ->get()
+            ->getRow();
+        $baseDeductions = (float)($baseDeductRow->total_deduct ?? 0);
+        $baseNet = max(0, $baseGross - $baseDeductions);
+
+        for ($i = 5; $i >= 0; $i--) {
+            $periodKey = date('Y-m', strtotime("-{$i} month"));
+            $periodLabel = date('M Y', strtotime("-{$i} month"));
+
+            if (isset($recordsByPeriod[$periodKey])) {
+                $rec = $recordsByPeriod[$periodKey];
+                $monthlyTrend[] = [
+                    'payroll_period' => $periodLabel,
+                    'gross'          => (float) $rec['gross'],
+                    'deductions'     => (float) $rec['deductions'],
+                    'net'            => (float) $rec['net'],
+                ];
+            } else {
+                $monthlyTrend[] = [
+                    'payroll_period' => $periodLabel,
+                    'gross'          => $baseGross,
+                    'deductions'     => $baseDeductions,
+                    'net'            => $baseNet,
+                ];
+            }
+        }
+        $data['monthly_trend'] = $monthlyTrend;
+
         $deductionFields = [
             'gsis_premium'    => 'GSIS Premium',
             'gsis_policy'     => 'GSIS Policy',

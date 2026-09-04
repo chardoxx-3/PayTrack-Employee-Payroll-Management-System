@@ -40,4 +40,32 @@ class User extends BaseController
         // Account settings for the logged-in user to update their own password
         return view('user/settings');
     }
+
+    public function updatePassword()
+    {
+        $userId = session()->get('id');
+        if (!$userId) return redirect()->to('/auth/login');
+
+        $model = new UserModel();
+        $user = $model->find($userId);
+
+        $oldPassword = $this->request->getPost('old_password');
+        $newPassword = $this->request->getPost('new_password');
+        $confirmPassword = $this->request->getPost('confirm_password');
+
+        if (!$user || !password_verify($oldPassword, $user['password'])) {
+            return redirect()->back()->with('error', 'Current password is incorrect.');
+        }
+
+        if (empty($newPassword) || strlen($newPassword) < 6) {
+            return redirect()->back()->with('error', 'New password must be at least 6 characters long.');
+        }
+
+        if ($newPassword !== $confirmPassword) {
+            return redirect()->back()->with('error', 'New password and confirmation do not match.');
+        }
+
+        $model->update($userId, ['password' => password_hash($newPassword, PASSWORD_DEFAULT)]);
+        return redirect()->back()->with('success', 'Password updated successfully.');
+    }
 }

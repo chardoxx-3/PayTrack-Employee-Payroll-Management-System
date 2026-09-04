@@ -247,7 +247,7 @@ function employeeDeductions($emp) {
                     <td class="text-end"><?= fmt(sumCol($employeesChunk, 'bank_mcc')) ?></td>
                     <td class="text-end"><?= fmt(sumCol($employeesChunk, 'bank_1stvb')) ?></td>
                     <td class="text-end border-start fw-bold"><?= fmt(sumCol($employeesChunk, 'withholding_tax')) ?></td>
-                    <td class="fw-bold text-success border-start"><?= peso($total_net) ?></td>
+                    <td class="fw-bold text-success border-start"><?= peso(sumCol($employeesChunk, 'first_quincena') + sumCol($employeesChunk, 'second_quincena')) ?></td>
                     <td class="border-start fw-bold"><?= peso(sumCol($employeesChunk, 'first_quincena') + sumCol($employeesChunk, 'second_quincena')) ?></td>
                     <td class="border-start"></td>
                 </tr>
@@ -289,7 +289,7 @@ function employeeDeductions($emp) {
             </div>
             <div style="flex: 1; text-align: center;">
                 <p class="fw-bold mb-0 text-decoration-underline">MARY LUSSEL S. PACTO</p>
-                <p class="small text-muted mb-0">Disburishing Officer</p>
+                <p class="small text-muted mb-0">Disbursing Officer</p>
             </div>
         </div>
     </div>

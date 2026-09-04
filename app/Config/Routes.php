@@ -67,4 +67,5 @@ $routes->group('user', ['filter' => 'auth'], function($routes) {
     $routes->get('/', 'User::index');
     $routes->post('register', 'User::register');
     $routes->get('settings', 'User::settings');
+    $routes->post('update_password', 'User::updatePassword');
 });

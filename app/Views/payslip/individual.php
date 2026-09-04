@@ -284,14 +284,12 @@
                     <span class="label">Basic Pay</span>
                     <span class="amount"><?= peso($basicPay) ?></span>
                 </div>
+                <?php if ($rata > 0): ?>
                 <div class="detail-item">
-                    <span class="label">RATA</span>
+                    <span class="label">Refund / Rata (PERA/ACA Diff.)</span>
                     <span class="amount"><?= peso($rata) ?></span>
                 </div>
-                <div class="detail-item">
-                    <span class="label">PERA/ACA</span>
-                    <span class="amount"><?= peso($rata) ?></span>
-                </div>
+                <?php endif; ?>
             </div>
             <div class="details-col right">
                 <div class="section-title">Deductions:</div>

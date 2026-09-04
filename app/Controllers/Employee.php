@@ -481,7 +481,9 @@ private function importRataOnlySheet(
             $deductionData['other_deduct'] = $unmapped;
         }
 
-        $existing = $model->where('full_name', $fullName)->first();
+        $existing = $model->where('office_id', $officeId)
+                           ->where('full_name', $fullName)
+                           ->first();
 
         if ($existing) {
             $model->update($existing['id'], ['position' => $designation ?: $existing['position']]);

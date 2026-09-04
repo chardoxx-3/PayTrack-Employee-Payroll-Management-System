@@ -36,7 +36,7 @@ public function preview($employee_id)
 
         $employee = $employeeModel->find($employee_id);
         if (!$employee) {
-            throw \CodeIgniter\Exceptions\PageNotFoundExceptionException::forPageNotFound();
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
         $payroll = $payrollModel->select('payroll_records.*')

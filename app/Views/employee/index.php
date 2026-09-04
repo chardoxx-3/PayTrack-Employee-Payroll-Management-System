@@ -129,7 +129,7 @@ function peso($value) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p class="text-muted small">Upload the payroll Excel file. Each sheet is treated as an office; sheets with "rata" in the name are skipped.</p>
+                <p class="text-muted small">Upload the payroll Excel file (.xls or .xlsx). Each sheet is automatically imported as its assigned office unit (including RATA vouchers).</p>
                 <input type="file" name="payroll_file" accept=".xls,.xlsx" class="form-control" required>
             </div>
             <div class="modal-footer">

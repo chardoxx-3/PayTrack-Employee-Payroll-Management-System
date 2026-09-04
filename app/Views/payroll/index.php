@@ -164,7 +164,7 @@ function peso($value) {
         $totalBankMcc += (float)($emp['bank_mcc'] ?? 0);
         $totalBank1stvb += (float)($emp['bank_1stvb'] ?? 0);
         $totalWithholdingTax += (float)($emp['withholding_tax'] ?? 0);
-        $totalNetPay += $secondQ;
+        $totalNetPay += $netPay;
     ?>
     <tr class="border-bottom">
         <td class="align-middle text-center" style="width: 40px;"><?= $no++ ?></td>
@@ -184,7 +184,7 @@ function peso($value) {
         <td class="text-danger small text-end"><?= peso($emp['bank_mcc'] ?? 0) ?></td>
         <td class="text-danger small text-end"><?= peso($emp['bank_1stvb'] ?? 0) ?></td>
         <td class="text-danger small text-end border-start"><?= peso($emp['withholding_tax'] ?? 0) ?></td>
-        <td class="fw-bold text-success border-start"><?= peso($secondQ) ?></td>
+        <td class="fw-bold text-success border-start"><?= peso($netPay) ?></td>
         <td class="text-muted small border-start">1st Q: <?= peso($firstQ) ?><br>2nd Q: <?= peso($secondQ) ?></td>
         <td class="text-muted small border-start text-end"><?= esc($emp['contact_number'] ?? '') ?></td>
         <td class="text-center" style="width: 50px;">

@@ -116,3 +116,4 @@ Be sure to modify the test case (or create your own) to point to your seed and m
 and include any additional steps to be run before tests in the `setUp()` method.
 See [Testing Your Database](https://codeigniter.com/user_guide/testing/database.html)
 for details.
+
